@@ -1,24 +1,64 @@
-const express = require('express');
-const swaggerUI = require('swagger-ui-express');
+// app.js
+
 const path = require('path');
-const YAML = require('yamljs');
-const userRouter = require('./resources/users/user.router');
 
-const app = express();
-const swaggerDocument = YAML.load(path.join(__dirname, '../doc/api.yaml'));
+// const YAML = require('yamljs');
 
-app.use(express.json());
+const Fastify = require('fastify');
+const swagger = require('fastify-swagger');
 
-app.use('/doc', swaggerUI.serve, swaggerUI.setup(swaggerDocument));
+const { createDatabase } = require('./db/db');
 
-app.use('/', (req, res, next) => {
-  if (req.originalUrl === '/') {
-    res.send('Service is running!');
-    return;
+const UserRouter = require('./resources/users/user.router');
+
+class App {
+  constructor() {
+    this.db = createDatabase();
+
+    this.fastify = Fastify({
+      logger: true,
+    });
+
+    this.apiSpec = path.join(__dirname, '../doc/api.yaml');
+
+    this.fastify.register(swagger, {
+      exposeRoute: true,
+      routePrefix: '/doc',
+      mode: 'static',
+      specification: {
+        path: this.apiSpec,
+      },
+    });
+
+    this.userRouter = new UserRouter(this.fastify, this.db);
   }
-  next();
-});
 
-app.use('/users', userRouter);
+  start(port) {
+    return new Promise((resolve, reject) => {
+      this.fastify.listen(port, (e, addr) => {
+        if (e) {
+          this.fastify.log.error(e);
+          reject(e);
+        } else {
+          this.fastify.log.info(`App is running on ${addr}`);
+          resolve(addr);
+        }
+      });
+    });
+  }
 
-module.exports = app;
+  stop() {
+    return this.fastify.close().then(
+      () => {
+        this.fastify.log.info('Server closed');
+      },
+      (e) => {
+        this.fastify.log.error(e);
+      }
+    );
+  }
+}
+
+module.exports = new App();
+
+// __EOF__
