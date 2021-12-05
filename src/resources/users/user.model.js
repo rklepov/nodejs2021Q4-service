@@ -1,5 +1,6 @@
 // user.model.js
 
+// TODO: learn more about how to automatically generate this from OpenAPI spec
 const User = {
   schema: {
     request: {

@@ -5,29 +5,29 @@ class UserRepo {
     this.db = db;
   }
 
-  create(user) {
-    return this.db.users.create(user);
+  async create(user) {
+    const id = await this.db.users.create(user);
+
+    return { id, ...user };
   }
 
-  read(id) {
-    const res = this.db.users.read(id);
-    return res;
+  async read(id) {
+    const { hasValue: hasUser, value: user } = await this.db.users.read(id);
+    return { hasUser, user: { id, ...user } };
   }
 
-  update(id, user) {
-    return this.db.users.update(id, user);
+  async update(id, newUser) {
+    const { updated, value: user } = await this.db.users.update(id, newUser);
+    return { updated, user };
   }
 
-  delete(id) {
-    return this.db.users.delete(id);
+  async delete(id) {
+    const { deleted } = await this.db.users.delete(id);
+    return deleted;
   }
 
   ls() {
     return this.db.users.ls();
-  }
-
-  where(pred) {
-    return this.db.users.where(pred);
   }
 }
 
