@@ -10,7 +10,7 @@ class BoardService {
   }
 
   async getBoard(q, p) {
-    const { id } = q.params;
+    const { boardId: id } = q.params;
     const { hasBoard, board } = await this.repo.read(id);
 
     if (hasBoard) {
@@ -26,7 +26,7 @@ class BoardService {
   }
 
   async updateBoard(q, p) {
-    const { id } = q.params;
+    const { boardId: id } = q.params;
     const { title, columns } = q.body;
     const { updated, board } = await this.repo.update(id, { title }, columns);
 
@@ -38,7 +38,7 @@ class BoardService {
   }
 
   async deleteBoard(q, p) {
-    const { id } = q.params;
+    const { boardId: id } = q.params;
 
     if (await this.repo.delete(id)) {
       p.code(204).send();

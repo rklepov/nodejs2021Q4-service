@@ -21,7 +21,7 @@ class BoardRouter {
       },
     });
 
-    this.fastify.get('/boards/:id', {
+    this.fastify.get('/boards/:boardId', {
       handler: this.service.getBoard.bind(this.service),
       schema: {
         response: {
@@ -40,7 +40,7 @@ class BoardRouter {
       },
     });
 
-    this.fastify.put('/boards/:id', {
+    this.fastify.put('/boards/:boardId', {
       handler: this.service.updateBoard.bind(this.service),
       schema: {
         body: Board.schema.request,
@@ -50,7 +50,7 @@ class BoardRouter {
       },
     });
 
-    this.fastify.delete('/boards/:id', {
+    this.fastify.delete('/boards/:boardId', {
       handler: this.service.deleteBoard.bind(this.service),
     });
   }
