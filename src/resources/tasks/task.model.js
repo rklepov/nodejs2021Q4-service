@@ -5,14 +5,11 @@ const Task = {
   schema: {
     request: {
       type: 'object',
-      required: ['title', 'order', 'boardId', 'columnId'],
+      required: ['title', 'order'],
       properties: {
         title: { type: 'string' },
         order: { type: 'integer' },
         description: { type: 'string' },
-        userId: { type: 'string' },
-        boardId: { type: 'string' },
-        columnId: { type: 'string' },
       },
     },
 
@@ -23,9 +20,9 @@ const Task = {
         title: { type: 'string' },
         order: { type: 'integer' },
         description: { type: 'string' },
-        userId: { type: 'string' },
+        userId: { default: null },
         boardId: { type: 'string' },
-        columnId: { type: 'string' },
+        columnId: { default: null },
       },
     },
   },

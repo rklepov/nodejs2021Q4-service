@@ -21,7 +21,8 @@ class TaskService {
   }
 
   async addTask(q, p) {
-    const task = q.body;
+    const { boardId } = q.params;
+    const task = { ...q.body, boardId };
     p.code(201).send(await this.repo.create(task));
   }
 
