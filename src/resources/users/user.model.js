@@ -16,15 +16,9 @@ const User = {
     response: {
       type: 'object',
       properties: {
-        id: {
-          type: 'string',
-        },
-        name: {
-          type: 'string',
-        },
-        login: {
-          type: 'string',
-        },
+        id: { type: 'string' },
+        name: { type: 'string' },
+        login: { type: 'string' },
       },
     },
   },

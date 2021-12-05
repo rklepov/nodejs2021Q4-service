@@ -23,6 +23,18 @@ class UserRepo {
 
   async delete(id) {
     const { deleted } = await this.db.users.delete(id);
+
+    if (deleted) {
+      // set userId of the deleted users' tasks to null
+      const tasks = await this.db.tasks.where((task) => task?.userId === id);
+
+      tasks.forEach(async (task) => {
+        const { id: taskId, ...updatedTask } = task;
+        updatedTask.userId = null;
+        await this.db.tasks.update(taskId, updatedTask);
+      });
+    }
+
     return deleted;
   }
 
