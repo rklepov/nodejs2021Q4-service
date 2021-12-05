@@ -18,6 +18,17 @@ class App {
 
     this.fastify = Fastify({
       logger: true,
+      ajv: {
+        customOptions: {
+          removeAdditional: true,
+          useDefaults: true,
+          coerceTypes: true,
+          allErrors: true,
+          strictTypes: true,
+          nullable: true,
+          strictRequired: true,
+        },
+      },
     });
 
     this.apiSpec = path.join(__dirname, '../doc/api.yaml');
