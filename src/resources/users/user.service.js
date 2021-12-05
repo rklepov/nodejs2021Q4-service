@@ -10,7 +10,7 @@ class UserService {
   }
 
   async getUser(q, p) {
-    const { id } = q.params;
+    const { userId: id } = q.params;
     const { hasUser, user } = await this.repo.read(id);
 
     if (hasUser) {
@@ -26,7 +26,7 @@ class UserService {
   }
 
   async updateUser(q, p) {
-    const { id } = q.params;
+    const { userId: id } = q.params;
     const newUser = q.body;
     const { updated, user } = await this.repo.update(id, newUser);
 
@@ -38,7 +38,7 @@ class UserService {
   }
 
   async deleteUser(q, p) {
-    const { id } = q.params;
+    const { userId: id } = q.params;
 
     if (await this.repo.delete(id)) {
       p.code(204).send();

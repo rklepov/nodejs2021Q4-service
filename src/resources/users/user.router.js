@@ -21,7 +21,7 @@ class UserRouter {
       },
     });
 
-    this.fastify.get('/users/:id', {
+    this.fastify.get('/users/:userId', {
       handler: this.service.getUser.bind(this.service),
       schema: {
         response: {
@@ -40,7 +40,7 @@ class UserRouter {
       },
     });
 
-    this.fastify.put('/users/:id', {
+    this.fastify.put('/users/:userId', {
       handler: this.service.updateUser.bind(this.service),
       schema: {
         body: User.schema.request,
@@ -50,7 +50,7 @@ class UserRouter {
       },
     });
 
-    this.fastify.delete('/users/:id', {
+    this.fastify.delete('/users/:userId', {
       handler: this.service.deleteUser.bind(this.service),
     });
   }
