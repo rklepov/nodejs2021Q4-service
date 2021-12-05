@@ -77,13 +77,24 @@ class BoardRepo {
     const { deleted } = await this.db.boards.delete(boardId);
 
     if (deleted) {
-      // also removing all columns of a board
+      // removing all columns of the board
+      // TODO: move the code to a separate dedicated function
       const columns = await this.db.columns.where(
         (col) => col?.boardId === boardId
       );
 
       columns.forEach(async (col) => {
         await this.db.columns.delete(col.id);
+      });
+
+      // also removing all tasks attached to the board
+      // TODO: move the code to a separate dedicated function
+      const tasks = await this.db.tasks.where(
+        (task) => task?.boardId === boardId
+      );
+
+      tasks.forEach(async (task) => {
+        await this.db.tasks.delete(task.id);
       });
     }
 

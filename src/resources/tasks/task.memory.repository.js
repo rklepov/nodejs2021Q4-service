@@ -7,9 +7,6 @@ class TaskRepo {
 
   async create(task) {
     const id = await this.db.tasks.create(task);
-
-    console.log('TaskRepo::create', id, task);
-
     return { id, ...task };
   }
 
