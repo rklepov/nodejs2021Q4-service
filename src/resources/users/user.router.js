@@ -1,34 +1,8 @@
 // user.router.js
 
-const UserService = require('./user.service');
 const UserRepo = require('./user.memory.repository');
-
-const UserSchema = {
-  request: {
-    type: 'object',
-    required: ['name'],
-    properties: {
-      name: { type: 'string' },
-      login: { type: 'string' },
-      password: { type: 'string' },
-    },
-  },
-
-  response: {
-    type: 'object',
-    properties: {
-      id: {
-        type: 'string',
-      },
-      name: {
-        type: 'string',
-      },
-      login: {
-        type: 'string',
-      },
-    },
-  },
-};
+const UserService = require('./user.service');
+const User = require('./user.model');
 
 class UserRouter {
   constructor(fastify, db) {
@@ -41,7 +15,7 @@ class UserRouter {
         response: {
           200: {
             type: 'array',
-            items: UserSchema.response,
+            items: User.schema.response,
           },
         },
       },
@@ -51,7 +25,7 @@ class UserRouter {
       handler: this.service.getUser.bind(this.service),
       schema: {
         response: {
-          200: UserSchema.response,
+          200: User.schema.response,
         },
       },
     });
@@ -59,9 +33,9 @@ class UserRouter {
     this.fastify.post('/users', {
       handler: this.service.addUser.bind(this.service),
       schema: {
-        body: UserSchema.request,
+        body: User.schema.request,
         response: {
-          201: UserSchema.response,
+          201: User.schema.response,
         },
       },
     });
@@ -69,9 +43,9 @@ class UserRouter {
     this.fastify.put('/users/:id', {
       handler: this.service.updateUser.bind(this.service),
       schema: {
-        body: UserSchema.request,
+        body: User.schema.request,
         response: {
-          200: UserSchema.response,
+          200: User.schema.response,
         },
       },
     });
