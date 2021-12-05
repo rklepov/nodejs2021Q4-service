@@ -10,6 +10,7 @@ const swagger = require('fastify-swagger');
 const { createDatabase } = require('./db/db');
 
 const UserRouter = require('./resources/users/user.router');
+const BoardRouter = require('./resources/boards/board.router');
 
 class App {
   constructor() {
@@ -31,6 +32,7 @@ class App {
     });
 
     this.userRouter = new UserRouter(this.fastify, this.db);
+    this.boardRouter = new BoardRouter(this.fastify, this.db);
   }
 
   start(port) {
