@@ -25,6 +25,15 @@ const Column = {
 // TODO: learn more about how to automatically generate this from OpenAPI spec
 const Board = {
   schema: {
+    params: {
+      type: 'object',
+      additionalProperties: false,
+      required: ['boardId'],
+      properties: {
+        boardId: { type: 'string', format: 'uuid' },
+      },
+    },
+
     request: {
       type: 'object',
       required: ['title', 'columns'],

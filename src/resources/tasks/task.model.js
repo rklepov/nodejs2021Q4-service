@@ -3,6 +3,16 @@
 // TODO: learn more about how to automatically generate this from OpenAPI spec
 const Task = {
   schema: {
+    params: {
+      type: 'object',
+      additionalProperties: false,
+      required: ['boardId', 'taskId'],
+      properties: {
+        boardId: { type: 'string', format: 'uuid' },
+        taskId: { type: 'string', format: 'uuid' },
+      },
+    },
+
     request: {
       type: 'object',
       required: ['title', 'order'],

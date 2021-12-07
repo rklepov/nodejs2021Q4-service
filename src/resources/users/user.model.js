@@ -3,6 +3,15 @@
 // TODO: learn more about how to automatically generate this from OpenAPI spec
 const User = {
   schema: {
+    params: {
+      type: 'object',
+      additionalProperties: false,
+      required: ['userId'],
+      properties: {
+        userId: { type: 'string', format: 'uuid' },
+      },
+    },
+
     request: {
       type: 'object',
       required: ['name'],
