@@ -18,7 +18,7 @@ class App {
     this.db = createDatabase();
 
     this.fastify = Fastify({
-      logger: true,
+      logger: { prettyPrint: true },
       ajv: {
         customOptions: {
           removeAdditional: true,
