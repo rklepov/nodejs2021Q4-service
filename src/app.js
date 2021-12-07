@@ -5,6 +5,8 @@ const path = require('path');
 // const YAML = require('yamljs');
 
 const Fastify = require('fastify');
+const AjvCompiler = require('@fastify/ajv-compiler');
+const ajvFormats = require('ajv-formats');
 const swagger = require('fastify-swagger');
 
 const { createDatabase } = require('./db/db');
@@ -28,6 +30,13 @@ class App {
           strictTypes: true,
           nullable: true,
           strictRequired: true,
+          validateFormats: true,
+        },
+        plugins: [ajvFormats],
+      },
+      schemaController: {
+        compilersFactory: {
+          buildValidator: AjvCompiler(),
         },
       },
     });

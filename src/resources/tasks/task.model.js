@@ -16,13 +16,13 @@ const Task = {
     response: {
       type: 'object',
       properties: {
-        id: { type: 'string' },
+        id: { type: 'string', format: 'uuid' },
         title: { type: 'string' },
         order: { type: 'integer' },
         description: { type: 'string' },
-        userId: { type: 'string', nullable: true },
-        boardId: { type: 'string' },
-        columnId: { type: 'string', nullable: true },
+        userId: { type: 'string', nullable: true, format: 'uuid' },
+        boardId: { type: 'string', format: 'uuid' },
+        columnId: { type: 'string', nullable: true, format: 'uuid' },
       },
     },
   },

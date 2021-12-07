@@ -14,7 +14,7 @@ const Column = {
     response: {
       type: 'object',
       properties: {
-        id: { type: 'string' },
+        id: { type: 'string', format: 'uuid' },
         title: { type: 'string' },
         order: { type: 'integer' },
       },
@@ -37,7 +37,7 @@ const Board = {
     response: {
       type: 'object',
       properties: {
-        id: { type: 'string' },
+        id: { type: 'string', format: 'uuid' },
         title: { type: 'string' },
         columns: { type: 'array', items: Column.schema.response },
       },
