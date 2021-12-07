@@ -1,5 +1,7 @@
 // user.router.js
 
+const HTTP_STATUS = require('http-status');
+
 const UserRepo = require('./user.memory.repository');
 const UserService = require('./user.service');
 const User = require('./user.model');
@@ -13,7 +15,7 @@ class UserRouter {
       handler: this.service.getAll.bind(this.service),
       schema: {
         response: {
-          200: {
+          [HTTP_STATUS.OK]: {
             type: 'array',
             items: User.schema.response,
           },
@@ -26,7 +28,7 @@ class UserRouter {
       schema: {
         params: User.schema.params,
         response: {
-          200: User.schema.response,
+          [HTTP_STATUS.OK]: User.schema.response,
         },
       },
     });
@@ -36,7 +38,7 @@ class UserRouter {
       schema: {
         body: User.schema.request,
         response: {
-          201: User.schema.response,
+          [HTTP_STATUS.CREATED]: User.schema.response,
         },
       },
     });
@@ -47,7 +49,7 @@ class UserRouter {
         params: User.schema.params,
         body: User.schema.request,
         response: {
-          200: User.schema.response,
+          [HTTP_STATUS.OK]: User.schema.response,
         },
       },
     });

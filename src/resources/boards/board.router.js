@@ -1,5 +1,7 @@
 // board.router.js
 
+const HTTP_STATUS = require('http-status');
+
 const BoardRepo = require('./board.memory.repository');
 const BoardService = require('./board.service');
 const Board = require('./board.model');
@@ -13,7 +15,7 @@ class BoardRouter {
       handler: this.service.getAll.bind(this.service),
       schema: {
         response: {
-          200: {
+          [HTTP_STATUS.OK]: {
             type: 'array',
             items: Board.schema.response,
           },
@@ -26,7 +28,7 @@ class BoardRouter {
       schema: {
         params: Board.schema.params,
         response: {
-          200: Board.schema.response,
+          [HTTP_STATUS.OK]: Board.schema.response,
         },
       },
     });
@@ -36,7 +38,7 @@ class BoardRouter {
       schema: {
         body: Board.schema.request,
         response: {
-          201: Board.schema.response,
+          [HTTP_STATUS.CREATED]: Board.schema.response,
         },
       },
     });
@@ -48,7 +50,7 @@ class BoardRouter {
         params: Board.schema.params,
         body: Board.schema.request,
         response: {
-          200: Board.schema.response,
+          [HTTP_STATUS.OK]: Board.schema.response,
         },
       },
     });

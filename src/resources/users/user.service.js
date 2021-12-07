@@ -1,5 +1,7 @@
 // user.service.js
 
+const HTTP_STATUS = require('http-status');
+
 class UserService {
   constructor(repo) {
     this.repo = repo;
@@ -16,13 +18,13 @@ class UserService {
     if (hasUser) {
       p.send(user);
     } else {
-      p.code(404).send({ id });
+      p.code(HTTP_STATUS.NOT_FOUND).send({ id });
     }
   }
 
   async addUser(q, p) {
     const user = q.body;
-    p.code(201).send(await this.repo.create(user));
+    p.code(HTTP_STATUS.CREATED).send(await this.repo.create(user));
   }
 
   async updateUser(q, p) {
@@ -33,7 +35,7 @@ class UserService {
     if (updated) {
       p.send(user);
     } else {
-      p.code(404).send({ id });
+      p.code(HTTP_STATUS.NOT_FOUND).send({ id });
     }
   }
 
@@ -41,9 +43,9 @@ class UserService {
     const { userId: id } = q.params;
 
     if (await this.repo.delete(id)) {
-      p.code(204).send();
+      p.code(HTTP_STATUS.NO_CONTENT).send();
     } else {
-      p.code(404).send({ id });
+      p.code(HTTP_STATUS.NOT_FOUND).send({ id });
     }
   }
 }

@@ -1,5 +1,7 @@
 // task.router.js
 
+const HTTP_STATUS = require('http-status');
+
 const TaskRepo = require('./task.memory.repository');
 const TaskService = require('./task.service');
 const Task = require('./task.model');
@@ -15,7 +17,7 @@ class TaskRouter {
       schema: {
         params: Board.schema.params,
         response: {
-          200: {
+          [HTTP_STATUS.OK]: {
             type: 'array',
             items: Task.schema.response,
           },
@@ -28,7 +30,7 @@ class TaskRouter {
       schema: {
         params: Task.schema.params,
         response: {
-          200: Task.schema.response,
+          [HTTP_STATUS.OK]: Task.schema.response,
         },
       },
     });
@@ -39,7 +41,7 @@ class TaskRouter {
         params: Board.schema.params,
         body: Task.schema.request,
         response: {
-          201: Task.schema.response,
+          [HTTP_STATUS.CREATED]: Task.schema.response,
         },
       },
     });
@@ -52,7 +54,7 @@ class TaskRouter {
         },
         body: Task.schema.request,
         response: {
-          200: Task.schema.response,
+          [HTTP_STATUS.OK]: Task.schema.response,
         },
       },
     });
