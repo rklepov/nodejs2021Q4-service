@@ -2,6 +2,8 @@
 
 const HTTP_STATUS = require('http-status');
 
+const { Reply } = require('../../common/reply');
+
 const Board = require('./board.model');
 const BoardRepo = require('./board.memory.repository');
 
@@ -11,47 +13,44 @@ class BoardService {
     this.taskService = taskService;
   }
 
-  async getAll(q, p) {
-    p.send(await this.repo.ls());
+  async getAll() {
+    return Reply(HTTP_STATUS.OK, await this.repo.ls());
   }
 
-  async getBoard(q, p) {
-    const { boardId } = q.params;
+  async getBoard({ params }) {
+    const { boardId } = params;
     const board = await this.repo.read(boardId);
 
     if (board) {
-      p.send(board);
-    } else {
-      p.code(HTTP_STATUS.NOT_FOUND).send({ boardId });
+      return Reply(HTTP_STATUS.OK, board);
     }
+    return Reply(HTTP_STATUS.NOT_FOUND, { boardId });
   }
 
-  async addBoard(q, p) {
-    const board = new Board(q.body);
-    p.code(HTTP_STATUS.CREATED).send(await this.repo.create(board));
+  async addBoard({ body }) {
+    const board = new Board(body);
+    return Reply(HTTP_STATUS.CREATED, await this.repo.create(board));
   }
 
-  async updateBoard(q, p) {
-    const { boardId } = q.params;
-    const newBoard = new Board(q.body);
+  async updateBoard({ params, body }) {
+    const { boardId } = params;
+    const newBoard = new Board(body);
     const board = await this.repo.update(boardId, newBoard);
 
     if (board) {
-      p.send(board);
-    } else {
-      p.code(HTTP_STATUS.NOT_FOUND).send({ boardId });
+      return Reply(HTTP_STATUS.OK, board);
     }
+    return Reply(HTTP_STATUS.NOT_FOUND, { boardId });
   }
 
-  async deleteBoard(q, p) {
-    const { boardId } = q.params;
+  async deleteBoard({ params }) {
+    const { boardId } = params;
 
     if (await this.repo.delete(boardId)) {
       await this.taskService.deleteTasksFor(boardId);
-      p.code(HTTP_STATUS.NO_CONTENT).send();
-    } else {
-      p.code(HTTP_STATUS.NOT_FOUND).send({ boardId });
+      return Reply(HTTP_STATUS.NO_CONTENT);
     }
+    return Reply(HTTP_STATUS.NOT_FOUND, { boardId });
   }
 
   async boardExists(boardId) {

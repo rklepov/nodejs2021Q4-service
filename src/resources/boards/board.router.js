@@ -13,7 +13,10 @@ class BoardRouter {
     this.service = new BoardService(db.boards, new TaskService(db.tasks));
 
     this.fastify.get('/boards', {
-      handler: this.service.getAll.bind(this.service),
+      handler: async (q, p) => {
+        const { status, payload } = await this.service.getAll();
+        p.code(status).send(payload);
+      },
       schema: {
         response: {
           [HTTP_STATUS.OK]: {
@@ -25,7 +28,10 @@ class BoardRouter {
     });
 
     this.fastify.get('/boards/:boardId', {
-      handler: this.service.getBoard.bind(this.service),
+      handler: async (q, p) => {
+        const { status, payload } = await this.service.getBoard(q);
+        p.code(status).send(payload);
+      },
       schema: {
         params: Board.schema.params,
         response: {
@@ -35,7 +41,10 @@ class BoardRouter {
     });
 
     this.fastify.post('/boards', {
-      handler: this.service.addBoard.bind(this.service),
+      handler: async (q, p) => {
+        const { status, payload } = await this.service.addBoard(q);
+        p.code(status).send(payload);
+      },
       schema: {
         body: Board.schema.request,
         response: {
@@ -45,8 +54,10 @@ class BoardRouter {
     });
 
     this.fastify.put('/boards/:boardId', {
-      handler: this.service.updateBoard.bind(this.service),
-
+      handler: async (q, p) => {
+        const { status, payload } = await this.service.updateBoard(q);
+        p.code(status).send(payload);
+      },
       schema: {
         params: Board.schema.params,
         body: Board.schema.request,
@@ -57,7 +68,10 @@ class BoardRouter {
     });
 
     this.fastify.delete('/boards/:boardId', {
-      handler: this.service.deleteBoard.bind(this.service),
+      handler: async (q, p) => {
+        const { status, payload } = await this.service.deleteBoard(q);
+        p.code(status).send(payload);
+      },
       schema: { params: Board.schema.params },
     });
   }
