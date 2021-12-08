@@ -6,28 +6,31 @@ class UserRepo {
   }
 
   async create(user) {
-    const id = await this.users.create(user);
-
-    return { id, ...user };
+    const { key: userId } = await this.users.create(user);
+    return user.assignId(userId);
   }
 
-  async read(id) {
-    const { hasValue: hasUser, value: user } = await this.users.read(id);
-    return { hasUser, user: { id, ...user } };
+  async read(userId) {
+    const { hasValue: found, value: user } = await this.users.read(userId);
+    return found ? user.assignId(userId) : null;
   }
 
-  async update(id, newUser) {
-    const { updated, value: user } = await this.users.update(id, newUser);
-    return { updated, user: { id, ...user } };
+  async update(userId, user) {
+    const { updated: found, value: updatedUser } = await this.users.update(
+      userId,
+      user
+    );
+    return found ? updatedUser.assignId(userId) : null;
   }
 
-  async delete(id) {
-    const { deleted } = await this.users.delete(id);
+  async delete(userId) {
+    const { deleted } = await this.users.delete(userId);
     return deleted;
   }
 
-  ls() {
-    return this.users.ls();
+  async ls() {
+    const users = await this.users.ls();
+    return users.map(({key: userId, value: user}) => user.assignId(userId))
   }
 }
 

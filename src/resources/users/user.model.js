@@ -1,7 +1,6 @@
 // user.model.js
 
 const pick = require('lodash.pick');
-const difference = require('lodash.difference');
 
 class User {
   constructor(user) {
@@ -11,8 +10,13 @@ class User {
     );
   }
 
+  assignId(userId) {
+    Object.assign(this, { id: userId });
+    return this;
+  }
+
   toJSON() {
-    return pick(this, difference(Object.keys(this), ['password']));
+    return pick(this, Object.keys(User.schema.response.properties));
   }
 
   // TODO: learn more about how to automatically generate this from OpenAPI spec

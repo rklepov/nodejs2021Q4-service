@@ -17,9 +17,9 @@ class UserService {
 
   async getUser(q, p) {
     const { userId } = q.params;
-    const { hasUser, user } = await this.repo.read(userId);
+    const user = await this.repo.read(userId);
 
-    if (hasUser) {
+    if (user) {
       p.send(user);
     } else {
       p.code(HTTP_STATUS.NOT_FOUND).send({ userId });
@@ -33,10 +33,10 @@ class UserService {
 
   async updateUser(q, p) {
     const { userId } = q.params;
-    const newUser = new User(q.body);
-    const { updated, user } = await this.repo.update(userId, newUser);
+    let user = new User(q.body);
+    user = await this.repo.update(userId, user);
 
-    if (updated) {
+    if (user) {
       p.send(user);
     } else {
       p.code(HTTP_STATUS.NOT_FOUND).send({ userId });
@@ -44,13 +44,13 @@ class UserService {
   }
 
   async deleteUser(q, p) {
-    const { userId: id } = q.params;
+    const { userId } = q.params;
 
-    if (await this.repo.delete(id)) {
-      await this.taskService.unassignUser(id);
+    if (await this.repo.delete(userId)) {
+      await this.taskService.unassignUser(userId);
       p.code(HTTP_STATUS.NO_CONTENT).send();
     } else {
-      p.code(HTTP_STATUS.NOT_FOUND).send({ id });
+      p.code(HTTP_STATUS.NOT_FOUND).send({ userId });
     }
   }
 }
