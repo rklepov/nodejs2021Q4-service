@@ -2,6 +2,8 @@
 
 const HTTP_STATUS = require('http-status');
 
+const { defineHandler } = require('../../common/handler');
+
 const Task = require('./task.model');
 const TaskService = require('./task.service');
 
@@ -14,10 +16,7 @@ class TaskRouter {
     this.service = new TaskService(db.tasks, new BoardService(db.boards));
 
     this.fastify.get('/boards/:boardId/tasks', {
-      handler: async (q, p) => {
-        const { status, payload } = await this.service.getAll(q);
-        p.code(status).send(payload);
-      },
+      handler: defineHandler(this, 'getAll'),
       schema: {
         params: Board.schema.params,
         response: {
@@ -30,10 +29,7 @@ class TaskRouter {
     });
 
     this.fastify.get('/boards/:boardId/tasks/:taskId', {
-      handler: async (q, p) => {
-        const { status, payload } = await this.service.getTask(q);
-        p.code(status).send(payload);
-      },
+      handler: defineHandler(this, 'getTask'),
       schema: {
         params: Task.schema.params,
         response: {
@@ -43,10 +39,7 @@ class TaskRouter {
     });
 
     this.fastify.post('/boards/:boardId/tasks', {
-      handler: async (q, p) => {
-        const { status, payload } = await this.service.addTask(q);
-        p.code(status).send(payload);
-      },
+      handler: defineHandler(this, 'addTask'),
       schema: {
         params: Board.schema.params,
         body: Task.schema.request,
@@ -57,11 +50,7 @@ class TaskRouter {
     });
 
     this.fastify.put('/boards/:boardId/tasks/:taskId', {
-      handler: async (q, p) => {
-        const { status, payload } = await this.service.updateTask(q);
-        p.code(status).send(payload);
-      },
-
+      handler: defineHandler(this, 'updateTask'),
       schema: {
         schema: {
           params: Task.schema.params,
@@ -74,11 +63,7 @@ class TaskRouter {
     });
 
     this.fastify.delete('/boards/:boardId/tasks/:taskId', {
-      handler: async (q, p) => {
-        const { status, payload } = await this.service.deleteTask(q);
-        p.code(status).send(payload);
-      },
-
+      handler: defineHandler(this, 'deleteTask'),
       schema: { params: Task.schema.params },
     });
   }
