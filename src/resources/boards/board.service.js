@@ -2,9 +2,13 @@
 
 const HTTP_STATUS = require('http-status');
 
+const Board = require('./board.model');
+const BoardRepo = require('./board.memory.repository');
+
 class BoardService {
-  constructor(repo) {
-    this.repo = repo;
+  constructor(boards, taskService) {
+    this.repo = new BoardRepo(boards);
+    this.taskService = taskService;
   }
 
   async getAll(q, p) {
@@ -12,43 +16,46 @@ class BoardService {
   }
 
   async getBoard(q, p) {
-    const { boardId: id } = q.params;
-    const { hasBoard, board } = await this.repo.read(id);
+    const { boardId } = q.params;
+    const board = await this.repo.read(boardId);
 
-    if (hasBoard) {
+    if (board) {
       p.send(board);
     } else {
-      p.code(HTTP_STATUS.NOT_FOUND).send({ id });
+      p.code(HTTP_STATUS.NOT_FOUND).send({ boardId });
     }
   }
 
   async addBoard(q, p) {
-    const { title, columns } = q.body;
-    p.code(HTTP_STATUS.CREATED).send(
-      await this.repo.create({ title }, columns)
-    );
+    const board = new Board(q.body);
+    p.code(HTTP_STATUS.CREATED).send(await this.repo.create(board));
   }
 
   async updateBoard(q, p) {
-    const { boardId: id } = q.params;
-    const { title, columns } = q.body;
-    const { updated, board } = await this.repo.update(id, { title }, columns);
+    const { boardId } = q.params;
+    const newBoard = new Board(q.body);
+    const board = await this.repo.update(boardId, newBoard);
 
-    if (updated) {
+    if (board) {
       p.send(board);
     } else {
-      p.code(HTTP_STATUS.NOT_FOUND).send({ id });
+      p.code(HTTP_STATUS.NOT_FOUND).send({ boardId });
     }
   }
 
   async deleteBoard(q, p) {
-    const { boardId: id } = q.params;
+    const { boardId } = q.params;
 
-    if (await this.repo.delete(id)) {
+    if (await this.repo.delete(boardId)) {
+      await this.taskService.deleteTasksFor(boardId);
       p.code(HTTP_STATUS.NO_CONTENT).send();
     } else {
-      p.code(HTTP_STATUS.NOT_FOUND).send({ id });
+      p.code(HTTP_STATUS.NOT_FOUND).send({ boardId });
     }
+  }
+
+  async boardExists(boardId) {
+    return !!(await this.repo.read(boardId));
   }
 }
 

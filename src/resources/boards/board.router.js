@@ -2,14 +2,15 @@
 
 const HTTP_STATUS = require('http-status');
 
-const BoardRepo = require('./board.memory.repository');
-const BoardService = require('./board.service');
 const Board = require('./board.model');
+const BoardService = require('./board.service');
+
+const TaskService = require('../tasks/task.service');
 
 class BoardRouter {
   constructor(fastify, db) {
     this.fastify = fastify;
-    this.service = new BoardService(new BoardRepo(db));
+    this.service = new BoardService(db.boards, new TaskService(db.tasks));
 
     this.fastify.get('/boards', {
       handler: this.service.getAll.bind(this.service),

@@ -14,7 +14,20 @@ class Board {
         difference(Object.keys(Board.schema.request.properties), ['columns'])
       )
     );
-    this.columns = pick(board, ['columns']).map((column) => new Column(column));
+
+    this.assignColumns(
+      pick(board, ['columns']).columns?.map((column) => new Column(column))
+    );
+  }
+
+  assignId(boardId) {
+    Object.assign(this, { id: boardId });
+    return this;
+  }
+
+  assignColumns(columns) {
+    this.columns = columns || [];
+    return this;
   }
 
   toJSON() {
@@ -53,7 +66,7 @@ class Board {
       },
     },
   };
-};
+}
 
 module.exports = Board;
 
