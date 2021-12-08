@@ -1,8 +1,22 @@
 // user.model.js
 
-// TODO: learn more about how to automatically generate this from OpenAPI spec
-const User = {
-  schema: {
+const pick = require('lodash.pick');
+const difference = require('lodash.difference');
+
+class User {
+  constructor(user) {
+    Object.assign(
+      this,
+      pick(user, Object.keys(User.schema.request.properties))
+    );
+  }
+
+  toJSON() {
+    return pick(this, difference(Object.keys(this), ['password']));
+  }
+
+  // TODO: learn more about how to automatically generate this from OpenAPI spec
+  static schema = {
     params: {
       type: 'object',
       additionalProperties: false,
@@ -30,8 +44,8 @@ const User = {
         login: { type: 'string' },
       },
     },
-  },
-};
+  };
+}
 
 module.exports = User;
 

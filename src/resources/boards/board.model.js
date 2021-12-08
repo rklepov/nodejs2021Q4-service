@@ -1,30 +1,31 @@
 // board.model.js
 
-const Column = {
-  schema: {
-    request: {
-      type: 'object',
-      required: ['title', 'order'],
-      properties: {
-        title: { type: 'string' },
-        order: { type: 'integer' },
-      },
-    },
+const pick = require('lodash.pick');
+const difference = require('lodash.difference');
 
-    response: {
-      type: 'object',
-      properties: {
-        id: { type: 'string', format: 'uuid' },
-        title: { type: 'string' },
-        order: { type: 'integer' },
-      },
-    },
-  },
-};
+const Column = require('./column.model');
 
-// TODO: learn more about how to automatically generate this from OpenAPI spec
-const Board = {
-  schema: {
+class Board {
+  constructor(board) {
+    Object.assign(
+      this,
+      pick(
+        board,
+        difference(Object.keys(Board.schema.request.properties), ['columns'])
+      )
+    );
+    this.columns = pick(board, ['columns']).map((column) => new Column(column));
+  }
+
+  toJSON() {
+    return {
+      ...pick(this, difference(Object.keys(this), ['columns'])),
+      columns: this.columns.map((column) => column.toJSON()),
+    };
+  }
+
+  // TODO: learn more about how to automatically generate this from OpenAPI spec
+  static schema = {
     params: {
       type: 'object',
       additionalProperties: false,
@@ -51,7 +52,7 @@ const Board = {
         columns: { type: 'array', items: Column.schema.response },
       },
     },
-  },
+  };
 };
 
 module.exports = Board;
