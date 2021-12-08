@@ -58,28 +58,25 @@ class App {
   }
 
   start(port) {
-    return new Promise((resolve, reject) => {
-      this.fastify.listen(port, (e, addr) => {
-        if (e) {
-          this.fastify.log.error(e);
-          reject(e);
-        } else {
-          this.fastify.log.info(`App is running on ${addr}`);
-          resolve(addr);
-        }
+    return this.fastify
+      .listen(port)
+      .then((addr) => {
+        this.fastify.log.info(`[start] App is running on ${addr}`);
+      })
+      .catch((e) => {
+        this.fastify.log.error(e);
       });
-    });
   }
 
   stop() {
-    return this.fastify.close().then(
-      () => {
-        this.fastify.log.info('Server closed');
-      },
-      (e) => {
+    return this.fastify
+      .close()
+      .then(() => {
+        this.fastify.log.info('[stop] Server closed');
+      })
+      .catch((e) => {
         this.fastify.log.error(e);
-      }
-    );
+      });
   }
 }
 
