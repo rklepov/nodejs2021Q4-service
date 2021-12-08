@@ -20,7 +20,26 @@ class App {
     this.db = createDatabase();
 
     this.fastify = Fastify({
-      logger: { prettyPrint: true },
+      logger: {
+        prettyPrint: true,
+        serializers: {
+          res(p) {
+            return {
+              statusCode: p.statusCode,
+              payload: p.raw.payload,
+            };
+          },
+          req(q) {
+            return {
+              method: q.method,
+              url: q.url,
+              path: q.path,
+              params: q.params,
+              headers: q.headers,
+            };
+          },
+        },
+      },
       ajv: {
         customOptions: {
           removeAdditional: true,
@@ -28,7 +47,6 @@ class App {
           coerceTypes: true,
           allErrors: true,
           strictTypes: true,
-          nullable: true,
           strictRequired: true,
           validateFormats: true,
         },
@@ -40,6 +58,18 @@ class App {
         },
       },
     });
+
+    this.fastify
+      .addHook('preHandler', (q, _, done) => {
+        if (q.body) {
+          q.log.info({ body: q.body }, 'parsed body');
+        }
+        done();
+      })
+      .addHook('preSerialization', (_, p, payload, done) => {
+        Object.assign(p.raw, { payload });
+        done();
+      });
 
     this.apiSpec = path.join(__dirname, '../doc/api.yaml');
 
