@@ -18,8 +18,13 @@ class Task {
     );
   }
 
+  assignId(taskId) {
+    Object.assign(this, { id: taskId });
+    return this;
+  }
+
   toJSON() {
-    return pick(this, Object.keys(this));
+    return pick(this, Object.keys(Task.schema.response.properties));
   }
 
   static schema = {

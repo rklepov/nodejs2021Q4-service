@@ -6,11 +6,12 @@ const Task = require('./task.model');
 const TaskService = require('./task.service');
 
 const Board = require('../boards/board.model');
+const BoardService = require('../boards/board.service');
 
 class TaskRouter {
   constructor(fastify, db) {
     this.fastify = fastify;
-    this.service = new TaskService(db.tasks);
+    this.service = new TaskService(db.tasks, new BoardService(db.boards));
 
     this.fastify.get('/boards/:boardId/tasks', {
       handler: this.service.getAll.bind(this.service),

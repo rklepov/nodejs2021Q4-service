@@ -6,43 +6,41 @@ class TaskRepo {
   }
 
   async create(task) {
-    const id = await this.tasks.create(task);
-    return { id, ...task };
+    const { key: taskId } = await this.tasks.create(task);
+    return task.assignId(taskId);
   }
 
-  async read(id) {
-    const { hasValue: hasTask, value: task } = await this.tasks.read(id);
-    return { hasTask, task: { id, ...task } };
+  async read(taskId) {
+    const { hasValue: found, value: task } = await this.tasks.read(taskId);
+    return found ? task.assignId(taskId) : null;
   }
 
-  async update(id, newTask) {
-    const { updated, value: task } = await this.tasks.update(id, newTask);
-    return { updated, task };
+  async update(taskId, task) {
+    const { updated: found, value: updatedTask } = await this.tasks.update(
+      taskId,
+      task
+    );
+    return found ? updatedTask.assignId(taskId) : null;
   }
 
-  async delete(id) {
-    const { deleted } = await this.tasks.delete(id);
+  async delete(taskId) {
+    const { deleted } = await this.tasks.delete(taskId);
     return deleted;
   }
 
-  ls() {
-    return this.tasks.ls();
+  async ls() {
+    return TaskRepo.assignIds(await this.tasks.ls());
   }
 
-  async unassignUser(userId) {
-    // set userId of the deleted users' tasks to null
-    const tasks = await this.tasks.where((task) => task?.userId === userId);
+  async getTasksFor(pred) {
+    return TaskRepo.assignIds(await this.tasks.where(pred));
+  }
 
-    tasks.forEach(async (task) => {
-      const { id: taskId, ...updatedTask } = task;
-      updatedTask.userId = null;
-      await this.tasks.update(taskId, updatedTask);
-    });
+  static assignIds(tasks) {
+    return tasks.map(({ key: taskId, value: task }) => task.assignId(taskId));
   }
 }
 
 module.exports = TaskRepo;
-
-// __EOF__
 
 // __EOF__

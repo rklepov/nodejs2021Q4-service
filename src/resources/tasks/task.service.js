@@ -1,11 +1,14 @@
 // task.service.js
 
 const HTTP_STATUS = require('http-status');
+
 const TaskRepo = require('./task.memory.repository');
+const Task = require('./task.model');
 
 class TaskService {
-  constructor(tasks) {
+  constructor(tasks, boardService) {
     this.repo = new TaskRepo(tasks);
+    this.boardService = boardService;
   }
 
   async getAll(q, p) {
@@ -14,9 +17,9 @@ class TaskService {
 
   async getTask(q, p) {
     const { taskId } = q.params;
-    const { hasTask, task } = await this.repo.read(taskId);
+    const task = await this.repo.read(taskId);
 
-    if (hasTask) {
+    if (task) {
       p.send(task);
     } else {
       p.code(HTTP_STATUS.NOT_FOUND).send({ taskId });
@@ -25,16 +28,30 @@ class TaskService {
 
   async addTask(q, p) {
     const { boardId } = q.params;
-    const task = { ...q.body, boardId };
-    p.code(201).send(await this.repo.create(task));
+
+    if (!(await this.boardService.boardExists(boardId))) {
+      p.code(HTTP_STATUS.NOT_FOUND).send({ boardId });
+      return;
+    }
+
+    const task = new Task({ ...q.body, boardId });
+    p.code(HTTP_STATUS.CREATED).send(await this.repo.create(task));
   }
 
   async updateTask(q, p) {
-    const { taskId } = q.params;
-    const newTask = q.body;
-    const { updated, task } = await this.repo.update(taskId, newTask);
+    const { boardId, taskId } = q.params;
 
-    if (updated) {
+    if (!(await this.boardService.boardExists(boardId))) {
+      p.code(HTTP_STATUS.NOT_FOUND).send({ boardId });
+      return;
+    }
+
+    // TODO: check that the task with this Id is really assigned to the board
+
+    let task = new Task({ ...q.body, boardId });
+    task = await this.repo.update(taskId, task);
+
+    if (task) {
       p.send(task);
     } else {
       p.code(HTTP_STATUS.NOT_FOUND).send({ taskId });
@@ -42,7 +59,14 @@ class TaskService {
   }
 
   async deleteTask(q, p) {
-    const { taskId } = q.params;
+    const { boardId, taskId } = q.params;
+
+    if (!(await this.boardService.boardExists(boardId))) {
+      p.code(HTTP_STATUS.NOT_FOUND).send({ boardId });
+      return;
+    }
+
+    // TODO: check that the task with this Id is really assigned to the board
 
     if (await this.repo.delete(taskId)) {
       p.code(HTTP_STATUS.NO_CONTENT).send();
@@ -52,7 +76,26 @@ class TaskService {
   }
 
   async unassignUser(userId) {
-    await this.repo.unassignUser(userId);
+    // set userId of the deleted users' tasks to null
+    const tasks = await this.repo.getTasksFor(
+      (task) => task?.userId === userId
+    );
+
+    tasks.forEach(async (task) => {
+      const updatedTask = new Task(task);
+      updatedTask.userId = null;
+      await this.repo.update(task.id, updatedTask);
+    });
+  }
+
+  async deleteTasksFor(boardId) {
+    const tasks = await this.repo.getTasksFor(
+      (task) => task?.boardId === boardId
+    );
+
+    tasks.forEach(async (task) => {
+      await this.repo.delete(task.id);
+    });
   }
 }
 
