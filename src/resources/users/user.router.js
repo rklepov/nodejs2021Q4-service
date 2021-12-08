@@ -2,6 +2,8 @@
 
 const HTTP_STATUS = require('http-status');
 
+const { defineHandler } = require('../../common/handler');
+
 const User = require('./user.model');
 const UserService = require('./user.service');
 
@@ -13,7 +15,7 @@ class UserRouter {
     this.service = new UserService(db.users, new TaskService(db.tasks));
 
     this.fastify.get('/users', {
-      handler: this.service.getAll.bind(this.service),
+      handler: defineHandler(this, 'getAll'),
       schema: {
         response: {
           [HTTP_STATUS.OK]: {
@@ -25,7 +27,7 @@ class UserRouter {
     });
 
     this.fastify.get('/users/:userId', {
-      handler: this.service.getUser.bind(this.service),
+      handler: defineHandler(this, 'getUser'),
       schema: {
         params: User.schema.params,
         response: {
@@ -35,7 +37,7 @@ class UserRouter {
     });
 
     this.fastify.post('/users', {
-      handler: this.service.addUser.bind(this.service),
+      handler: defineHandler(this, 'addUser'),
       schema: {
         body: User.schema.request,
         response: {
@@ -45,7 +47,7 @@ class UserRouter {
     });
 
     this.fastify.put('/users/:userId', {
-      handler: this.service.updateUser.bind(this.service),
+      handler: defineHandler(this, 'updateUser'),
       schema: {
         params: User.schema.params,
         body: User.schema.request,
@@ -56,7 +58,7 @@ class UserRouter {
     });
 
     this.fastify.delete('/users/:userId', {
-      handler: this.service.deleteUser.bind(this.service),
+      handler: defineHandler(this, 'deleteUser'),
       schema: { params: User.schema.params },
     });
   }

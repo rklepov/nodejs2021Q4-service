@@ -2,6 +2,8 @@
 
 const HTTP_STATUS = require('http-status');
 
+const { Reply } = require('../../common/reply');
+
 const User = require('./user.model');
 const UserRepo = require('./user.memory.repository');
 
@@ -11,47 +13,44 @@ class UserService {
     this.taskService = taskService;
   }
 
-  async getAll(q, p) {
-    p.send(await this.repo.ls());
+  async getAll() {
+    return Reply(HTTP_STATUS.OK, await this.repo.ls());
   }
 
-  async getUser(q, p) {
-    const { userId } = q.params;
+  async getUser({ params }) {
+    const { userId } = params;
     const user = await this.repo.read(userId);
 
     if (user) {
-      p.send(user);
-    } else {
-      p.code(HTTP_STATUS.NOT_FOUND).send({ userId });
+      return Reply(HTTP_STATUS.OK, user);
     }
+    return Reply(HTTP_STATUS.NOT_FOUND, { userId });
   }
 
-  async addUser(q, p) {
-    const user = new User(q.body);
-    p.code(HTTP_STATUS.CREATED).send(await this.repo.create(user));
+  async addUser({ body }) {
+    const user = new User(body);
+    return Reply(HTTP_STATUS.CREATED, await this.repo.create(user));
   }
 
-  async updateUser(q, p) {
-    const { userId } = q.params;
-    let user = new User(q.body);
+  async updateUser({ params, body }) {
+    const { userId } = params;
+    let user = new User(body);
     user = await this.repo.update(userId, user);
 
     if (user) {
-      p.send(user);
-    } else {
-      p.code(HTTP_STATUS.NOT_FOUND).send({ userId });
+      return Reply(HTTP_STATUS.OK, user);
     }
+    return Reply(HTTP_STATUS.NOT_FOUND, { userId });
   }
 
-  async deleteUser(q, p) {
-    const { userId } = q.params;
+  async deleteUser({ params }) {
+    const { userId } = params;
 
     if (await this.repo.delete(userId)) {
       await this.taskService.unassignUser(userId);
-      p.code(HTTP_STATUS.NO_CONTENT).send();
-    } else {
-      p.code(HTTP_STATUS.NOT_FOUND).send({ userId });
+      return Reply(HTTP_STATUS.NO_CONTENT);
     }
+    return Reply(HTTP_STATUS.NOT_FOUND, { userId });
   }
 }
 
