@@ -17,8 +17,9 @@ class Storage {
 
   create(value) {
     const key = uuid.v4();
+
     this.map.set(key, value);
-    return key;
+    return { key, value };
   }
 
   read(key) {
@@ -35,17 +36,18 @@ class Storage {
   }
 
   delete(key) {
-    return { deleted: this.map.delete(key) };
+    const value = this.map.get(key);
+    return { deleted: this.map.delete(key), value };
   }
 
   ls() {
-    return [...this.map.entries()].map(([id, v]) => ({ id, ...v }));
+    return [...this.map.entries()].map(([key, value]) => ({ key, value }));
   }
 
   where(pred) {
     const records = [];
-    this.map.forEach((v, id) => {
-      if (pred(v)) records.push({ id, ...v });
+    this.map.forEach((value, key) => {
+      if (pred(value)) records.push({ key, value });
     });
     return records;
   }
