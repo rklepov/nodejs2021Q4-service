@@ -2,14 +2,15 @@
 
 const HTTP_STATUS = require('http-status');
 
-const UserRepo = require('./user.memory.repository');
-const UserService = require('./user.service');
 const User = require('./user.model');
+const UserService = require('./user.service');
+
+const TaskService = require('../tasks/task.service');
 
 class UserRouter {
   constructor(fastify, db) {
     this.fastify = fastify;
-    this.service = new UserService(new UserRepo(db));
+    this.service = new UserService(db.users, new TaskService(db.tasks));
 
     this.fastify.get('/users', {
       handler: this.service.getAll.bind(this.service),
