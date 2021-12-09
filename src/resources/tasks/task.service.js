@@ -1,11 +1,11 @@
 // task.service.js
 
-const HTTP_STATUS = require('http-status');
+import HTTP_STATUS from 'http-status';
 
-const { Reply } = require('../../common/reply');
+import { Reply } from '../../common/reply.js';
 
-const TaskRepo = require('./task.memory.repository');
-const Task = require('./task.model');
+import TaskRepo from './task.memory.repository.js';
+import Task from './task.model.js';
 
 class TaskService {
   constructor(tasks, boardService) {
@@ -95,6 +95,6 @@ class TaskService {
   }
 }
 
-module.exports = TaskService;
+export default TaskService;
 
 // __EOF__

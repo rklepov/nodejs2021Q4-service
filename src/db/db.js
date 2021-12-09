@@ -1,6 +1,6 @@
 // db.js
 
-const Table = require('./table');
+import Table from './table.js';
 
 function createDatabase() {
   return {
@@ -10,6 +10,6 @@ function createDatabase() {
   };
 }
 
-module.exports = { createDatabase };
+export { createDatabase };
 
 // __EOF__

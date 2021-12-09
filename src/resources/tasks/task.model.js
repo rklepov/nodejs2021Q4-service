@@ -1,8 +1,8 @@
 // task.model.js
 
-const pick = require('lodash.pick');
+import pick from 'lodash.pick';
 
-const Board = require('../boards/board.model');
+import Board from '../boards/board.model.js';
 
 // TODO: learn more about how to automatically generate this from OpenAPI spec
 class Task {
@@ -63,8 +63,8 @@ class Task {
       },
     },
   };
-};
+}
 
-module.exports = Task;
+export default Task;
 
 // __EOF__

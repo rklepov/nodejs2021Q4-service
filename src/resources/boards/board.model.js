@@ -1,9 +1,9 @@
 // board.model.js
 
-const pick = require('lodash.pick');
-const difference = require('lodash.difference');
+import pick from 'lodash.pick';
+import difference from 'lodash.difference';
 
-const Column = require('./column.model');
+import Column from './column.model.js';
 
 class Board {
   constructor(board) {
@@ -68,6 +68,6 @@ class Board {
   };
 }
 
-module.exports = Board;
+export default Board;
 
 // __EOF__

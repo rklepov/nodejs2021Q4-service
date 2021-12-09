@@ -1,11 +1,11 @@
 // user.service.js
 
-const HTTP_STATUS = require('http-status');
+import HTTP_STATUS from 'http-status';
 
-const { Reply } = require('../../common/reply');
+import { Reply } from '../../common/reply.js';
 
-const User = require('./user.model');
-const UserRepo = require('./user.memory.repository');
+import User from './user.model.js';
+import UserRepo from './user.memory.repository.js';
 
 class UserService {
   constructor(users, taskService) {
@@ -54,6 +54,6 @@ class UserService {
   }
 }
 
-module.exports = UserService;
+export default UserService;
 
 // __EOF__

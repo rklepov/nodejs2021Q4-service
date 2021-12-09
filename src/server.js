@@ -1,7 +1,7 @@
 // server.js
 
-const { PORT } = require('./common/config');
-const app = require('./app');
+import { PORT } from './common/config.js';
+import app from './app.js';
 
 app.start(PORT);
 

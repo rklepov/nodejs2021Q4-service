@@ -1,13 +1,13 @@
 // user.router.js
 
-const HTTP_STATUS = require('http-status');
+import HTTP_STATUS from 'http-status';
 
-const { defineHandler } = require('../../common/handler');
+import { defineHandler } from '../../common/handler.js';
 
-const User = require('./user.model');
-const UserService = require('./user.service');
+import User from './user.model.js';
+import UserService from './user.service.js';
 
-const TaskService = require('../tasks/task.service');
+import TaskService from '../tasks/task.service.js';
 
 class UserRouter {
   constructor(fastify, db) {
@@ -64,6 +64,6 @@ class UserRouter {
   }
 }
 
-module.exports = UserRouter;
+export default UserRouter;
 
 // __EOF__

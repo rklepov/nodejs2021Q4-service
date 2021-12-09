@@ -1,6 +1,6 @@
 // storage.js
 
-const uuid = require('uuid');
+import * as uuid from 'uuid';
 
 /**
  * Simple in-memory key-value storage. The implementation is based on Map which
@@ -53,6 +53,6 @@ class Storage {
   }
 }
 
-module.exports = Storage;
+export default Storage;
 
 // __EOF__

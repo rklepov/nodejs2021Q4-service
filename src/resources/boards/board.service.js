@@ -1,11 +1,11 @@
 // board.service.js
 
-const HTTP_STATUS = require('http-status');
+import HTTP_STATUS from 'http-status';
 
-const { Reply } = require('../../common/reply');
+import { Reply } from '../../common/reply.js';
 
-const Board = require('./board.model');
-const BoardRepo = require('./board.memory.repository');
+import Board from './board.model.js';
+import BoardRepo from './board.memory.repository.js';
 
 class BoardService {
   constructor(boards, taskService) {
@@ -58,6 +58,6 @@ class BoardService {
   }
 }
 
-module.exports = BoardService;
+export default BoardService;
 
 // __EOF__

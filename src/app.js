@@ -1,19 +1,22 @@
 // app.js
 
-const path = require('path');
+import path from 'path';
+import { fileURLToPath } from 'url';
 
 // const YAML = require('yamljs');
 
-const Fastify = require('fastify');
-const AjvCompiler = require('@fastify/ajv-compiler');
-const ajvFormats = require('ajv-formats');
-const swagger = require('fastify-swagger');
+import Fastify from 'fastify';
+import AjvCompiler from '@fastify/ajv-compiler';
+import ajvFormats from 'ajv-formats';
+import swagger from 'fastify-swagger';
 
-const { createDatabase } = require('./db/db');
+import { createDatabase } from './db/db.js';
 
-const UserRouter = require('./resources/users/user.router');
-const BoardRouter = require('./resources/boards/board.router');
-const TaskRouter = require('./resources/tasks/task.router');
+import UserRouter from './resources/users/user.router.js';
+import BoardRouter from './resources/boards/board.router.js';
+import TaskRouter from './resources/tasks/task.router.js';
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 class App {
   constructor() {
@@ -110,6 +113,6 @@ class App {
   }
 }
 
-module.exports = new App();
+export default new App();
 
 // __EOF__

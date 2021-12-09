@@ -1,6 +1,6 @@
 // user.model.js
 
-const pick = require('lodash.pick');
+import pick from 'lodash.pick';
 
 class User {
   constructor(user) {
@@ -51,6 +51,6 @@ class User {
   };
 }
 
-module.exports = User;
+export default User;
 
 // __EOF__

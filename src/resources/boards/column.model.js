@@ -1,7 +1,7 @@
 // column.model.js
 
-const uuid = require('uuid');
-const pick = require('lodash.pick');
+import * as uuid from 'uuid';
+import pick from 'lodash.pick';
 
 // TODO: so far columns are not exposed as individual entities
 //       (in fact this is not so easy to achieve because columns are nested
@@ -49,6 +49,6 @@ class Column {
   };
 }
 
-module.exports = Column;
+export default Column;
 
 // __EOF__

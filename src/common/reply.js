@@ -1,5 +1,7 @@
 // reply.js
 
-exports.Reply = (status, payload) => ({ status, payload });
+export function Reply(status, payload) {
+  return { status, payload };
+}
 
 // __EOF__

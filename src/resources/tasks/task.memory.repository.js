@@ -41,6 +41,6 @@ class TaskRepo {
   }
 }
 
-module.exports = TaskRepo;
+export default TaskRepo;
 
 // __EOF__

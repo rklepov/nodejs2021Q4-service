@@ -37,6 +37,6 @@ class BoardRepo {
   }
 }
 
-module.exports = BoardRepo;
+export default BoardRepo;
 
 // __EOF__

@@ -1,13 +1,13 @@
 // board.router.js
 
-const HTTP_STATUS = require('http-status');
+import HTTP_STATUS from 'http-status';
 
-const { defineHandler } = require('../../common/handler');
+import { defineHandler } from '../../common/handler.js';
 
-const Board = require('./board.model');
-const BoardService = require('./board.service');
+import Board from './board.model.js';
+import BoardService from './board.service.js';
 
-const TaskService = require('../tasks/task.service');
+import TaskService from '../tasks/task.service.js';
 
 class BoardRouter {
   constructor(fastify, db) {
@@ -64,6 +64,6 @@ class BoardRouter {
   }
 }
 
-module.exports = BoardRouter;
+export default BoardRouter;
 
 // __EOF__

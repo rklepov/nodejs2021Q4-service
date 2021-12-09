@@ -1,6 +1,6 @@
 // table.js
 
-const Storage = require('./storage.js');
+import Storage from './storage.js';
 
 /**
  * The abstraction of a database table.
@@ -48,6 +48,6 @@ class Table {
   }
 }
 
-module.exports = Table;
+export default Table;
 
 // __EOF__

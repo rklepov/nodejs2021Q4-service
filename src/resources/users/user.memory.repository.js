@@ -34,6 +34,6 @@ class UserRepo {
   }
 }
 
-module.exports = UserRepo;
+export default UserRepo;
 
 // __EOF__

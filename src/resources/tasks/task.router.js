@@ -1,14 +1,14 @@
 // task.router.js
 
-const HTTP_STATUS = require('http-status');
+import HTTP_STATUS from 'http-status';
 
-const { defineHandler } = require('../../common/handler');
+import { defineHandler } from '../../common/handler.js';
 
-const Task = require('./task.model');
-const TaskService = require('./task.service');
+import Task from './task.model.js';
+import TaskService from './task.service.js';
 
-const Board = require('../boards/board.model');
-const BoardService = require('../boards/board.service');
+import Board from '../boards/board.model.js';
+import BoardService from '../boards/board.service.js';
 
 class TaskRouter {
   constructor(fastify, db) {
@@ -69,6 +69,6 @@ class TaskRouter {
   }
 }
 
-module.exports = TaskRouter;
+export default TaskRouter;
 
 // __EOF__
