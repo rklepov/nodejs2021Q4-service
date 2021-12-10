@@ -16,7 +16,8 @@ import UserRouter from './resources/users/user.router.js';
 import BoardRouter from './resources/boards/board.router.js';
 import TaskRouter from './resources/tasks/task.router.js';
 
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 class App {
   constructor() {
