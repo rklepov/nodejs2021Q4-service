@@ -1,0 +1,11 @@
+{
+  "restartable": "rs",
+  "ignore": ["test/", "build/"],
+  "verbose": true,
+  "exec": "npm start",
+  "watch": ["src/"],
+  "env": {
+    "NODE_ENV": "development"
+  },
+  "ext": "js,json,ts"
+}

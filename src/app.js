@@ -1,7 +1,6 @@
 // app.js
 
 import path from 'path';
-import { fileURLToPath } from 'url';
 
 // const YAML = require('yamljs');
 
@@ -15,9 +14,6 @@ import { createDatabase } from './db/db.js';
 import UserRouter from './resources/users/user.router.js';
 import BoardRouter from './resources/boards/board.router.js';
 import TaskRouter from './resources/tasks/task.router.js';
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
 
 class App {
   constructor() {
