@@ -2,7 +2,10 @@
 
 import * as uuid from 'uuid';
 
-type K = string;
+// TODO: preferably should be "the return type of uuid.v4()" rather than tha
+//       hardcoded primitive type.
+//       Also this should be some global definition somewhere.
+type KeyT = string;
 
 /**
  * Simple in-memory key-value storage. The implementation is based on Map which
@@ -12,14 +15,14 @@ type K = string;
  * for the sake of simplicity and the ability to use Map I've decided to
  * keep this solution for the time being.
  */
-class Storage<V> {
-  map: Map<K, V>;
+class Storage<ValueT> {
+  map: Map<KeyT, ValueT>;
 
   constructor() {
     this.map = new Map();
   }
 
-  create(value: V) {
+  create(value: ValueT) {
     const key = uuid.v4();
 
     this.map.set(key, value);
@@ -31,7 +34,7 @@ class Storage<V> {
     return { hasValue: !!value, value };
   }
 
-  update(key: string, value: V) {
+  update(key: string, value: ValueT) {
     if (this.map.has(key)) {
       this.map.set(key, value);
       return { updated: true, value };
@@ -48,9 +51,9 @@ class Storage<V> {
     return [...this.map.entries()].map(([key, value]) => ({ key, value }));
   }
 
-  where(pred: (v: V) => boolean) {
-    const records: { key: K; value: V }[] = [];
-    this.map.forEach((value: V, key: K) => {
+  where(pred: (v: ValueT) => boolean) {
+    const records: { key: KeyT; value: ValueT }[] = [];
+    this.map.forEach((value: ValueT, key: KeyT) => {
       if (pred(value)) records.push({ key, value });
     });
     return records;

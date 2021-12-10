@@ -9,7 +9,7 @@ import AjvCompiler from '@fastify/ajv-compiler';
 import ajvFormats from 'ajv-formats';
 import swagger from 'fastify-swagger';
 
-import { createDatabase } from './db/db.js';
+import { createDatabase } from './db/db';
 
 import UserRouter from './resources/users/user.router.js';
 import BoardRouter from './resources/boards/board.router.js';

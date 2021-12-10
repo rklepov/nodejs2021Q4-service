@@ -1,6 +1,6 @@
-// db.js
+// db.ts
 
-import Table from './table.js';
+import Table from './table';
 
 function createDatabase() {
   return {
