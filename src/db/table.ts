@@ -1,11 +1,6 @@
 // table.ts
 
-import Storage from './storage';
-
-// TODO: preferably should be "the return type of uuid.v4()" rather than tha
-//       hardcoded primitive type.
-//       Also this should be some global definition somewhere.
-type KeyT = string;
+import Storage, { KeyT } from './storage';
 
 /**
  * The abstraction of a database table.
@@ -79,6 +74,7 @@ class Table<ValueT> {
   }
 }
 
+export { KeyT };
 export default Table;
 
 // __EOF__

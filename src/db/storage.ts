@@ -60,6 +60,7 @@ class Storage<ValueT> {
   }
 }
 
+export { KeyT };
 export default Storage;
 
 // __EOF__
