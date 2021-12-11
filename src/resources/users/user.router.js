@@ -1,11 +1,61 @@
-const router = require('express').Router();
+// user.router.js
+
+const UserRepo = require('./user.memory.repository');
+const UserService = require('./user.service');
 const User = require('./user.model');
-const usersService = require('./user.service');
 
-router.route('/').get(async (req, res) => {
-  const users = await usersService.getAll();
-  // map user fields to exclude secret fields like "password"
-  res.json(users.map(User.toResponse));
-});
+class UserRouter {
+  constructor(fastify, db) {
+    this.fastify = fastify;
+    this.service = new UserService(new UserRepo(db));
 
-module.exports = router;
+    this.fastify.get('/users', {
+      handler: this.service.getAll.bind(this.service),
+      schema: {
+        response: {
+          200: {
+            type: 'array',
+            items: User.schema.response,
+          },
+        },
+      },
+    });
+
+    this.fastify.get('/users/:userId', {
+      handler: this.service.getUser.bind(this.service),
+      schema: {
+        response: {
+          200: User.schema.response,
+        },
+      },
+    });
+
+    this.fastify.post('/users', {
+      handler: this.service.addUser.bind(this.service),
+      schema: {
+        body: User.schema.request,
+        response: {
+          201: User.schema.response,
+        },
+      },
+    });
+
+    this.fastify.put('/users/:userId', {
+      handler: this.service.updateUser.bind(this.service),
+      schema: {
+        body: User.schema.request,
+        response: {
+          200: User.schema.response,
+        },
+      },
+    });
+
+    this.fastify.delete('/users/:userId', {
+      handler: this.service.deleteUser.bind(this.service),
+    });
+  }
+}
+
+module.exports = UserRouter;
+
+// __EOF__

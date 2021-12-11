@@ -1,22 +1,29 @@
-const uuid = require('uuid');
+// user.model.js
 
-class User {
-  constructor({
-    id = uuid(),
-    name = 'USER',
-    login = 'user',
-    password = 'P@55w0rd'
-  } = {}) {
-    this.id = id;
-    this.name = name;
-    this.login = login;
-    this.password = password;
-  }
+// TODO: learn more about how to automatically generate this from OpenAPI spec
+const User = {
+  schema: {
+    request: {
+      type: 'object',
+      required: ['name'],
+      properties: {
+        name: { type: 'string' },
+        login: { type: 'string' },
+        password: { type: 'string' },
+      },
+    },
 
-  static toResponse(user) {
-    const { id, name, login } = user;
-    return { id, name, login };
-  }
-}
+    response: {
+      type: 'object',
+      properties: {
+        id: { type: 'string' },
+        name: { type: 'string' },
+        login: { type: 'string' },
+      },
+    },
+  },
+};
 
 module.exports = User;
+
+// __EOF__
