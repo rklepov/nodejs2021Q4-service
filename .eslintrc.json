@@ -23,6 +23,7 @@
       }
     },
     "node": {
+      "resolvePaths": ["__dirname"],
       "tryExtensions": [".js", ".ts"]
     }
   },
