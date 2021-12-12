@@ -1,11 +1,20 @@
-// board.model.js
+// board.model.ts
 
 import pick from 'lodash.pick';
 import difference from 'lodash.difference';
 
-import Column from './column.model.js';
+import { BoardId } from '../../db/database';
+
+import { Column } from './column.model';
 
 class Board {
+  // TODO: wonder if the class fields can be somehow inferred from the JSON schema below?
+  id?: BoardId = '';
+
+  title = '';
+
+  columns: Column[] = [];
+
   constructor(board) {
     Object.assign(
       this,
@@ -20,12 +29,12 @@ class Board {
     );
   }
 
-  assignId(boardId) {
+  assignId(boardId: BoardId) {
     Object.assign(this, { id: boardId });
     return this;
   }
 
-  assignColumns(columns) {
+  assignColumns(columns: Column[]) {
     this.columns = columns || [];
     return this;
   }

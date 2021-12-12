@@ -1,12 +1,24 @@
-// column.model.js
+// column.model.ts
 
 import * as uuid from 'uuid';
 import pick from 'lodash.pick';
+
+import { BoardId } from '../../db/database';
+
+// TODO: inherit from Db table key type
+type ColumnId = string;
 
 // TODO: so far columns are not exposed as individual entities
 //       (in fact this is not so easy to achieve because columns are nested
 //        to a board and at the same the columns needs to be assigned an Id).
 class Column {
+  // TODO: wonder if the class fields can be somehow inferred from the JSON schema below?
+  id: ColumnId = '';
+
+  title = '';
+
+  order = NaN;
+
   constructor(column) {
     Object.assign(
       this,
@@ -18,7 +30,7 @@ class Column {
     );
   }
 
-  assignToBoard(boardId) {
+  assignToBoard(boardId: BoardId) {
     Object.assign(this, { boardId });
     return this;
   }
@@ -49,6 +61,7 @@ class Column {
   };
 }
 
+export { ColumnId, Column };
 export default Column;
 
 // __EOF__

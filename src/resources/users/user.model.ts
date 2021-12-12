@@ -1,8 +1,19 @@
-// user.model.js
+// user.model.ts
 
 import pick from 'lodash.pick';
 
+import { UserId } from '../../db/database';
+
 class User {
+  // TODO: wonder if the class fields can be somehow inferred from the JSON schema below?
+  id?: UserId = '';
+
+  name = '';
+
+  login? = '';
+
+  password? = '';
+
   constructor(user) {
     Object.assign(
       this,
@@ -10,7 +21,7 @@ class User {
     );
   }
 
-  assignId(userId) {
+  assignId(userId: UserId) {
     Object.assign(this, { id: userId });
     return this;
   }
@@ -51,6 +62,7 @@ class User {
   };
 }
 
+export { UserId };
 export default User;
 
 // __EOF__

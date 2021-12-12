@@ -1,11 +1,27 @@
-// task.model.js
+// task.model.ts
 
 import pick from 'lodash.pick';
 
-import Board from '../boards/board.model.js';
+import { UserId, BoardId, TaskId, ColumnId } from '../../db/database';
 
-// TODO: learn more about how to automatically generate this from OpenAPI spec
+import Board from '../boards/board.model';
+
 class Task {
+  // TODO: wonder if the class fields can be somehow inferred from the JSON schema below?
+  id?: TaskId = '';
+
+  title = '';
+
+  order = NaN;
+
+  boardId: BoardId = '';
+
+  description? = '';
+
+  userId?: UserId | null = '';
+
+  columnId?: ColumnId | null = '';
+
   constructor(task) {
     Object.assign(
       this,
@@ -18,7 +34,7 @@ class Task {
     );
   }
 
-  assignId(taskId) {
+  assignId(taskId: TaskId) {
     Object.assign(this, { id: taskId });
     return this;
   }
@@ -27,6 +43,7 @@ class Task {
     return pick(this, Object.keys(Task.schema.response.properties));
   }
 
+  // TODO: learn more about how to automatically generate this from OpenAPI spec
   static schema = {
     params: {
       type: 'object',
