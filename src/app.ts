@@ -1,25 +1,42 @@
-// app.js
+// app.ts
 
 import path from 'path';
+import http from 'http';
 
-// const YAML = require('yamljs');
-
-import Fastify from 'fastify';
-import AjvCompiler from '@fastify/ajv-compiler';
-import ajvFormats from 'ajv-formats';
+import fastify, { FastifyInstance, FastifyLoggerInstance } from 'fastify';
 import swagger from 'fastify-swagger';
 
-import { createDatabase } from './db/db';
+import AjvCompiler from '@fastify/ajv-compiler';
+import ajvFormats from 'ajv-formats';
 
-import UserRouter from './resources/users/user.router.js';
-import BoardRouter from './resources/boards/board.router.js';
-import TaskRouter from './resources/tasks/task.router.js';
+import { Database, createDatabase } from './db/database';
+
+import UserRouter from './resources/users/user.router';
+import BoardRouter from './resources/boards/board.router';
+import TaskRouter from './resources/tasks/task.router';
 
 class App {
+  fastify: FastifyInstance<
+    http.Server,
+    http.IncomingMessage,
+    http.ServerResponse,
+    FastifyLoggerInstance
+  >;
+
+  db: Database;
+
+  apiSpec: string; /* path */
+
+  userRouter: UserRouter;
+
+  boardRouter: BoardRouter;
+
+  taskRouter: TaskRouter;
+
   constructor() {
     this.db = createDatabase();
 
-    this.fastify = Fastify({
+    this.fastify = fastify({
       logger: {
         prettyPrint: true,
         serializers: {
@@ -46,9 +63,6 @@ class App {
           useDefaults: true,
           coerceTypes: true,
           allErrors: true,
-          strictTypes: true,
-          strictRequired: true,
-          validateFormats: true,
         },
         plugins: [ajvFormats],
       },
@@ -78,35 +92,32 @@ class App {
       routePrefix: '/doc',
       mode: 'static',
       specification: {
+        baseDir: path.dirname(this.apiSpec),
         path: this.apiSpec,
       },
     });
 
     this.userRouter = new UserRouter(this.fastify, this.db);
     this.boardRouter = new BoardRouter(this.fastify, this.db);
-    this.boardRouter = new TaskRouter(this.fastify, this.db);
+    this.taskRouter = new TaskRouter(this.fastify, this.db);
   }
 
-  start(port) {
-    return this.fastify
-      .listen(port)
-      .then((addr) => {
-        this.fastify.log.info(`[start] App is running on ${addr}`);
-      })
-      .catch((e) => {
-        this.fastify.log.error(e);
-      });
+  async start(port: number) {
+    try {
+      const addr = await this.fastify.listen(port);
+      this.fastify.log.info(`[start] App is running on ${addr}`);
+    } catch (e) {
+      this.fastify.log.error(e);
+    }
   }
 
-  stop() {
-    return this.fastify
-      .close()
-      .then(() => {
-        this.fastify.log.info('[stop] Server closed');
-      })
-      .catch((e) => {
-        this.fastify.log.error(e);
-      });
+  async stop() {
+    try {
+      await this.fastify.close();
+      this.fastify.log.info('[stop] Server closed');
+    } catch (e) {
+      this.fastify.log.error(e);
+    }
   }
 }
 
