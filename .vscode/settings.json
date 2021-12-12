@@ -5,5 +5,8 @@
   "javascript.validate.enable": false,
   "[javascript]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
-  }
+  },
+  "cSpell.words": [
+    "fastify"
+  ]
 }
