@@ -1,17 +1,34 @@
-// task.router.js
+// task.router.ts
 
 import HTTP_STATUS from 'http-status';
 
-import { defineHandler } from '../../common/handler.js';
+import http from 'http';
+import { FastifyInstance, FastifyLoggerInstance } from 'fastify';
 
-import Task from './task.model.js';
-import TaskService from './task.service.js';
+import { defineHandler } from '../../common/handler';
 
-import Board from '../boards/board.model.js';
-import BoardService from '../boards/board.service.js';
+import { Database } from '../../db/database';
+
+import Task from './task.model';
+import TaskService from './task.service';
+
+import Board from '../boards/board.model';
+import BoardService from '../boards/board.service';
+
+// TODO: this should be inherited from the common declaration
+type Server = FastifyInstance<
+  http.Server,
+  http.IncomingMessage,
+  http.ServerResponse,
+  FastifyLoggerInstance
+>;
 
 class TaskRouter {
-  constructor(fastify, db) {
+  fastify: Server;
+
+  service: TaskService;
+
+  constructor(fastify: Server, db: Database) {
     this.fastify = fastify;
     this.service = new TaskService(db.tasks, new BoardService(db.boards));
 
@@ -52,9 +69,7 @@ class TaskRouter {
     this.fastify.put('/boards/:boardId/tasks/:taskId', {
       handler: defineHandler(this, 'updateTask'),
       schema: {
-        schema: {
-          params: Task.schema.params,
-        },
+        params: Task.schema.params,
         body: Task.schema.request,
         response: {
           [HTTP_STATUS.OK]: Task.schema.response,

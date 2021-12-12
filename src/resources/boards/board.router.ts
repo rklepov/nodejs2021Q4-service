@@ -1,16 +1,33 @@
-// board.router.js
+// board.router.ts
 
 import HTTP_STATUS from 'http-status';
 
-import { defineHandler } from '../../common/handler.js';
+import http from 'http';
+import { FastifyInstance, FastifyLoggerInstance } from 'fastify';
 
-import Board from './board.model.js';
-import BoardService from './board.service.js';
+import { defineHandler } from '../../common/handler';
 
-import TaskService from '../tasks/task.service.js';
+import { Database } from '../../db/database';
+
+import Board from './board.model';
+import BoardService from './board.service';
+
+import TaskService from '../tasks/task.service';
+
+// TODO: this should be inherited from the common declaration
+type Server = FastifyInstance<
+  http.Server,
+  http.IncomingMessage,
+  http.ServerResponse,
+  FastifyLoggerInstance
+>;
 
 class BoardRouter {
-  constructor(fastify, db) {
+  fastify: Server;
+
+  service: BoardService;
+
+  constructor(fastify: Server, db: Database) {
     this.fastify = fastify;
     this.service = new BoardService(db.boards, new TaskService(db.tasks));
 

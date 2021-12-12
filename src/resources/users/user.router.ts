@@ -1,16 +1,33 @@
-// user.router.js
+// user.router.ts
 
 import HTTP_STATUS from 'http-status';
 
-import { defineHandler } from '../../common/handler.js';
+import http from 'http';
+import { FastifyInstance, FastifyLoggerInstance } from 'fastify';
 
-import User from './user.model.js';
-import UserService from './user.service.js';
+import { defineHandler } from '../../common/handler';
 
-import TaskService from '../tasks/task.service.js';
+import { Database } from '../../db/database';
+
+import User from './user.model';
+import UserService from './user.service';
+
+import TaskService from '../tasks/task.service';
+
+// TODO: this should be inherited from the common declaration
+type Server = FastifyInstance<
+  http.Server,
+  http.IncomingMessage,
+  http.ServerResponse,
+  FastifyLoggerInstance
+>;
 
 class UserRouter {
-  constructor(fastify, db) {
+  fastify: Server;
+
+  service: UserService;
+
+  constructor(fastify: Server, db: Database) {
     this.fastify = fastify;
     this.service = new UserService(db.users, new TaskService(db.tasks));
 
