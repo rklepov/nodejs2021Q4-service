@@ -34,6 +34,7 @@ class UserRouter {
     this.fastify.get('/users', {
       handler: defineHandler(this, 'getAll'),
       schema: {
+        tags: ['user'],
         response: {
           [HTTP_STATUS.OK]: {
             type: 'array',
@@ -46,6 +47,7 @@ class UserRouter {
     this.fastify.get('/users/:userId', {
       handler: defineHandler(this, 'getUser'),
       schema: {
+        tags: User.schema.tags,
         params: User.schema.params,
         response: {
           [HTTP_STATUS.OK]: User.schema.response,
@@ -56,6 +58,7 @@ class UserRouter {
     this.fastify.post('/users', {
       handler: defineHandler(this, 'addUser'),
       schema: {
+        tags: User.schema.tags,
         body: User.schema.request,
         response: {
           [HTTP_STATUS.CREATED]: User.schema.response,
@@ -66,6 +69,7 @@ class UserRouter {
     this.fastify.put('/users/:userId', {
       handler: defineHandler(this, 'updateUser'),
       schema: {
+        tags: User.schema.tags,
         params: User.schema.params,
         body: User.schema.request,
         response: {
@@ -76,7 +80,7 @@ class UserRouter {
 
     this.fastify.delete('/users/:userId', {
       handler: defineHandler(this, 'deleteUser'),
-      schema: { params: User.schema.params },
+      schema: { tags: User.schema.tags, params: User.schema.params },
     });
   }
 }

@@ -45,6 +45,8 @@ class Task {
 
   // TODO: learn more about how to automatically generate this from OpenAPI spec
   static schema = {
+    tags: ['task'],
+
     params: {
       type: 'object',
       additionalProperties: false,

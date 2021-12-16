@@ -34,6 +34,7 @@ class BoardRouter {
     this.fastify.get('/boards', {
       handler: defineHandler(this, 'getAll'),
       schema: {
+        tags: Board.schema.tags,
         response: {
           [HTTP_STATUS.OK]: {
             type: 'array',
@@ -46,6 +47,7 @@ class BoardRouter {
     this.fastify.get('/boards/:boardId', {
       handler: defineHandler(this, 'getBoard'),
       schema: {
+        tags: Board.schema.tags,
         params: Board.schema.params,
         response: {
           [HTTP_STATUS.OK]: Board.schema.response,
@@ -56,6 +58,7 @@ class BoardRouter {
     this.fastify.post('/boards', {
       handler: defineHandler(this, 'addBoard'),
       schema: {
+        tags: Board.schema.tags,
         body: Board.schema.request,
         response: {
           [HTTP_STATUS.CREATED]: Board.schema.response,
@@ -66,6 +69,7 @@ class BoardRouter {
     this.fastify.put('/boards/:boardId', {
       handler: defineHandler(this, 'updateBoard'),
       schema: {
+        tags: Board.schema.tags,
         params: Board.schema.params,
         body: Board.schema.request,
         response: {
@@ -76,7 +80,7 @@ class BoardRouter {
 
     this.fastify.delete('/boards/:boardId', {
       handler: defineHandler(this, 'deleteBoard'),
-      schema: { params: Board.schema.params },
+      schema: { tags: Board.schema.tags, params: Board.schema.params },
     });
   }
 }

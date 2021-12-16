@@ -48,6 +48,8 @@ class Board {
 
   // TODO: learn more about how to automatically generate this from OpenAPI spec
   static schema = {
+    tags: ['board'],
+
     params: {
       type: 'object',
       additionalProperties: false,
