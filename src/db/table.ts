@@ -1,6 +1,6 @@
 // table.ts
 
-import Storage, { KeyT } from './storage';
+import Storage from './storage';
 
 /**
  * The abstraction of a database table.
@@ -8,19 +8,19 @@ import Storage, { KeyT } from './storage';
  *
  *  TODO: review the definitions of Promise return types, can be simplified?
  */
-class Table<ValueT> {
-  storage: Storage<ValueT>;
+class Table<KeyT, ValueT> {
+  storage: Storage<KeyT, ValueT>;
 
   constructor() {
-    this.storage = new Storage<ValueT>();
+    this.storage = new Storage();
   }
 
-  create(value: ValueT) {
+  create(key: KeyT, value: ValueT) {
     return new Promise<{
       key: KeyT;
       value: ValueT;
     }>((resolve) => {
-      resolve(this.storage.create(value));
+      resolve(this.storage.create(key, value));
     });
   }
 
@@ -74,7 +74,6 @@ class Table<ValueT> {
   }
 }
 
-export { KeyT };
 export default Table;
 
 // __EOF__
