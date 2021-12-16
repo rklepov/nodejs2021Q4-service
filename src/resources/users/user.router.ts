@@ -2,8 +2,7 @@
 
 import HTTP_STATUS from 'http-status';
 
-import http from 'http';
-import { FastifyInstance, FastifyLoggerInstance } from 'fastify';
+import fastify from 'fastify';
 
 import { defineHandler } from '../../common/handler';
 
@@ -14,21 +13,15 @@ import UserService from './user.service';
 
 import TaskService from '../tasks/task.service';
 
-// TODO: this should be inherited from the common declaration
-type Server = FastifyInstance<
-  http.Server,
-  http.IncomingMessage,
-  http.ServerResponse,
-  FastifyLoggerInstance
->;
+type Server = ReturnType<typeof fastify>;
 
 class UserRouter {
   fastify: Server;
 
   service: UserService;
 
-  constructor(fastify: Server, db: Database) {
-    this.fastify = fastify;
+  constructor(server: Server, db: Database) {
+    this.fastify = server;
     this.service = new UserService(db.users, new TaskService(db.tasks));
 
     this.fastify.get('/users', {

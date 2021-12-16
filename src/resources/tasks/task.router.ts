@@ -2,8 +2,7 @@
 
 import HTTP_STATUS from 'http-status';
 
-import http from 'http';
-import { FastifyInstance, FastifyLoggerInstance } from 'fastify';
+import fastify from 'fastify';
 
 import { defineHandler } from '../../common/handler';
 
@@ -15,21 +14,15 @@ import TaskService from './task.service';
 import Board from '../boards/board.model';
 import BoardService from '../boards/board.service';
 
-// TODO: this should be inherited from the common declaration
-type Server = FastifyInstance<
-  http.Server,
-  http.IncomingMessage,
-  http.ServerResponse,
-  FastifyLoggerInstance
->;
+type Server = ReturnType<typeof fastify>;
 
 class TaskRouter {
   fastify: Server;
 
   service: TaskService;
 
-  constructor(fastify: Server, db: Database) {
-    this.fastify = fastify;
+  constructor(server: Server, db: Database) {
+    this.fastify = server;
     this.service = new TaskService(db.tasks, new BoardService(db.boards));
 
     this.fastify.get('/boards/:boardId/tasks', {
@@ -83,7 +76,7 @@ class TaskRouter {
 
     this.fastify.delete('/boards/:boardId/tasks/:taskId', {
       handler: defineHandler(this, 'deleteTask'),
-      schema: { tags: Task.schema.tags,params: Task.schema.params },
+      schema: { tags: Task.schema.tags, params: Task.schema.params },
     });
   }
 }

@@ -1,9 +1,8 @@
 // app.ts
 
 import path from 'path';
-import http from 'http';
 
-import fastify, { FastifyInstance, FastifyLoggerInstance } from 'fastify';
+import fastify from 'fastify';
 import swagger from 'fastify-swagger';
 
 // import AjvCompiler from '@fastify/ajv-compiler';
@@ -16,12 +15,7 @@ import BoardRouter from './resources/boards/board.router';
 import TaskRouter from './resources/tasks/task.router';
 
 class App {
-  fastify: FastifyInstance<
-    http.Server,
-    http.IncomingMessage,
-    http.ServerResponse,
-    FastifyLoggerInstance
-  >;
+  fastify: ReturnType<typeof fastify>;
 
   db: Database;
 
