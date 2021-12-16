@@ -4,11 +4,11 @@ import HTTP_STATUS from 'http-status';
 
 import fastify from 'fastify';
 
-import { defineHandler } from '../../common/handler';
+// import { defineHandler } from '../../common/handler';
 
 import { Database } from '../../db/database';
 
-import Board from './board.model';
+import Board, { IBoard, IBoardId } from './board.model';
 import BoardService from './board.service';
 
 import TaskService from '../tasks/task.service';
@@ -24,8 +24,12 @@ class BoardRouter {
     this.fastify = server;
     this.service = new BoardService(db.boards, new TaskService(db.tasks));
 
-    this.fastify.get<>('/boards', {
-      handler: defineHandler(this, 'getAll'),
+    this.fastify.get<{ Params: Record<string, never> }>('/boards', {
+      // handler: defineHandler(this, 'getAll'),
+      handler: async (_, p) => {
+        const { status, payload } = await this.service.getAll();
+        await p.code(status).send(payload);
+      },
       schema: {
         tags: Board.schema.tags,
         response: {
@@ -37,8 +41,12 @@ class BoardRouter {
       },
     });
 
-    this.fastify.get('/boards/:boardId', {
-      handler: defineHandler(this, 'get'),
+    this.fastify.get<{ Params: IBoardId }>('/boards/:boardId', {
+      // handler: defineHandler(this, 'get'),
+      handler: async (q, p) => {
+        const { status, payload } = await this.service.get(q);
+        await p.code(status).send(payload);
+      },
       schema: {
         tags: Board.schema.tags,
         params: Board.schema.params,
@@ -48,8 +56,12 @@ class BoardRouter {
       },
     });
 
-    this.fastify.post('/boards', {
-      handler: defineHandler(this, 'add'),
+    this.fastify.post<{ Body: IBoard }>('/boards', {
+      // handler: defineHandler(this, 'add'),
+      handler: async (q, p) => {
+        const { status, payload } = await this.service.add(q);
+        await p.code(status).send(payload);
+      },
       schema: {
         tags: Board.schema.tags,
         body: Board.schema.request,
@@ -59,8 +71,12 @@ class BoardRouter {
       },
     });
 
-    this.fastify.put('/boards/:boardId', {
-      handler: defineHandler(this, 'update'),
+    this.fastify.put<{ Params: IBoardId; Body: IBoard }>('/boards/:boardId', {
+      // handler: defineHandler(this, 'update'),
+      handler: async (q, p) => {
+        const { status, payload } = await this.service.update(q);
+        await p.code(status).send(payload);
+      },
       schema: {
         tags: Board.schema.tags,
         params: Board.schema.params,
@@ -71,8 +87,12 @@ class BoardRouter {
       },
     });
 
-    this.fastify.delete('/boards/:boardId', {
-      handler: defineHandler(this, 'delete'),
+    this.fastify.delete<{ Params: IBoardId }>('/boards/:boardId', {
+      // handler: defineHandler(this, 'delete'),
+      handler: async (q, p) => {
+        const { status, payload } = await this.service.delete(q);
+        await p.code(status).send(payload);
+      },
       schema: { tags: Board.schema.tags, params: Board.schema.params },
     });
   }

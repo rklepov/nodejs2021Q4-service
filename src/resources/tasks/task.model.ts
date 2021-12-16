@@ -2,7 +2,7 @@
 
 import pick from 'lodash.pick';
 
-import { TaskId, BoardId, TaskId, ColumnId } from '../../db/database';
+import { TaskId, BoardId, ColumnId } from '../../db/database';
 
 import Board, { IBoardId } from '../boards/board.model';
 

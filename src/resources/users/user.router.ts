@@ -4,7 +4,7 @@ import HTTP_STATUS from 'http-status';
 
 import fastify from 'fastify';
 
-import { defineHandler } from '../../common/handler';
+// import { defineHandler } from '../../common/handler';
 
 import { Database } from '../../db/database';
 
@@ -25,7 +25,11 @@ class UserRouter {
     this.service = new UserService(db.users, new TaskService(db.tasks));
 
     this.fastify.get<{ Params: Record<string, never> }>('/users', {
-      handler: defineHandler(this, 'getAll'),
+      // handler: defineHandler(this, 'getAll'),
+      handler: async (_, p) => {
+        const { status, payload } = await this.service.getAll();
+        await p.code(status).send(payload);
+      },
       schema: {
         tags: ['user'],
         response: {
@@ -38,7 +42,11 @@ class UserRouter {
     });
 
     this.fastify.get<{ Params: IUserId }>('/users/:userId', {
-      handler: defineHandler(this, 'get'),
+      // handler: defineHandler(this, 'get'),
+      handler: async (q, p) => {
+        const { status, payload } = await this.service.get(q);
+        await p.code(status).send(payload);
+      },
       schema: {
         tags: User.schema.tags,
         params: User.schema.params,
@@ -49,7 +57,11 @@ class UserRouter {
     });
 
     this.fastify.post<{ Body: IUser }>('/users', {
-      handler: defineHandler(this, 'add'),
+      // handler: defineHandler(this, 'add'),
+      handler: async (q, p) => {
+        const { status, payload } = await this.service.add(q);
+        await p.code(status).send(payload);
+      },
       schema: {
         tags: User.schema.tags,
         body: User.schema.request,
@@ -60,7 +72,11 @@ class UserRouter {
     });
 
     this.fastify.put<{ Params: IUserId; Body: IUser }>('/users/:userId', {
-      handler: defineHandler(this, 'update'),
+      // handler: defineHandler(this, 'update'),
+      handler: async (q, p) => {
+        const { status, payload } = await this.service.update(q);
+        await p.code(status).send(payload);
+      },
       schema: {
         tags: User.schema.tags,
         params: User.schema.params,
@@ -72,7 +88,11 @@ class UserRouter {
     });
 
     this.fastify.delete<{ Params: IUserId }>('/users/:userId', {
-      handler: defineHandler(this, 'delete'),
+      // handler: defineHandler(this, 'delete'),
+      handler: async (q, p) => {
+        const { status, payload } = await this.service.delete(q);
+        await p.code(status).send(payload);
+      },
       schema: { tags: User.schema.tags, params: User.schema.params },
     });
   }

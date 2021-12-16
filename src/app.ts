@@ -102,6 +102,7 @@ class App {
       this.fastify.log.info(`[start] App is running on ${addr}`);
     } catch (e) {
       this.fastify.log.error(e);
+      throw e;
     }
   }
 
@@ -111,6 +112,7 @@ class App {
       this.fastify.log.info('[stop] Server closed');
     } catch (e) {
       this.fastify.log.error(e);
+      throw e;
     }
   }
 }

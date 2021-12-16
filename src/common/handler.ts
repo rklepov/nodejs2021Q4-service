@@ -17,8 +17,8 @@ export function defineHandler<
   ReplyT extends FastifyReply
 >(router: IRouter, f: ServiceCalls) {
   return async (q: RequesT, p: ReplyT) => {
-    const { status, payload } = await router.service[f](q);
-    await p.code(status).send(payload);
+    // const { status, payload } = await router.service[f](q);
+    // await p.code(status).send(payload);
   };
 }
 
