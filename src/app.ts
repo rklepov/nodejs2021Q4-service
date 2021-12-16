@@ -121,6 +121,6 @@ class App {
   }
 }
 
-export default new App();
+export default App;
 
 // __EOF__
