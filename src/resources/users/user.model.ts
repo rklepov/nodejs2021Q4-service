@@ -4,17 +4,27 @@ import pick from 'lodash.pick';
 
 import { UserId } from '../../db/database';
 
-class User {
+interface IUserId {
+  userId: UserId;
+}
+
+interface IUser {
+  name: string;
+  login?: string;
+  password?: string;
+}
+
+class User implements IUserId, IUser {
   // TODO: wonder if the class fields can be somehow inferred from the JSON schema below?
-  id?: UserId = '';
+  userId: UserId = ''; // TODO: the id shouldn't be an empty string
 
   name = '';
 
-  login? = '';
+  login?: string | undefined;
 
-  password? = '';
+  password?: string | undefined;
 
-  constructor(user) {
+  constructor(user: IUser) {
     Object.assign(
       this,
       pick(user, Object.keys(User.schema.request.properties))
@@ -22,12 +32,13 @@ class User {
   }
 
   assignId(userId: UserId) {
-    Object.assign(this, { id: userId });
+    Object.assign(this, { userId });
     return this;
   }
 
   toJSON() {
-    return pick(this, Object.keys(User.schema.response.properties));
+    const { userId: id, ...rest } = this;
+    return pick({ id, ...rest }, Object.keys(User.schema.response.properties));
   }
 
   // TODO: learn more about how to automatically generate this from OpenAPI spec
@@ -64,7 +75,7 @@ class User {
   };
 }
 
-export { UserId };
+export { UserId, IUserId, IUser };
 export default User;
 
 // __EOF__

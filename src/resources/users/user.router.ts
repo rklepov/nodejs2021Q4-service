@@ -8,7 +8,7 @@ import { defineHandler } from '../../common/handler';
 
 import { Database } from '../../db/database';
 
-import User from './user.model';
+import User, { IUser, IUserId } from './user.model';
 import UserService from './user.service';
 
 import TaskService from '../tasks/task.service';
@@ -24,7 +24,7 @@ class UserRouter {
     this.fastify = server;
     this.service = new UserService(db.users, new TaskService(db.tasks));
 
-    this.fastify.get('/users', {
+    this.fastify.get<{ Params: Record<string, never> }>('/users', {
       handler: defineHandler(this, 'getAll'),
       schema: {
         tags: ['user'],
@@ -37,8 +37,8 @@ class UserRouter {
       },
     });
 
-    this.fastify.get('/users/:userId', {
-      handler: defineHandler(this, 'getUser'),
+    this.fastify.get<{ Params: IUserId }>('/users/:userId', {
+      handler: defineHandler(this, 'get'),
       schema: {
         tags: User.schema.tags,
         params: User.schema.params,
@@ -48,8 +48,8 @@ class UserRouter {
       },
     });
 
-    this.fastify.post('/users', {
-      handler: defineHandler(this, 'addUser'),
+    this.fastify.post<{ Body: IUser }>('/users', {
+      handler: defineHandler(this, 'add'),
       schema: {
         tags: User.schema.tags,
         body: User.schema.request,
@@ -59,8 +59,8 @@ class UserRouter {
       },
     });
 
-    this.fastify.put('/users/:userId', {
-      handler: defineHandler(this, 'updateUser'),
+    this.fastify.put<{ Params: IUserId; Body: IUser }>('/users/:userId', {
+      handler: defineHandler(this, 'update'),
       schema: {
         tags: User.schema.tags,
         params: User.schema.params,
@@ -71,8 +71,8 @@ class UserRouter {
       },
     });
 
-    this.fastify.delete('/users/:userId', {
-      handler: defineHandler(this, 'deleteUser'),
+    this.fastify.delete<{ Params: IUserId }>('/users/:userId', {
+      handler: defineHandler(this, 'delete'),
       schema: { tags: User.schema.tags, params: User.schema.params },
     });
   }

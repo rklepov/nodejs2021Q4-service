@@ -24,7 +24,7 @@ class BoardRouter {
     this.fastify = server;
     this.service = new BoardService(db.boards, new TaskService(db.tasks));
 
-    this.fastify.get('/boards', {
+    this.fastify.get<>('/boards', {
       handler: defineHandler(this, 'getAll'),
       schema: {
         tags: Board.schema.tags,
@@ -38,7 +38,7 @@ class BoardRouter {
     });
 
     this.fastify.get('/boards/:boardId', {
-      handler: defineHandler(this, 'getBoard'),
+      handler: defineHandler(this, 'get'),
       schema: {
         tags: Board.schema.tags,
         params: Board.schema.params,
@@ -49,7 +49,7 @@ class BoardRouter {
     });
 
     this.fastify.post('/boards', {
-      handler: defineHandler(this, 'addBoard'),
+      handler: defineHandler(this, 'add'),
       schema: {
         tags: Board.schema.tags,
         body: Board.schema.request,
@@ -60,7 +60,7 @@ class BoardRouter {
     });
 
     this.fastify.put('/boards/:boardId', {
-      handler: defineHandler(this, 'updateBoard'),
+      handler: defineHandler(this, 'update'),
       schema: {
         tags: Board.schema.tags,
         params: Board.schema.params,
@@ -72,7 +72,7 @@ class BoardRouter {
     });
 
     this.fastify.delete('/boards/:boardId', {
-      handler: defineHandler(this, 'deleteBoard'),
+      handler: defineHandler(this, 'delete'),
       schema: { tags: Board.schema.tags, params: Board.schema.params },
     });
   }

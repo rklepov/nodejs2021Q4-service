@@ -2,13 +2,24 @@
 
 import pick from 'lodash.pick';
 
-import { UserId, BoardId, TaskId, ColumnId } from '../../db/database';
+import { TaskId, BoardId, TaskId, ColumnId } from '../../db/database';
 
-import Board from '../boards/board.model';
+import Board, { IBoardId } from '../boards/board.model';
 
-class Task {
+interface ITaskId {
+  taskId: TaskId;
+}
+
+interface ITask {
+  title: string;
+  order: number;
+  description?: string;
+  columnId?: ColumnId | null;
+}
+
+class Task implements IBoardId, ITaskId, ITask {
   // TODO: wonder if the class fields can be somehow inferred from the JSON schema below?
-  id?: TaskId = '';
+  taskId: TaskId = ''; // TODO: the id shouldn't be an empty string
 
   title = '';
 
@@ -18,11 +29,11 @@ class Task {
 
   description? = '';
 
-  userId?: UserId | null = '';
+  userId?: string | null | undefined;
 
-  columnId?: ColumnId | null = '';
+  columnId?: string | null | undefined;
 
-  constructor(task) {
+  constructor(task: IBoardId & ITask) {
     Object.assign(
       this,
       pick(
@@ -35,12 +46,13 @@ class Task {
   }
 
   assignId(taskId: TaskId) {
-    Object.assign(this, { id: taskId });
+    Object.assign(this, { taskId });
     return this;
   }
 
   toJSON() {
-    return pick(this, Object.keys(Task.schema.response.properties));
+    const { taskId: id, ...rest } = this;
+    return pick({ id, ...rest }, Object.keys(Task.schema.response.properties));
   }
 
   // TODO: learn more about how to automatically generate this from OpenAPI spec
@@ -84,6 +96,7 @@ class Task {
   };
 }
 
+export { TaskId, ITaskId, ITask };
 export default Task;
 
 // __EOF__

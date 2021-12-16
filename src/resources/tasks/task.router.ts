@@ -40,7 +40,7 @@ class TaskRouter {
     });
 
     this.fastify.get('/boards/:boardId/tasks/:taskId', {
-      handler: defineHandler(this, 'getTask'),
+      handler: defineHandler(this, 'get'),
       schema: {
         tags: Task.schema.tags,
         params: Task.schema.params,
@@ -51,7 +51,7 @@ class TaskRouter {
     });
 
     this.fastify.post('/boards/:boardId/tasks', {
-      handler: defineHandler(this, 'addTask'),
+      handler: defineHandler(this, 'add'),
       schema: {
         tags: Task.schema.tags,
         params: Board.schema.params,
@@ -63,7 +63,7 @@ class TaskRouter {
     });
 
     this.fastify.put('/boards/:boardId/tasks/:taskId', {
-      handler: defineHandler(this, 'updateTask'),
+      handler: defineHandler(this, 'update'),
       schema: {
         tags: Task.schema.tags,
         params: Task.schema.params,
@@ -75,7 +75,7 @@ class TaskRouter {
     });
 
     this.fastify.delete('/boards/:boardId/tasks/:taskId', {
-      handler: defineHandler(this, 'deleteTask'),
+      handler: defineHandler(this, 'delete'),
       schema: { tags: Task.schema.tags, params: Task.schema.params },
     });
   }

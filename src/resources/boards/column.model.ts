@@ -3,23 +3,32 @@
 import * as uuid from 'uuid';
 import pick from 'lodash.pick';
 
-import { BoardId } from '../../db/database';
+import { BoardId, ColumnId } from '../../db/database';
+import { IBoardId } from './board.model';
 
-// TODO: inherit from Db table key type
-type ColumnId = string;
+interface IColumnId {
+  columnId: ColumnId;
+}
+
+interface IColumn {
+  title: string;
+  order: number;
+}
 
 // TODO: so far columns are not exposed as individual entities
 //       (in fact this is not so easy to achieve because columns are nested
 //        to a board and at the same the columns needs to be assigned an Id).
-class Column {
+class Column implements IColumnId, IBoardId, IColumn {
   // TODO: wonder if the class fields can be somehow inferred from the JSON schema below?
-  id: ColumnId = '';
+  columnId: ColumnId = ''; // TODO: the id shouldn't be an empty string
 
   title = '';
 
   order = NaN;
 
-  constructor(column) {
+  boardId: BoardId = ''; // TODO: the id shouldn't be an empty string
+
+  constructor(column: IColumn) {
     Object.assign(
       this,
       // TODO: there should be a single place for Id generation
@@ -36,7 +45,11 @@ class Column {
   }
 
   toJSON() {
-    return pick(this, Object.keys(Column.schema.response.properties));
+    const { columnId: id, ...rest } = this;
+    return pick(
+      { id, ...rest },
+      Object.keys(Column.schema.response.properties)
+    );
   }
 
   static schema = {
@@ -61,7 +74,7 @@ class Column {
   };
 }
 
-export { ColumnId, Column };
+export { ColumnId, IColumnId, IColumn };
 export default Column;
 
 // __EOF__

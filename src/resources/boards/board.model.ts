@@ -5,17 +5,26 @@ import difference from 'lodash.difference';
 
 import { BoardId } from '../../db/database';
 
-import { Column } from './column.model';
+import Column, { IColumn } from './column.model';
 
-class Board {
+interface IBoardId {
+  boardId: BoardId;
+}
+
+interface IBoard {
+  title: string;
+  columns: IColumn[];
+}
+
+class Board implements IBoardId, IBoardId {
   // TODO: wonder if the class fields can be somehow inferred from the JSON schema below?
-  id?: BoardId = '';
+  boardId: BoardId = ''; // TODO: the id shouldn't be an empty string
 
   title = '';
 
   columns: Column[] = [];
 
-  constructor(board) {
+  constructor(board: IBoard) {
     Object.assign(
       this,
       pick(
@@ -25,12 +34,14 @@ class Board {
     );
 
     this.assignColumns(
-      pick(board, ['columns']).columns?.map((column) => new Column(column))
+      pick(board, ['columns']).columns?.map(
+        (column: IColumn) => new Column(column)
+      )
     );
   }
 
   assignId(boardId: BoardId) {
-    Object.assign(this, { id: boardId });
+    Object.assign(this, { boardId });
     return this;
   }
 
@@ -40,9 +51,15 @@ class Board {
   }
 
   toJSON() {
+    const { boardId: id, ...rest } = pick(
+      this,
+      difference(Object.keys(this), ['columns'])
+    );
+
     return {
-      ...pick(this, difference(Object.keys(this), ['columns'])),
-      columns: this.columns.map((column) => column.toJSON()),
+      id,
+      ...rest,
+      columns: this.columns.map((column: Column) => column.toJSON()),
     };
   }
 
@@ -79,6 +96,7 @@ class Board {
   };
 }
 
+export { BoardId, IBoardId, IBoard };
 export default Board;
 
 // __EOF__
