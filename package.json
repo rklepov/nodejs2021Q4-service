@@ -46,8 +46,6 @@
     ]
   },
   "dependencies": {
-    "@fastify/ajv-compiler": "^2.1.0",
-    "ajv-formats": "^2.1.1",
     "cross-env": "7.0.3",
     "dotenv": "10.0.0",
     "fastify": "^3.24.1",
