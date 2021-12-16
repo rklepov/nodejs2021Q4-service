@@ -6,8 +6,8 @@ import http from 'http';
 import fastify, { FastifyInstance, FastifyLoggerInstance } from 'fastify';
 import swagger from 'fastify-swagger';
 
-import AjvCompiler from '@fastify/ajv-compiler';
-import ajvFormats from 'ajv-formats';
+// import AjvCompiler from '@fastify/ajv-compiler';
+// import ajvFormats from 'ajv-formats';
 
 import { Database, createDatabase } from './db/database';
 
@@ -62,13 +62,13 @@ class App {
           coerceTypes: true,
           allErrors: true,
         },
-        plugins: [ajvFormats],
+        // plugins: [ajvFormats],
       },
-      schemaController: {
-        compilersFactory: {
-          buildValidator: AjvCompiler(),
-        },
-      },
+      // schemaController: {
+      //   compilersFactory: {
+      //     buildValidator: AjvCompiler(),
+      //   },
+      // },
     });
 
     this.fastify
