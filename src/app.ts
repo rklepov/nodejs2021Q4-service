@@ -43,14 +43,12 @@ class App {
           res(p) {
             return {
               statusCode: p.statusCode,
-              payload: p.raw.payload,
             };
           },
           req(q) {
             return {
               method: q.method,
               url: q.url,
-              path: q.path,
               params: q.params,
               headers: q.headers,
             };
@@ -76,26 +74,18 @@ class App {
     this.fastify
       .addHook('preHandler', (q, _, done) => {
         if (q.body) {
-          q.log.info({ body: q.body }, 'parsed body');
+          q.log.info({ body: q.body }, 'parsed request body');
         }
         done();
       })
       .addHook('preSerialization', (_, p, payload, done) => {
-        Object.assign(p.raw, { payload });
+        if (payload) {
+          p.log.info({ payload }, 'response body');
+        }
         done();
       });
 
     this.apiSpec = path.join(__dirname, '../doc/api.yaml');
-
-    this.fastify.register(swagger, {
-      exposeRoute: true,
-      routePrefix: '/doc',
-      mode: 'static',
-      specification: {
-        baseDir: path.dirname(this.apiSpec),
-        path: this.apiSpec,
-      },
-    });
 
     this.userRouter = new UserRouter(this.fastify, this.db);
     this.boardRouter = new BoardRouter(this.fastify, this.db);
@@ -104,6 +94,16 @@ class App {
 
   async start(port: number) {
     try {
+      await this.fastify.register(swagger, {
+        exposeRoute: true,
+        routePrefix: '/doc',
+        mode: 'static',
+        specification: {
+          baseDir: path.dirname(this.apiSpec),
+          path: this.apiSpec,
+        },
+      });
+
       const addr = await this.fastify.listen(port);
       this.fastify.log.info(`[start] App is running on ${addr}`);
     } catch (e) {
