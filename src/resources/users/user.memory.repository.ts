@@ -1,8 +1,8 @@
 // user.memory.repository.ts
 
-import { UserId, UsersTable } from '../../db/database';
+import { UsersTable } from '../../db/database';
 
-import User from './user.model';
+import User, { UserId } from './user.model';
 
 class UserRepo {
   users: UsersTable;
@@ -12,7 +12,7 @@ class UserRepo {
   }
 
   async create(user: User) {
-    const { key: userId } = await this.users.create(user);
+    const { key: userId } = await this.users.create(user.id, user);
     return user.assignId(userId);
   }
 

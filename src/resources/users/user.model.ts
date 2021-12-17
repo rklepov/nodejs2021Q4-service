@@ -15,8 +15,8 @@ interface IUser {
 }
 
 class User implements IUserId, IUser {
-  // TODO: wonder if the class fields can be somehow inferred from the JSON schema below?
-  userId: UserId = ''; // TODO: the id shouldn't be an empty string
+  // ? wonder if the class fields can be somehow inferred from the JSON schema below ?
+  userId: UserId = genId(); // TODO: preferably should be private
 
   name = '';
 
@@ -31,14 +31,17 @@ class User implements IUserId, IUser {
     );
   }
 
+  get id() {
+    return this.userId;
+  }
+
   assignId(userId: UserId) {
     Object.assign(this, { userId });
     return this;
   }
 
   toJSON() {
-    const { userId: id, ...rest } = this;
-    return pick({ id, ...rest }, Object.keys(User.schema.response.properties));
+    return pick(this, Object.keys(User.schema.response.properties));
   }
 
   // TODO: learn more about how to automatically generate this from OpenAPI spec

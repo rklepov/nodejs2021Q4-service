@@ -2,24 +2,15 @@
 
 import pick from 'lodash.pick';
 
-import { TaskId, BoardId, ColumnId } from '../../db/database';
+import { genId } from '../../common/utils';
 
-import Board, { IBoardId } from '../boards/board.model';
-
-interface ITaskId {
-  taskId: TaskId;
-}
-
-interface ITask {
-  title: string;
-  order: number;
-  description?: string;
-  columnId?: ColumnId | null;
-}
+import Board from '../boards/board.model';
+import { BoardId, IBoardId } from '../boards/board.types';
+import { ITaskId, ITask, TaskId } from './task.types';
 
 class Task implements IBoardId, ITaskId, ITask {
-  // TODO: wonder if the class fields can be somehow inferred from the JSON schema below?
-  taskId: TaskId = ''; // TODO: the id shouldn't be an empty string
+  // ? wonder if the class fields can be somehow inferred from the JSON schema below ?
+  taskId: TaskId = genId(); // TODO: preferably should be private
 
   title = '';
 
@@ -45,14 +36,17 @@ class Task implements IBoardId, ITaskId, ITask {
     );
   }
 
+  get id() {
+    return this.taskId;
+  }
+
   assignId(taskId: TaskId) {
     Object.assign(this, { taskId });
     return this;
   }
 
   toJSON() {
-    const { taskId: id, ...rest } = this;
-    return pick({ id, ...rest }, Object.keys(Task.schema.response.properties));
+    return pick(this, Object.keys(Task.schema.response.properties));
   }
 
   // TODO: learn more about how to automatically generate this from OpenAPI spec

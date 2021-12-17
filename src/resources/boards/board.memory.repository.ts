@@ -1,8 +1,8 @@
 // board.memory.repository.ts
 
-import { BoardId, BoardsTable } from '../../db/database';
+import { BoardsTable } from '../../db/database';
 
-import Board from './board.model';
+import Board, { BoardId } from './board.model';
 
 class BoardRepo {
   boards: BoardsTable;
@@ -12,7 +12,7 @@ class BoardRepo {
   }
 
   async create(board: Board) {
-    const { key: boardId } = await this.boards.create(board);
+    const { key: boardId } = await this.boards.create(board.id, board);
     board.columns.forEach((col) => col.assignToBoard(boardId));
     return board.assignId(boardId);
   }

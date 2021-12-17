@@ -3,7 +3,7 @@
 import pick from 'lodash.pick';
 import difference from 'lodash.difference';
 
-import { BoardId } from '../../db/database';
+import { genId } from '../../common/utils';
 
 import Column, { IColumn } from './column.model';
 
@@ -17,8 +17,8 @@ interface IBoard {
 }
 
 class Board implements IBoardId, IBoardId {
-  // TODO: wonder if the class fields can be somehow inferred from the JSON schema below?
-  boardId: BoardId = ''; // TODO: the id shouldn't be an empty string
+  // ? wonder if the class fields can be somehow inferred from the JSON schema below ?
+  boardId: BoardId = genId(); // TODO: preferably should be private
 
   title = '';
 
@@ -40,6 +40,10 @@ class Board implements IBoardId, IBoardId {
     );
   }
 
+  get id() {
+    return this.boardId;
+  }
+
   assignId(boardId: BoardId) {
     Object.assign(this, { boardId });
     return this;
@@ -51,14 +55,11 @@ class Board implements IBoardId, IBoardId {
   }
 
   toJSON() {
-    const { boardId: id, ...rest } = pick(
-      this,
-      difference(Object.keys(this), ['columns'])
-    );
-
     return {
-      id,
-      ...rest,
+      ...pick(
+        this,
+        difference(Object.keys(Board.schema.response.properties), ['columns'])
+      ),
       columns: this.columns.map((column: Column) => column.toJSON()),
     };
   }

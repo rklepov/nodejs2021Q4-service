@@ -1,10 +1,8 @@
 // column.model.ts
 
-import * as uuid from 'uuid';
 import pick from 'lodash.pick';
 
-import { BoardId, ColumnId } from '../../db/database';
-import { IBoardId } from './board.model';
+import { genId } from '../../common/utils';
 
 interface IColumnId {
   columnId: ColumnId;
@@ -19,8 +17,8 @@ interface IColumn {
 //       (in fact this is not so easy to achieve because columns are nested
 //        to a board and at the same the columns needs to be assigned an Id).
 class Column implements IColumnId, IBoardId, IColumn {
-  // TODO: wonder if the class fields can be somehow inferred from the JSON schema below?
-  columnId: ColumnId = ''; // TODO: the id shouldn't be an empty string
+  // ? wonder if the class fields can be somehow inferred from the JSON schema below ?
+  columnId: ColumnId = genId(); // TODO: preferably should be private
 
   title = '';
 
@@ -31,12 +29,17 @@ class Column implements IColumnId, IBoardId, IColumn {
   constructor(column: IColumn) {
     Object.assign(
       this,
-      // TODO: there should be a single place for Id generation
-      {
-        id: uuid.v4(),
-        ...pick(column, Object.keys(Column.schema.request.properties)),
-      }
+      pick(column, Object.keys(Column.schema.request.properties))
     );
+  }
+
+  // TODO: setter needed because the request can contain the column Id
+  set id(columnId: ColumnId) {
+    this.columnId = columnId;
+  }
+
+  get id() {
+    return this.columnId;
   }
 
   assignToBoard(boardId: BoardId) {
@@ -45,11 +48,7 @@ class Column implements IColumnId, IBoardId, IColumn {
   }
 
   toJSON() {
-    const { columnId: id, ...rest } = this;
-    return pick(
-      { id, ...rest },
-      Object.keys(Column.schema.response.properties)
-    );
+    return pick(this, Object.keys(Column.schema.response.properties));
   }
 
   static schema = {

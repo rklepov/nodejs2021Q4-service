@@ -1,8 +1,8 @@
 // task.memory.repository.ts
 
-import { TaskId, TasksTable } from '../../db/database';
+import { TasksTable } from '../../db/database';
 
-import Task from './task.model';
+import Task, { TaskId } from './task.model';
 
 class TaskRepo {
   tasks: TasksTable;
@@ -12,7 +12,7 @@ class TaskRepo {
   }
 
   async create(task: Task) {
-    const { key: taskId } = await this.tasks.create(task);
+    const { key: taskId } = await this.tasks.create(task.id, task);
     return task.assignId(taskId);
   }
 
