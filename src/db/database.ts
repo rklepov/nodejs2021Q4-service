@@ -2,9 +2,12 @@
 
 import Table from './table';
 
-import User, { UserId } from '../resources/users/user.model';
-import Board, { BoardId } from '../resources/boards/board.model';
-import Task, { TaskId } from '../resources/tasks/task.model';
+import User from '../resources/users/user.model';
+import { UserId } from '../resources/users/user.types';
+import Board from '../resources/boards/board.model';
+import { BoardId } from '../resources/boards/board.types';
+import Task from '../resources/tasks/task.model';
+import { TaskId } from '../resources/tasks/task.types';
 
 type UsersTable = Table<UserId, User>;
 type BoardsTable = Table<BoardId, Board>;

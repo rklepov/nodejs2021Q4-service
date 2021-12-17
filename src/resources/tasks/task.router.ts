@@ -8,10 +8,12 @@ import fastify from 'fastify';
 
 import { Database } from '../../db/database';
 
-import Task, { ITask, ITaskId } from './task.model';
+import Task from './task.model';
+import { ITask, ITaskId } from './task.types';
 import TaskService from './task.service';
 
-import Board, { IBoardId } from '../boards/board.model';
+import Board from '../boards/board.model';
+import { IBoardId } from '../boards/board.types';
 import BoardService from '../boards/board.service';
 
 type Server = ReturnType<typeof fastify>;

@@ -2,7 +2,8 @@
 
 import { TasksTable } from '../../db/database';
 
-import Task, { TaskId } from './task.model';
+import Task from './task.model';
+import { TaskId } from './task.types';
 
 class TaskRepo {
   tasks: TasksTable;

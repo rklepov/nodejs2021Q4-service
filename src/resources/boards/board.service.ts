@@ -2,28 +2,30 @@
 
 import HTTP_STATUS from 'http-status';
 
-import { FastifyRequest } from 'fastify';
+import { reply } from '../../common/utils';
 
-import { reply } from '../../common/reply';
+import { BoardsTable } from '../../db/database';
 
-import { BoardId, BoardsTable } from '../../db/database';
+import { ITaskService } from '../tasks/task.types';
 
-import TaskService from '../tasks/task.service';
+import {
+  IBoardService,
+  BoardId,
+  BoardDeleteRequest,
+  BoardGetRequest,
+  BoardPostRequest,
+  BoardPutRequest,
+} from './board.types';
 
-import Board, { IBoard, IBoardId } from './board.model';
+import Board from './board.model';
 import BoardRepo from './board.memory.repository';
 
-type BoardGetRequest = FastifyRequest<{ Params: IBoardId }>;
-type BoardPostRequest = FastifyRequest<{ Body: IBoard }>;
-type BoardPutRequest = FastifyRequest<{ Params: IBoardId; Body: IBoard }>;
-type BoardDeleteRequest = FastifyRequest<{ Params: IBoardId }>;
-
-class BoardService {
+class BoardService implements IBoardService {
   repo: BoardRepo;
 
-  taskService?: TaskService;
+  taskService?: ITaskService;
 
-  constructor(boards: BoardsTable, taskService?: TaskService) {
+  constructor(boards: BoardsTable, taskService?: ITaskService) {
     this.repo = new BoardRepo(boards);
     this.taskService = taskService;
   }

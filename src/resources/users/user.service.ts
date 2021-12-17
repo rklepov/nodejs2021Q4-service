@@ -1,28 +1,29 @@
 // user.service.ts
 
 import HTTP_STATUS from 'http-status';
-import { FastifyRequest } from 'fastify';
 
-import { reply } from '../../common/reply';
+import { reply } from '../../common/utils';
 
 import { UsersTable } from '../../db/database';
 
-import TaskService from '../tasks/task.service';
+import { ITaskService } from '../tasks/task.types';
 
-import User, { IUser, IUserId } from './user.model';
+import {
+  UserGetRequest,
+  UserPostRequest,
+  UserPutRequest,
+  UserDeleteRequest,
+} from './user.types';
+
+import User from './user.model';
 import UserRepo from './user.memory.repository';
-
-type UserGetRequest = FastifyRequest<{ Params: IUserId }>;
-type UserPostRequest = FastifyRequest<{ Body: IUser }>;
-type UserPutRequest = FastifyRequest<{ Params: IUserId; Body: IUser }>;
-type UserDeleteRequest = FastifyRequest<{ Params: IUserId }>;
 
 class UserService {
   repo: UserRepo;
 
-  taskService: TaskService;
+  taskService: ITaskService;
 
-  constructor(users: UsersTable, taskService: TaskService) {
+  constructor(users: UsersTable, taskService: ITaskService) {
     this.repo = new UserRepo(users);
     this.taskService = taskService;
   }

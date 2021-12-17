@@ -2,7 +2,8 @@
 
 import { UsersTable } from '../../db/database';
 
-import User, { UserId } from './user.model';
+import User from './user.model';
+import { UserId } from './user.types';
 
 class UserRepo {
   users: UsersTable;

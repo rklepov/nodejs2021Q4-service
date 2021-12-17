@@ -8,7 +8,8 @@ import fastify from 'fastify';
 
 import { Database } from '../../db/database';
 
-import Board, { IBoard, IBoardId } from './board.model';
+import Board from './board.model';
+import { IBoard, IBoardId } from './board.types';
 import BoardService from './board.service';
 
 import TaskService from '../tasks/task.service';

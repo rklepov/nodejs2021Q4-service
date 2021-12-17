@@ -2,34 +2,31 @@
 
 import HTTP_STATUS from 'http-status';
 
-import { FastifyRequest } from 'fastify';
+import { reply } from '../../common/utils';
 
-import { reply } from '../../common/reply';
+import { TasksTable } from '../../db/database';
 
-import { BoardId, TasksTable } from '../../db/database';
+import { UserId } from '../users/user.types';
 
-import { UserId } from '../users/user.model';
+import { BoardId, IBoardService } from '../boards/board.types';
 
-import { IBoardId } from '../boards/board.model';
-import BoardService from '../boards/board.service';
+import {
+  ITaskService,
+  TaskGetRequest,
+  TaskPostRequest,
+  TaskPutRequest,
+  TaskDeleteRequest,
+} from './task.types';
 
-import Task, { ITask, ITaskId } from './task.model';
+import Task from './task.model';
 import TaskRepo from './task.memory.repository';
 
-type TaskGetRequest = FastifyRequest<{ Params: IBoardId & ITaskId }>;
-type TaskPostRequest = FastifyRequest<{ Params: IBoardId; Body: ITask }>;
-type TaskPutRequest = FastifyRequest<{
-  Params: IBoardId & ITaskId;
-  Body: ITask;
-}>;
-type TaskDeleteRequest = FastifyRequest<{ Params: IBoardId & ITaskId }>;
-
-class TaskService {
+class TaskService implements ITaskService {
   repo: TaskRepo;
 
-  boardService: BoardService | null;
+  boardService: IBoardService | null;
 
-  constructor(tasks: TasksTable, boardService: BoardService | null = null) {
+  constructor(tasks: TasksTable, boardService: IBoardService | null = null) {
     this.repo = new TaskRepo(tasks);
     this.boardService = boardService;
   }
@@ -99,9 +96,10 @@ class TaskService {
 
     await Promise.allSettled(
       tasks.map(async (task) => {
-        const updatedTask = new Task(task);
+        const updatedTask = new Task(task); // TODO: new taskId now generated
+        updatedTask.assignId(task.id);
         updatedTask.userId = null;
-        await this.repo.update(task.taskId, updatedTask);
+        await this.repo.update(task.id, updatedTask);
       })
     );
   }

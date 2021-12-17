@@ -5,16 +5,9 @@ import difference from 'lodash.difference';
 
 import { genId } from '../../common/utils';
 
-import Column, { IColumn } from './column.model';
-
-interface IBoardId {
-  boardId: BoardId;
-}
-
-interface IBoard {
-  title: string;
-  columns: IColumn[];
-}
+import Column from './column.model';
+import { IColumn } from './column.types';
+import { IBoardId, BoardId, IBoard } from './board.types';
 
 class Board implements IBoardId, IBoardId {
   // ? wonder if the class fields can be somehow inferred from the JSON schema below ?

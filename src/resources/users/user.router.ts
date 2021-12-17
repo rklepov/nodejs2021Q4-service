@@ -8,7 +8,8 @@ import fastify from 'fastify';
 
 import { Database } from '../../db/database';
 
-import User, { IUser, IUserId } from './user.model';
+import User from './user.model';
+import { IUser, IUserId } from './user.types';
 import UserService from './user.service';
 
 import TaskService from '../tasks/task.service';

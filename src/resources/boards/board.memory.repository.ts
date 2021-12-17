@@ -2,7 +2,8 @@
 
 import { BoardsTable } from '../../db/database';
 
-import Board, { BoardId } from './board.model';
+import Board from './board.model';
+import { BoardId } from './board.types';
 
 class BoardRepo {
   boards: BoardsTable;

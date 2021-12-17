@@ -4,14 +4,8 @@ import pick from 'lodash.pick';
 
 import { genId } from '../../common/utils';
 
-interface IColumnId {
-  columnId: ColumnId;
-}
-
-interface IColumn {
-  title: string;
-  order: number;
-}
+import { BoardId, IBoardId } from './board.types';
+import { IColumnId, IColumn, ColumnId } from './column.types';
 
 // TODO: so far columns are not exposed as individual entities
 //       (in fact this is not so easy to achieve because columns are nested

@@ -2,17 +2,8 @@
 
 import pick from 'lodash.pick';
 
-import { UserId } from '../../db/database';
-
-interface IUserId {
-  userId: UserId;
-}
-
-interface IUser {
-  name: string;
-  login?: string;
-  password?: string;
-}
+import { genId } from '../../common/utils';
+import { IUserId, IUser, UserId } from './user.types';
 
 class User implements IUserId, IUser {
   // ? wonder if the class fields can be somehow inferred from the JSON schema below ?
