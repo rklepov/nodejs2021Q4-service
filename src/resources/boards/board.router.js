@@ -1,19 +1,24 @@
 // board.router.js
 
-const BoardRepo = require('./board.memory.repository');
-const BoardService = require('./board.service');
+const HTTP_STATUS = require('http-status');
+
+const { defineHandler } = require('../../common/handler');
+
 const Board = require('./board.model');
+const BoardService = require('./board.service');
+
+const TaskService = require('../tasks/task.service');
 
 class BoardRouter {
   constructor(fastify, db) {
     this.fastify = fastify;
-    this.service = new BoardService(new BoardRepo(db));
+    this.service = new BoardService(db.boards, new TaskService(db.tasks));
 
     this.fastify.get('/boards', {
-      handler: this.service.getAll.bind(this.service),
+      handler: defineHandler(this, 'getAll'),
       schema: {
         response: {
-          200: {
+          [HTTP_STATUS.OK]: {
             type: 'array',
             items: Board.schema.response,
           },
@@ -22,36 +27,39 @@ class BoardRouter {
     });
 
     this.fastify.get('/boards/:boardId', {
-      handler: this.service.getBoard.bind(this.service),
+      handler: defineHandler(this, 'getBoard'),
       schema: {
+        params: Board.schema.params,
         response: {
-          200: Board.schema.response,
+          [HTTP_STATUS.OK]: Board.schema.response,
         },
       },
     });
 
     this.fastify.post('/boards', {
-      handler: this.service.addBoard.bind(this.service),
+      handler: defineHandler(this, 'addBoard'),
       schema: {
         body: Board.schema.request,
         response: {
-          201: Board.schema.response,
+          [HTTP_STATUS.CREATED]: Board.schema.response,
         },
       },
     });
 
     this.fastify.put('/boards/:boardId', {
-      handler: this.service.updateBoard.bind(this.service),
+      handler: defineHandler(this, 'updateBoard'),
       schema: {
+        params: Board.schema.params,
         body: Board.schema.request,
         response: {
-          200: Board.schema.response,
+          [HTTP_STATUS.OK]: Board.schema.response,
         },
       },
     });
 
     this.fastify.delete('/boards/:boardId', {
-      handler: this.service.deleteBoard.bind(this.service),
+      handler: defineHandler(this, 'deleteBoard'),
+      schema: { params: Board.schema.params },
     });
   }
 }

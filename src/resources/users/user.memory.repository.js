@@ -1,45 +1,36 @@
 // user.memory.repository.js
 
 class UserRepo {
-  constructor(db) {
-    this.db = db;
+  constructor(users) {
+    this.users = users;
   }
 
   async create(user) {
-    const id = await this.db.users.create(user);
-
-    return { id, ...user };
+    const { key: userId } = await this.users.create(user);
+    return user.assignId(userId);
   }
 
-  async read(id) {
-    const { hasValue: hasUser, value: user } = await this.db.users.read(id);
-    return { hasUser, user: { id, ...user } };
+  async read(userId) {
+    const { hasValue: found, value: user } = await this.users.read(userId);
+    return found ? user.assignId(userId) : null;
   }
 
-  async update(id, newUser) {
-    const { updated, value: user } = await this.db.users.update(id, newUser);
-    return { updated, user };
+  async update(userId, user) {
+    const { updated: found, value: updatedUser } = await this.users.update(
+      userId,
+      user
+    );
+    return found ? updatedUser.assignId(userId) : null;
   }
 
-  async delete(id) {
-    const { deleted } = await this.db.users.delete(id);
-
-    if (deleted) {
-      // set userId of the deleted users' tasks to null
-      const tasks = await this.db.tasks.where((task) => task?.userId === id);
-
-      tasks.forEach(async (task) => {
-        const { id: taskId, ...updatedTask } = task;
-        updatedTask.userId = null;
-        await this.db.tasks.update(taskId, updatedTask);
-      });
-    }
-
+  async delete(userId) {
+    const { deleted } = await this.users.delete(userId);
     return deleted;
   }
 
-  ls() {
-    return this.db.users.ls();
+  async ls() {
+    const users = await this.users.ls();
+    return users.map(({key: userId, value: user}) => user.assignId(userId))
   }
 }
 

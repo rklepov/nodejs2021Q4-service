@@ -1,19 +1,26 @@
 // task.router.js
 
-const TaskRepo = require('./task.memory.repository');
-const TaskService = require('./task.service');
+const HTTP_STATUS = require('http-status');
+
+const { defineHandler } = require('../../common/handler');
+
 const Task = require('./task.model');
+const TaskService = require('./task.service');
+
+const Board = require('../boards/board.model');
+const BoardService = require('../boards/board.service');
 
 class TaskRouter {
   constructor(fastify, db) {
     this.fastify = fastify;
-    this.service = new TaskService(new TaskRepo(db));
+    this.service = new TaskService(db.tasks, new BoardService(db.boards));
 
     this.fastify.get('/boards/:boardId/tasks', {
-      handler: this.service.getAll.bind(this.service),
+      handler: defineHandler(this, 'getAll'),
       schema: {
+        params: Board.schema.params,
         response: {
-          200: {
+          [HTTP_STATUS.OK]: {
             type: 'array',
             items: Task.schema.response,
           },
@@ -22,36 +29,42 @@ class TaskRouter {
     });
 
     this.fastify.get('/boards/:boardId/tasks/:taskId', {
-      handler: this.service.getTask.bind(this.service),
+      handler: defineHandler(this, 'getTask'),
       schema: {
+        params: Task.schema.params,
         response: {
-          200: Task.schema.response,
+          [HTTP_STATUS.OK]: Task.schema.response,
         },
       },
     });
 
     this.fastify.post('/boards/:boardId/tasks', {
-      handler: this.service.addTask.bind(this.service),
+      handler: defineHandler(this, 'addTask'),
       schema: {
+        params: Board.schema.params,
         body: Task.schema.request,
         response: {
-          201: Task.schema.response,
+          [HTTP_STATUS.CREATED]: Task.schema.response,
         },
       },
     });
 
     this.fastify.put('/boards/:boardId/tasks/:taskId', {
-      handler: this.service.updateTask.bind(this.service),
+      handler: defineHandler(this, 'updateTask'),
       schema: {
+        schema: {
+          params: Task.schema.params,
+        },
         body: Task.schema.request,
         response: {
-          200: Task.schema.response,
+          [HTTP_STATUS.OK]: Task.schema.response,
         },
       },
     });
 
     this.fastify.delete('/boards/:boardId/tasks/:taskId', {
-      handler: this.service.deleteTask.bind(this.service),
+      handler: defineHandler(this, 'deleteTask'),
+      schema: { params: Task.schema.params },
     });
   }
 }

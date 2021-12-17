@@ -1,37 +1,46 @@
 // task.memory.repository.js
 
 class TaskRepo {
-  constructor(db) {
-    this.db = db;
+  constructor(tasks) {
+    this.tasks = tasks;
   }
 
   async create(task) {
-    const id = await this.db.tasks.create(task);
-    return { id, ...task };
+    const { key: taskId } = await this.tasks.create(task);
+    return task.assignId(taskId);
   }
 
-  async read(id) {
-    const { hasValue: hasTask, value: task } = await this.db.tasks.read(id);
-    return { hasTask, task: { id, ...task } };
+  async read(taskId) {
+    const { hasValue: found, value: task } = await this.tasks.read(taskId);
+    return found ? task.assignId(taskId) : null;
   }
 
-  async update(id, newTask) {
-    const { updated, value: task } = await this.db.tasks.update(id, newTask);
-    return { updated, task };
+  async update(taskId, task) {
+    const { updated: found, value: updatedTask } = await this.tasks.update(
+      taskId,
+      task
+    );
+    return found ? updatedTask.assignId(taskId) : null;
   }
 
-  async delete(id) {
-    const { deleted } = await this.db.tasks.delete(id);
+  async delete(taskId) {
+    const { deleted } = await this.tasks.delete(taskId);
     return deleted;
   }
 
-  ls() {
-    return this.db.tasks.ls();
+  async ls() {
+    return TaskRepo.assignIds(await this.tasks.ls());
+  }
+
+  async getTasksFor(pred) {
+    return TaskRepo.assignIds(await this.tasks.where(pred));
+  }
+
+  static assignIds(tasks) {
+    return tasks.map(({ key: taskId, value: task }) => task.assignId(taskId));
   }
 }
 
 module.exports = TaskRepo;
-
-// __EOF__
 
 // __EOF__

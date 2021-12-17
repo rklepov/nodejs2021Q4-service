@@ -5,6 +5,8 @@ const path = require('path');
 // const YAML = require('yamljs');
 
 const Fastify = require('fastify');
+const AjvCompiler = require('@fastify/ajv-compiler');
+const ajvFormats = require('ajv-formats');
 const swagger = require('fastify-swagger');
 
 const { createDatabase } = require('./db/db');
@@ -18,7 +20,26 @@ class App {
     this.db = createDatabase();
 
     this.fastify = Fastify({
-      logger: true,
+      logger: {
+        prettyPrint: true,
+        serializers: {
+          res(p) {
+            return {
+              statusCode: p.statusCode,
+              payload: p.raw.payload,
+            };
+          },
+          req(q) {
+            return {
+              method: q.method,
+              url: q.url,
+              path: q.path,
+              params: q.params,
+              headers: q.headers,
+            };
+          },
+        },
+      },
       ajv: {
         customOptions: {
           removeAdditional: true,
@@ -26,11 +47,29 @@ class App {
           coerceTypes: true,
           allErrors: true,
           strictTypes: true,
-          nullable: true,
           strictRequired: true,
+          validateFormats: true,
+        },
+        plugins: [ajvFormats],
+      },
+      schemaController: {
+        compilersFactory: {
+          buildValidator: AjvCompiler(),
         },
       },
     });
+
+    this.fastify
+      .addHook('preHandler', (q, _, done) => {
+        if (q.body) {
+          q.log.info({ body: q.body }, 'parsed body');
+        }
+        done();
+      })
+      .addHook('preSerialization', (_, p, payload, done) => {
+        Object.assign(p.raw, { payload });
+        done();
+      });
 
     this.apiSpec = path.join(__dirname, '../doc/api.yaml');
 
@@ -49,28 +88,25 @@ class App {
   }
 
   start(port) {
-    return new Promise((resolve, reject) => {
-      this.fastify.listen(port, (e, addr) => {
-        if (e) {
-          this.fastify.log.error(e);
-          reject(e);
-        } else {
-          this.fastify.log.info(`App is running on ${addr}`);
-          resolve(addr);
-        }
+    return this.fastify
+      .listen(port)
+      .then((addr) => {
+        this.fastify.log.info(`[start] App is running on ${addr}`);
+      })
+      .catch((e) => {
+        this.fastify.log.error(e);
       });
-    });
   }
 
   stop() {
-    return this.fastify.close().then(
-      () => {
-        this.fastify.log.info('Server closed');
-      },
-      (e) => {
+    return this.fastify
+      .close()
+      .then(() => {
+        this.fastify.log.info('[stop] Server closed');
+      })
+      .catch((e) => {
         this.fastify.log.error(e);
-      }
-    );
+      });
   }
 }
 
