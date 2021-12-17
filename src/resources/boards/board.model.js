@@ -36,37 +36,37 @@ class Board {
       columns: this.columns.map((column) => column.toJSON()),
     };
   }
-
-  // TODO: learn more about how to automatically generate this from OpenAPI spec
-  static schema = {
-    params: {
-      type: 'object',
-      additionalProperties: false,
-      required: ['boardId'],
-      properties: {
-        boardId: { type: 'string', format: 'uuid' },
-      },
-    },
-
-    request: {
-      type: 'object',
-      required: ['title', 'columns'],
-      properties: {
-        title: { type: 'string' },
-        columns: { type: 'array', items: Column.schema.request },
-      },
-    },
-
-    response: {
-      type: 'object',
-      properties: {
-        id: { type: 'string', format: 'uuid' },
-        title: { type: 'string' },
-        columns: { type: 'array', items: Column.schema.response },
-      },
-    },
-  };
 }
+
+// TODO: learn more about how to automatically generate this from OpenAPI spec
+Board.schema = {
+  params: {
+    type: 'object',
+    additionalProperties: false,
+    required: ['boardId'],
+    properties: {
+      boardId: { type: 'string', format: 'uuid' },
+    },
+  },
+
+  request: {
+    type: 'object',
+    required: ['title', 'columns'],
+    properties: {
+      title: { type: 'string' },
+      columns: { type: 'array', items: Column.schema.request },
+    },
+  },
+
+  response: {
+    type: 'object',
+    properties: {
+      id: { type: 'string', format: 'uuid' },
+      title: { type: 'string' },
+      columns: { type: 'array', items: Column.schema.response },
+    },
+  },
+};
 
 module.exports = Board;
 

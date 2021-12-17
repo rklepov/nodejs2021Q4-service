@@ -26,28 +26,28 @@ class Column {
   toJSON() {
     return pick(this, Object.keys(Column.schema.response.properties));
   }
-
-  static schema = {
-    request: {
-      type: 'object',
-      required: ['title', 'order'],
-      properties: {
-        id: { type: 'string', format: 'uuid' },
-        title: { type: 'string' },
-        order: { type: 'integer' },
-      },
-    },
-
-    response: {
-      type: 'object',
-      properties: {
-        id: { type: 'string', format: 'uuid' },
-        title: { type: 'string' },
-        order: { type: 'integer' },
-      },
-    },
-  };
 }
+
+Column.schema = {
+  request: {
+    type: 'object',
+    required: ['title', 'order'],
+    properties: {
+      id: { type: 'string', format: 'uuid' },
+      title: { type: 'string' },
+      order: { type: 'integer' },
+    },
+  },
+
+  response: {
+    type: 'object',
+    properties: {
+      id: { type: 'string', format: 'uuid' },
+      title: { type: 'string' },
+      order: { type: 'integer' },
+    },
+  },
+};
 
 module.exports = Column;
 
