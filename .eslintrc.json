@@ -46,7 +46,8 @@
     ],
     "no-underscore-dangle": "off",
     "import/prefer-default-export": "off",
-    "@typescript-eslint/no-explicit-any": "error"
+    "@typescript-eslint/no-explicit-any": "error",
+    "tsdoc/syntax": "warn"
   },
-  "plugins": ["@typescript-eslint"]
+  "plugins": ["@typescript-eslint", "eslint-plugin-tsdoc"]
 }
