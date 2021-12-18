@@ -3,18 +3,35 @@
 import Storage from './storage';
 
 /**
- * The abstraction of a database table.
- * Simple implementation adds async interface to  in-memory key-value storage with.
+ * The abstraction of a database table.  This simple implementation just adds
+ * async interface to  in-memory key-value storage defined in {@link Storage | Storage class}
  *
- *  TODO: review the definitions of Promise return types, can be simplified?
+ * TODO: review the definitions of Promise return types, can be simplified?
  */
 class Table<KeyT, ValueT> {
-  storage: Storage<KeyT, ValueT>;
+  private storage: Storage<KeyT, ValueT>;
 
+  /**
+   * Table constructor. Create the storage object which is responsible for
+   * actually keeping the objects and assigns it to the private property.
+   */
   constructor() {
     this.storage = new Storage();
   }
 
+  /**
+   * Asynchronously add a new object to the storage. Put its **value** into the
+   * map using the provided **key**.
+   *
+   * @param key - The key of the stored object (generated externally, supposed
+   * to be unique).
+   * @param value - The object stored in the map.
+   *
+   * @returns A Promise that will resolve to the `{ key, value }` pair of the
+   * added object.
+   *
+   * @see {@link Storage.create}
+   */
   create(key: KeyT, value: ValueT) {
     return new Promise<{
       key: KeyT;
@@ -24,6 +41,17 @@ class Table<KeyT, ValueT> {
     });
   }
 
+  /**
+   * Asynchronously get the stored object by key.
+   *
+   * @param key - The key of the object to extract.
+   *
+   * @returns A Promise that will resolve to the pair `{ hasValue, value }`. If
+   * **hasValue** property is `true` then **value** contains the extracted
+   * object. Otherwise **value** is `undefined`.
+   *
+   * @see {@link Storage.read}
+   */
   read(key: KeyT) {
     return new Promise<{
       hasValue: boolean;
@@ -33,6 +61,19 @@ class Table<KeyT, ValueT> {
     });
   }
 
+  /**
+   * Asynchronously update the stored object with the provided key.
+   *
+   * @param key - The key of the object to extract
+   * @param value - The object which will replace the one with the same key in
+   * the map.
+   *
+   * @returns A Promise that will resolve to the pair `{ updated, value }`. If
+   * **updated** property is `true` then **value** contains the same object
+   * passed in the same argument.  Otherwise **value** property is `undefined`.
+   *
+   * @see {@link Storage.update}
+   */
   update(key: KeyT, value: ValueT) {
     return new Promise<{
       updated: boolean;
@@ -42,6 +83,17 @@ class Table<KeyT, ValueT> {
     });
   }
 
+  /**
+   * Asynchronously delete the stored object with the provided key.
+   *
+   * @param key - The key of the object to delete.
+   *
+   * @returns A Promise that will resolve to the pair `{ deleted, value }`. If
+   * **deleted** property is `true` then **value** contains the object which has
+   * just been deleted. Otherwise **value** is undefined.
+   *
+   * @see {@link Storage.delete}
+   */
   delete(key: KeyT) {
     return new Promise<{
       deleted: boolean;
@@ -51,6 +103,14 @@ class Table<KeyT, ValueT> {
     });
   }
 
+  /**
+   * Asynchronously list all stored objects.
+   *
+   * @returns A Promise that will resolve to the array of `{ key, value }` pairs
+   * stored in the map.
+   *
+   * @see {@link Storage.ls}
+   */
   ls() {
     return new Promise<
       {
@@ -62,6 +122,18 @@ class Table<KeyT, ValueT> {
     });
   }
 
+  /**
+   * Asynchronously return the list of objects matching the filter.
+   *
+   * @param pred - The predicate function that returns `true` if the stored
+   * object should be included and `false` otherwise.
+   *
+   * @returns A Promise that will resolve to the array of `{ key, value }` pairs
+   * stored in the map. Only the **value**s for which **pred** returned `true`
+   * are included.
+   *
+   * @see {@link Storage.where}
+   */
   where(pred: (v: ValueT) => boolean) {
     return new Promise<
       {
