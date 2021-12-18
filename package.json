@@ -13,6 +13,7 @@
     "build:check": "tsc --noEmit",
     "dev": "nodemon",
     "docs": "typedoc",
+    "docs:dev": "nodemon --exec npm run docs",
     "eslint": "eslint --ext .js,.ts --fix src/",
     "lint": "npm run build:check && npm run eslint",
     "start": "ts-node src/server.ts",
