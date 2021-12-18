@@ -3,6 +3,12 @@
 import { PORT } from './common/config';
 import App from './app';
 
+/**
+ * The main entry point of the REST server application.
+ * Creates the application instance and starts the server on the specified port.
+ *
+ * @param port - The server port number
+ */
 function run(port: number) {
   const app = new App();
   app
