@@ -1,6 +1,6 @@
 {
   "restartable": "rs",
-  "ignore": ["test/", "build/"],
+  "ignore": ["test/", "build/", "ts-docs/"],
   "verbose": true,
   "exec": "npm start",
   "watch": ["src/"],

@@ -1,0 +1,4 @@
+{
+  "entryPoints": ["src/server.ts"],
+  "out": "ts-docs"
+}

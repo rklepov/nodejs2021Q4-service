@@ -12,6 +12,7 @@
     "build": "tsc",
     "build:check": "tsc --noEmit",
     "dev": "nodemon",
+    "docs": "typedoc",
     "eslint": "eslint --ext .js,.ts --fix src/",
     "lint": "npm run build:check && npm run eslint",
     "start": "ts-node src/server.ts",
@@ -82,6 +83,7 @@
     "prettier": "^2.4.1",
     "supertest": "6.1.6",
     "ts-node": "^10.4.0",
+    "typedoc": "^0.22.10",
     "typescript": "^4.5.3"
   }
 }
