@@ -1,6 +1,6 @@
 {
   "name": "rs-rest-service-starter",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "repository": {
     "type": "git",
     "url": ""
@@ -19,12 +19,12 @@
     "test:auth": "cross-env DEBUG=rs:* TEST_MODE=auth jest --noStackTrace"
   },
   "keywords": [
+    "autotest",
+    "fastify",
+    "node",
+    "rest",
     "rs",
     "school",
-    "rest",
-    "node",
-    "fastify",
-    "autotest",
     "starter"
   ],
   "license": "ISC",

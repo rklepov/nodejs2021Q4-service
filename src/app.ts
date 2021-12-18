@@ -2,17 +2,19 @@
 
 import path from 'path';
 
-import fastify from 'fastify';
+import fastify, { FastifyInstance } from 'fastify';
 import swagger from 'fastify-swagger';
-
-// import AjvCompiler from '@fastify/ajv-compiler';
-// import ajvFormats from 'ajv-formats';
 
 import { Database, createDatabase } from './db/database';
 
 import UserRouter from './resources/users/user.router';
+import User from './resources/users/user.model';
+
 import BoardRouter from './resources/boards/board.router';
+import Board from './resources/boards/board.model';
+
 import TaskRouter from './resources/tasks/task.router';
+import Task from './resources/tasks/task.model';
 
 class App {
   fastify: ReturnType<typeof fastify>;
@@ -26,6 +28,8 @@ class App {
   boardRouter: BoardRouter;
 
   taskRouter: TaskRouter;
+
+  swagger: FastifyInstance;
 
   constructor() {
     this.db = createDatabase();
@@ -56,13 +60,7 @@ class App {
           coerceTypes: true,
           allErrors: true,
         },
-        // plugins: [ajvFormats],
       },
-      // schemaController: {
-      //   compilersFactory: {
-      //     buildValidator: AjvCompiler(),
-      //   },
-      // },
     });
 
     this.fastify
@@ -81,6 +79,28 @@ class App {
 
     this.apiSpec = path.join(__dirname, '../doc/api.yaml');
 
+    this.swagger = this.fastify.register(swagger, {
+      exposeRoute: true,
+      routePrefix: '/doc',
+      swagger: {
+        info: {
+          title: 'Trello Service',
+          description: "Let's try to create a competitor for Trello!",
+          version: '1.1.0',
+        },
+        tags: [
+          { name: 'user', description: 'Users related end-points' },
+          { name: 'board', description: 'Boards related end-points' },
+          { name: 'task', description: 'Tasks related end-points' },
+        ],
+        definitions: {
+          User: User.schema.request,
+          Board: Board.schema.request,
+          Task: Task.schema.request,
+        },
+      },
+    });
+
     this.userRouter = new UserRouter(this.fastify, this.db);
     this.boardRouter = new BoardRouter(this.fastify, this.db);
     this.taskRouter = new TaskRouter(this.fastify, this.db);
@@ -88,16 +108,6 @@ class App {
 
   async start(port: number) {
     try {
-      await this.fastify.register(swagger, {
-        exposeRoute: true,
-        routePrefix: '/doc',
-        mode: 'static',
-        specification: {
-          baseDir: path.dirname(this.apiSpec),
-          path: this.apiSpec,
-        },
-      });
-
       const addr = await this.fastify.listen(port);
       this.fastify.log.info(`[start] App is running on ${addr}`);
     } catch (e) {
