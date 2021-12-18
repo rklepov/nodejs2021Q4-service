@@ -1,5 +1,6 @@
 {
-  "entryPoints": ["src"],
+  "entryPoints": ["./src"],
   "entryPointStrategy": "expand",
-  "out": "ts-docs"
+  "out": "ts-docs",
+  "logLevel": "Verbose"
 }
