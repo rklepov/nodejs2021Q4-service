@@ -86,6 +86,7 @@
     "supertest": "6.1.6",
     "ts-node": "^10.4.0",
     "typedoc": "^0.22.10",
+    "typedoc-plugin-mdn-links": "^1.0.4",
     "typedoc-plugin-merge-modules": "^3.1.0",
     "typedoc-plugin-rename-defaults": "^0.4.0",
     "typescript": "^4.5.3"
