@@ -5,7 +5,7 @@ import { FastifyRequest } from 'fastify';
 import { genId } from '../../common/utils';
 
 /**
- * The unique Id of the user.
+ * The unique **Id** of the user.
  */
 export type UserId = ReturnType<typeof genId>;
 

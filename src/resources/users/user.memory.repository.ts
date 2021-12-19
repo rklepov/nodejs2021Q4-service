@@ -84,7 +84,7 @@ class UserRepo {
    *
    * @param userId - The **Id** of the {@link User} object to delete.
    *
-   * @returns `true` if the {@link User} object  with the specified **Id** was
+   * @returns `true` if the {@link User} object with the specified **Id** was
    * found and deleted, `false` otherwise.
    *
    * @remarks
@@ -96,7 +96,7 @@ class UserRepo {
   }
 
   /**
-   * List all users in the database table.
+   * List all users stored in the database table.
    *
    * @returns An array of {@link User} objects stored in the table.
    *

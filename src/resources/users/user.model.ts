@@ -5,6 +5,10 @@ import pick from 'lodash.pick';
 import { genId } from '../../common/utils';
 import { IUserId, IUser, UserId } from './user.types';
 
+/**
+ * Models the User object which holds the unique **Id** along with the fields
+ * describing a user.
+ */
 class User implements IUserId, IUser {
   // ? wonder if the class fields can be somehow inferred from the JSON schema below ?
   /**
@@ -40,7 +44,7 @@ class User implements IUserId, IUser {
   }
 
   /**
-   * Returns the value of the object **Id**.
+   * Returns the object **Id**.
    */
   get id() {
     return this.userId;

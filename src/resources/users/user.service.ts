@@ -21,6 +21,7 @@ import UserRepo from './user.memory.repository';
 /**
  * HTTP request handlers for {@link User}.
  *
+ * @privateremarks
  * TODO: some return types of the methods below are not inferred by TS
  * correctly, need to understand the reason of that and maybe specify the types
  * explicitly
@@ -42,7 +43,7 @@ class UserService {
    *
    * @param users - An instance of the Users table.
    * @param taskService - The instance of {@link TaskService} that allows
-   * operations on the Task object linked to the User object.
+   * operations on the {@link Task} object linked to the {@link User} object.
    */
   constructor(users: UsersTable, taskService: ITaskService) {
     this.repo = new UserRepo(users);
