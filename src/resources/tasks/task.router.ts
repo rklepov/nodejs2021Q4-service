@@ -16,19 +16,37 @@ import Board from '../boards/board.model';
 import { IBoardId } from '../boards/board.types';
 import BoardService from '../boards/board.service';
 
+/**
+ * Fastify server instance.
+ */
 type Server = ReturnType<typeof fastify>;
 
+/**
+ * Router object for `boards/:boardId/tasks` endpoints.
+ */
 class TaskRouter {
   fastify: Server;
 
   service: TaskService;
 
+  /**
+   * The router constructor. Sets up the endpoint handles for all supported HTTP
+   * methods.
+   *
+   * @param server - Fastify server instance.
+   * @param db - Database instance.
+   */
   constructor(server: Server, db: Database) {
     this.fastify = server;
     this.service = new TaskService(db.tasks, new BoardService(db.boards));
 
     this.fastify.get<{ Params: IBoardId }>('/boards/:boardId/tasks', {
       // handler: defineHandler(this, 'getAll'),
+      /**
+       * The handler of GET request to '/boards/:boardId/tasks' endpoint
+       * @param _ - unused
+       * @param p - Server response.
+       */
       handler: async (_, p) => {
         const { status, payload } = await this.service.getAll();
         await p.code(status).send(payload);
@@ -49,6 +67,11 @@ class TaskRouter {
       '/boards/:boardId/tasks/:taskId',
       {
         // handler: defineHandler(this, 'get'),
+        /**
+         * The handler of GET request to '/boards/:boardId/tasks' endpoint
+         * @param q - Server request.
+         * @param p - Server response.
+         */
         handler: async (q, p) => {
           const { status, payload } = await this.service.get(q);
           await p.code(status).send(payload);
@@ -67,6 +90,11 @@ class TaskRouter {
       '/boards/:boardId/tasks',
       {
         // handler: defineHandler(this, 'add'),
+        /**
+         * The handler of POST request to '/boards/:boardId/tasks' endpoint.
+         * @param q - Server request.
+         * @param p - Server response.
+         */
         handler: async (q, p) => {
           const { status, payload } = await this.service.add(q);
           await p.code(status).send(payload);
@@ -86,6 +114,12 @@ class TaskRouter {
       '/boards/:boardId/tasks/:taskId',
       {
         // handler: defineHandler(this, 'update'),
+        /**
+         * The handler of PUT request to '/boards/:boardId/tasks/:taskId'
+         * endpoint.
+         * @param q - Server request.
+         * @param p - Server response.
+         */
         handler: async (q, p) => {
           const { status, payload } = await this.service.update(q);
           await p.code(status).send(payload);
@@ -105,6 +139,12 @@ class TaskRouter {
       '/boards/:boardId/tasks/:taskId',
       {
         // handler: defineHandler(this, 'delete'),
+        /**
+         * The handler of DELETE request to '/boards/:boardId/tasks/:taskId'
+         * endpoint.
+         * @param q - Server request.
+         * @param p - Server response.
+         */
         handler: async (q, p) => {
           const { status, payload } = await this.service.delete(q);
           await p.code(status).send(payload);
