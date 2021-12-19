@@ -16,21 +16,54 @@ import Board from './resources/boards/board.model';
 import TaskRouter from './resources/tasks/task.router';
 import Task from './resources/tasks/task.model';
 
+/**
+ * The main application class representing the server instance.
+ */
 class App {
+  /**
+   * Server instance.
+   */
   fastify: ReturnType<typeof fastify>;
 
+  /**
+   * Database instance.
+   */
   db: Database;
 
+  /**
+   * The path to the OpenAPI schema spec YAML.
+   */
   apiSpec: string; /* path */
 
+  /**
+   * Router instance for users endpoints.
+   */
   userRouter: UserRouter;
 
+  /**
+   * Router instance for board endpoints.
+   */
   boardRouter: BoardRouter;
 
+  /**
+   * Router instance for tasks endpoints.
+   */
   taskRouter: TaskRouter;
 
+  /**
+   * Swagger instance.
+   */
   swagger: FastifyInstance;
 
+  /**
+   * Application object constructor.
+   * 1. Creates **fastify** instance.
+   * 2. Creates **swagger** instance.
+   * 3. Creates routes.
+   *
+   * The swagger will use the schemas defined in the routes to generate the UI
+   * (available via `/doc` endpoint).
+   */
   constructor() {
     this.db = createDatabase();
 
@@ -106,6 +139,15 @@ class App {
     this.taskRouter = new TaskRouter(this.fastify, this.db);
   }
 
+  /**
+   * Start the server (start listening on the provided port number).
+   *
+   * @param port - The server port number.
+   *
+   * @throws Error
+   * In the case of the issue (for example if the specified port number is
+   * already occupied)
+   */
   async start(port: number) {
     try {
       const addr = await this.fastify.listen(port);
@@ -116,6 +158,9 @@ class App {
     }
   }
 
+  /**
+   * Stop the server.
+   */
   async stop() {
     try {
       await this.fastify.close();
