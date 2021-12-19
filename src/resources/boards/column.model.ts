@@ -9,7 +9,7 @@ import { IColumnId, IColumn, ColumnId } from './column.types';
 
 /**
  * Models the Column object which holds the unique **Id** along with the fields
- * describing a column.
+ * describing a column that belongs to a board.
  *
  * @privateremarks
  * TODO: so far columns are not exposed as individual entities (in fact this is
