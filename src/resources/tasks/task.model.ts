@@ -52,7 +52,7 @@ class Task implements IBoardId, ITaskId, ITask {
   /**
    * The {@link Task} object constructor.
    *
-   * @param Task - An object with the fields matching {@link Task.schema}.
+   * @param task - An object with the fields matching {@link Task.schema}.
    */
   constructor(task: IBoardId & ITask) {
     Object.assign(

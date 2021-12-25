@@ -33,7 +33,7 @@ class Board implements IBoardId, IBoardId {
   /**
    * The {@link Board} object constructor.
    *
-   * @param Board - An object with the fields matching {@link Board.schema}.
+   * @param board - An object with the fields matching {@link Board.schema}.
    */
   constructor(board: IBoard) {
     Object.assign(

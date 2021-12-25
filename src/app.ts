@@ -145,7 +145,7 @@ class App {
    * @param port - The server port number.
    *
    * @throws Error
-   * In the case of the issue (for example if the specified port number is
+   * In the case of an issue (for example if the specified port number is
    * already occupied)
    */
   async start(port: number) {

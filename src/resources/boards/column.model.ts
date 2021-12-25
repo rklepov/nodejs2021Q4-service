@@ -41,7 +41,7 @@ class Column implements IColumnId, IBoardId, IColumn {
   /**
    * The {@link Column} object constructor.
    *
-   * @param Column - An object with the fields matching {@link Column.schema}.
+   * @param column - An object with the fields matching {@link Column.schema}.
    */
   constructor(column: IColumn) {
     Object.assign(
