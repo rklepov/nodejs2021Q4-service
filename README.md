@@ -3,7 +3,7 @@
 ## Prerequisites
 
 - Git - [Download & Install Git](https://git-scm.com/downloads).
-- Node.js - [Download & Install Node.js](https://nodejs.org/en/download/) `v16.13.0` and the **npm** package manager.
+- Node.js - [Download & Install Node.js](https://nodejs.org/en/download/) `16.13.0` and **npm** package manager `^8.1.0`.
 
 ## Downloading
 
@@ -14,7 +14,7 @@ git clone https://github.com/rklepov/nodejs2021Q4-service
 
 Go to the root directory of the cloned repository and do:
 ```
-git checkout task/04-REST-service
+git checkout task/05-Typescript-basics
 ```
 
 ## Installing NPM modules
