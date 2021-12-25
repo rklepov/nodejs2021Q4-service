@@ -13,7 +13,7 @@ import { IBoardId, BoardId, IBoard } from './board.types';
  * Models the Board object which holds the unique **Id** along with the fields
  * describing a board.
  */
-class Board implements IBoardId, IBoardId {
+class Board implements IBoardId, IBoard {
   // ? wonder if the class fields can be somehow inferred from the JSON schema below ?
   /**
    * The unique board **Id**.
