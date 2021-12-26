@@ -129,7 +129,7 @@ class App {
       // https://github.com/fastify/fastify/issues/1025
       // https://github.com/fastify/fastify/blob/v3.25.2/lib/fourOhFour.js#L50
       const msg = `Route ${q.method}:${q.url} not found`;
-      this.log.pinoLogger.warn(q, msg);
+      q.log.warn(q, msg);
       p.notFound(msg);
     });
 
