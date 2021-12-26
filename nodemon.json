@@ -1,9 +1,9 @@
 {
   "restartable": "rs",
-  "ignore": ["test/", "build/", "ts-docs/"],
+  "ignore": ["test/", "build/", "ts-docs/", "logs/"],
   "verbose": true,
   "exec": "npm start",
-  "watch": ["src/", "./*.json"],
+  "watch": ["src/", "./*.json", "./.env"],
   "env": {
     "NODE_ENV": "development"
   },

@@ -5,6 +5,8 @@ import path from 'path';
 import fastify, { FastifyInstance } from 'fastify';
 import swagger from 'fastify-swagger';
 
+import Logger from './common/logger';
+
 import { Database, createDatabase } from './db/database';
 
 import UserRouter from './resources/users/user.router';
@@ -24,6 +26,11 @@ class App {
    * Server instance.
    */
   fastify: ReturnType<typeof fastify>;
+
+  /**
+   * Logger instance.
+   */
+  log: Logger;
 
   /**
    * Database instance.
@@ -64,28 +71,13 @@ class App {
    * The swagger will use the schemas defined in the routes to generate the UI
    * (available via `/doc` endpoint).
    */
-  constructor() {
+  constructor(logger: Logger) {
+    this.log = logger;
+
     this.db = createDatabase();
 
     this.fastify = fastify({
-      logger: {
-        prettyPrint: true,
-        serializers: {
-          res(p) {
-            return {
-              statusCode: p.statusCode,
-            };
-          },
-          req(q) {
-            return {
-              method: q.method,
-              url: q.url,
-              params: q.params,
-              headers: q.headers,
-            };
-          },
-        },
-      },
+      logger: this.log.pinoLogger,
       ajv: {
         customOptions: {
           removeAdditional: true,

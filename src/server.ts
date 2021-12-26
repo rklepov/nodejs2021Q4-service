@@ -2,6 +2,7 @@
 
 import { PORT } from './common/config';
 import App from './app';
+import Logger from './common/logger';
 
 /**
  * The main entry point of the REST server application.
@@ -10,15 +11,16 @@ import App from './app';
  * @param port - The server port number
  */
 function run(port: number) {
-  const app = new App();
+  const logger = new Logger('info', 'logs');
+  const app = new App(logger);
   app
     .start(port)
     .then(() => {
-      app.fastify.log.info('The server has been started successfully');
+      logger.info('The server has been started successfully');
     })
     .catch((e) => {
       const errMsg = e instanceof Error ? e.message : String(e);
-      app.fastify.log.fatal(`Failed to start the server on ${port}: ${errMsg}`);
+      logger.fatal(`Failed to start the server on ${port}: ${errMsg}`);
     });
 }
 
