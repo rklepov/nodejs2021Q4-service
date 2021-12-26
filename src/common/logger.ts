@@ -3,7 +3,7 @@
 import path from 'path';
 import { FastifyReply, FastifyRequest } from 'fastify';
 
-import pino, { Level, Logger as PinoLogger } from 'pino';
+import pino, { Level as LogLevel, Logger as PinoLogger } from 'pino';
 
 /**
  * Simple logger wrapper over pino log.
@@ -11,7 +11,7 @@ import pino, { Level, Logger as PinoLogger } from 'pino';
 class Logger {
   pinoLogger: PinoLogger;
 
-  constructor(logLevel: Level, logsDir: string) {
+  constructor(logLevel: LogLevel, logsDir: string) {
     this.pinoLogger = pino({
       serializers: {
         req(q: FastifyRequest) {

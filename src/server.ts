@@ -1,8 +1,11 @@
 // server.ts
 
-import { PORT } from './common/config';
-import App from './app';
+import { Level as LogLevel } from 'pino';
+
+import { LOG_DIR, LOG_LEVEL, PORT } from './common/config';
 import Logger from './common/logger';
+
+import App from './app';
 
 /**
  * The main entry point of the REST server application.
@@ -10,8 +13,8 @@ import Logger from './common/logger';
  *
  * @param port - The server port number
  */
-function run(port: number) {
-  const logger = new Logger('info', 'logs');
+function run(port: number, logLevel: LogLevel, logDir: string) {
+  const logger = new Logger(logLevel, logDir);
   const app = new App(logger);
   app
     .start(port)
@@ -24,6 +27,10 @@ function run(port: number) {
     });
 }
 
-run(Number(PORT) || 4000);
+run(
+  Number(PORT) || 4000,
+  (LOG_LEVEL as LogLevel) || 'info',
+  LOG_DIR || './logs'
+);
 
 // __EOF__
