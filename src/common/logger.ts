@@ -13,6 +13,7 @@ class Logger {
 
   constructor(logLevel: LogLevel, logsDir: string) {
     this.pinoLogger = pino({
+      level: logLevel,
       serializers: {
         req(q: FastifyRequest) {
           // log http request url, query parameters
@@ -109,5 +110,6 @@ class Logger {
 }
 
 export default Logger;
+export { PinoLogger };
 
 // __EOF__

@@ -6,6 +6,8 @@ import fastify from 'fastify';
 
 // import { defineHandler } from '../../common/handler';
 
+import Logger from '../../common/logger';
+
 import { Database } from '../../db/database';
 
 import User from './user.model';
@@ -23,6 +25,8 @@ type Server = ReturnType<typeof fastify>;
  * Router object for `users` endpoints.
  */
 class UserRouter {
+  log: Logger;
+
   fastify: Server;
 
   service: UserService;
@@ -31,12 +35,18 @@ class UserRouter {
    * The router constructor. Sets up the endpoint handles for all supported HTTP
    * methods.
    *
+   * @param log - {@link Logger} instance.
    * @param server - Fastify server instance.
    * @param db - Database instance.
    */
-  constructor(server: Server, db: Database) {
+  constructor(log: Logger, server: Server, db: Database) {
+    this.log = log;
     this.fastify = server;
-    this.service = new UserService(db.users, new TaskService(db.tasks));
+    this.service = new UserService(
+      log,
+      db.users,
+      new TaskService(log, db.tasks)
+    );
 
     this.fastify.get<{ Params: Record<string, never> }>('/users', {
       // handler: defineHandler(this, 'getAll'),

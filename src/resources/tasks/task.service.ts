@@ -2,6 +2,7 @@
 
 import HTTP_STATUS from 'http-status';
 
+import Logger from '../../common/logger';
 import { reply } from '../../common/utils';
 
 import { TasksTable } from '../../db/database';
@@ -31,6 +32,11 @@ import TaskRepo from './task.memory.repository';
  */
 class TaskService implements ITaskService {
   /**
+   * Logger instance.
+   */
+  log: Logger;
+
+  /**
    * Tasks repository: an interface to the database table.
    */
   repo: TaskRepo;
@@ -44,11 +50,17 @@ class TaskService implements ITaskService {
   /**
    * The constructor of the {@link TaskService} instance.
    *
+   * @param log - {@link Logger} instance.
    * @param tasks - An instance of the Users table.
    * @param boardService - The instance of {@link BoardService} that allows
    * operations on the {@link Board} object linked to the {@link Task} object.
    */
-  constructor(tasks: TasksTable, boardService: IBoardService | null = null) {
+  constructor(
+    log: Logger,
+    tasks: TasksTable,
+    boardService: IBoardService | null = null
+  ) {
+    this.log = log;
     this.repo = new TaskRepo(tasks);
     this.boardService = boardService;
   }
@@ -63,7 +75,13 @@ class TaskService implements ITaskService {
    * async, returns a Promise
    */
   async getAll() {
-    return reply(HTTP_STATUS.OK, await this.repo.ls());
+    const tasks = await this.repo.ls();
+    this.log.debug(`Returning ${tasks.length} task(s)`);
+    return reply(HTTP_STATUS.OK, tasks);
+  }
+
+  async f() {
+    await this.repo.ls();
   }
 
   /**

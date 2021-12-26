@@ -126,9 +126,9 @@ class App {
       },
     });
 
-    this.userRouter = new UserRouter(this.fastify, this.db);
-    this.boardRouter = new BoardRouter(this.fastify, this.db);
-    this.taskRouter = new TaskRouter(this.fastify, this.db);
+    this.userRouter = new UserRouter(this.log, this.fastify, this.db);
+    this.boardRouter = new BoardRouter(this.log, this.fastify, this.db);
+    this.taskRouter = new TaskRouter(this.log, this.fastify, this.db);
   }
 
   /**
