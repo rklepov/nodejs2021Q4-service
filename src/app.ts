@@ -3,6 +3,7 @@
 import path from 'path';
 
 import fastify, { FastifyInstance } from 'fastify';
+import fastifySensible from 'fastify-sensible';
 import swagger from 'fastify-swagger';
 
 import Logger from './common/logger';
@@ -123,6 +124,15 @@ class App {
       }
     });
 
+    // 404 not found handler with extra warn logging
+    this.fastify.setNotFoundHandler({}, (q, p) => {
+      // https://github.com/fastify/fastify/issues/1025
+      // https://github.com/fastify/fastify/blob/v3.25.2/lib/fourOhFour.js#L50
+      const msg = `Route ${q.method}:${q.url} not found`;
+      this.log.pinoLogger.warn(q, msg);
+      p.notFound(msg);
+    });
+
     this.apiSpec = path.join(__dirname, '../doc/api.yaml');
 
     this.swagger = this.fastify.register(swagger, {
@@ -163,6 +173,7 @@ class App {
    */
   async start(port: number) {
     try {
+      await this.fastify.register(fastifySensible);
       const addr = await this.fastify.listen(port);
       this.fastify.log.info(`[start] App is running on ${addr}`);
     } catch (e) {
