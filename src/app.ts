@@ -70,6 +70,10 @@ class App {
    *
    * The swagger will use the schemas defined in the routes to generate the UI
    * (available via `/doc` endpoint).
+   *
+   * @privateremarks
+   * TODO: the constructor function became too long, consider splitting it in
+   *       smaller chunks
    */
   constructor(logger: Logger) {
     this.log = logger;

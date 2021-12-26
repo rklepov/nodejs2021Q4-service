@@ -20,6 +20,8 @@ import BoardService from '../boards/board.service';
 
 /**
  * Fastify server instance.
+ *
+ * TODO: this declaration is repeated in several files.
  */
 type Server = ReturnType<typeof fastify>;
 

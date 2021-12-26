@@ -18,6 +18,8 @@ import TaskService from '../tasks/task.service';
 
 /**
  * Fastify server instance.
+ *
+ * TODO: this declaration is repeated in several files.
  */
 type Server = ReturnType<typeof fastify>;
 
