@@ -113,6 +113,12 @@ class UserService {
    */
   async add({ body }: UserPostRequest) {
     const user = new User(body);
+
+    // ! pass the specific user nto model 500 internal server error
+    if (user.name === 'Harry Potter') {
+      throw new ReferenceError('Expelliarmus!');
+    }
+
     return reply(HTTP_STATUS.CREATED, await this.repo.create(user));
   }
 

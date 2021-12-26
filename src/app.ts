@@ -88,6 +88,7 @@ class App {
       },
     });
 
+    // hooks for printing the bodies of request and response to the log
     this.fastify
       .addHook('preHandler', (q, _, done) => {
         if (q.body) {
@@ -101,6 +102,22 @@ class App {
         }
         done();
       });
+
+    // error handler with extra logging
+    this.fastify.setErrorHandler(async (e, q, p) => {
+      const { statusCode } = e;
+      if (statusCode) {
+        if (statusCode >= 500) {
+          q.log.error(e);
+        } else if (statusCode >= 400) {
+          q.log.warn(e);
+        }
+        await p.status(statusCode).send(e);
+      } else {
+        q.log.error(e);
+        await p.send(e);
+      }
+    });
 
     this.apiSpec = path.join(__dirname, '../doc/api.yaml');
 
