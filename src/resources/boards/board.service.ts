@@ -96,6 +96,7 @@ class BoardService implements IBoardService {
     if (board) {
       return reply(HTTP_STATUS.OK, board);
     }
+    this.log.warn(`[BoardService::get] Board with Id '${boardId}' not found`);
     return reply(HTTP_STATUS.NOT_FOUND, { boardId });
   }
 
@@ -144,6 +145,9 @@ class BoardService implements IBoardService {
     if (board) {
       return reply(HTTP_STATUS.OK, board);
     }
+    this.log.warn(
+      `[BoardService::update] Board with Id '${boardId}' not found`
+    );
     return reply(HTTP_STATUS.NOT_FOUND, { boardId });
   }
 
@@ -168,6 +172,9 @@ class BoardService implements IBoardService {
       await this.taskService?.deleteTasksFor(boardId);
       return reply(HTTP_STATUS.NO_CONTENT);
     }
+    this.log.warn(
+      `[BoardService::delete] Board with Id '${boardId}' not found`
+    );
     return reply(HTTP_STATUS.NOT_FOUND, { boardId });
   }
 

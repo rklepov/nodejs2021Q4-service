@@ -99,12 +99,20 @@ class TaskService implements ITaskService {
    * async, returns a Promise
    */
   async get({ params }: TaskGetRequest) {
-    const { taskId } = params;
+    const { boardId, taskId } = params;
     const task = await this.repo.read(taskId);
+
+    if (!(await this.boardService?.boardExists(boardId))) {
+      this.log.warn(`[TaskService::get] Board with Id '${boardId}' not found`);
+      return reply(HTTP_STATUS.NOT_FOUND, { boardId });
+    }
+
+    // TODO: check that the task with this Id is really assigned to the board
 
     if (task) {
       return reply(HTTP_STATUS.OK, task);
     }
+    this.log.warn(`[TaskService::get] Task with Id '${taskId}' not found`);
     return reply(HTTP_STATUS.NOT_FOUND, { taskId });
   }
 
@@ -126,6 +134,7 @@ class TaskService implements ITaskService {
     const { boardId } = params;
 
     if (!(await this.boardService?.boardExists(boardId))) {
+      this.log.warn(`[TaskService::add] Board with Id '${boardId}' not found`);
       return reply(HTTP_STATUS.NOT_FOUND, { boardId });
     }
 
@@ -153,6 +162,9 @@ class TaskService implements ITaskService {
     const { boardId, taskId } = params;
 
     if (!(await this.boardService?.boardExists(boardId))) {
+      this.log.warn(
+        `[TaskService::update] Board with Id '${boardId}' not found`
+      );
       return reply(HTTP_STATUS.NOT_FOUND, { boardId });
     }
 
@@ -163,6 +175,7 @@ class TaskService implements ITaskService {
     if (task) {
       return reply(HTTP_STATUS.OK, task);
     }
+    this.log.warn(`[TaskService::update] Task with Id '${taskId}' not found`);
     return reply(HTTP_STATUS.NOT_FOUND, { taskId });
   }
 
@@ -184,6 +197,9 @@ class TaskService implements ITaskService {
     const { boardId, taskId } = params;
 
     if (!(await this.boardService?.boardExists(boardId))) {
+      this.log.warn(
+        `[TaskService::delete] Board with Id '${boardId}' not found`
+      );
       return reply(HTTP_STATUS.NOT_FOUND, { boardId });
     }
 
@@ -192,6 +208,7 @@ class TaskService implements ITaskService {
     if (await this.repo.delete(taskId)) {
       return reply(HTTP_STATUS.NO_CONTENT);
     }
+    this.log.warn(`[TaskService::delete] Task with Id '${taskId}' not found`);
     return reply(HTTP_STATUS.NOT_FOUND, { taskId });
   }
 

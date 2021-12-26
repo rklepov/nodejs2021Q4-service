@@ -94,6 +94,7 @@ class UserService {
     if (user) {
       return reply(HTTP_STATUS.OK, user);
     }
+    this.log.warn(`[UserService::get] User with Id '${userId}' not found`);
     return reply(HTTP_STATUS.NOT_FOUND, { userId });
   }
 
@@ -145,6 +146,7 @@ class UserService {
     if (user) {
       return reply(HTTP_STATUS.OK, user);
     }
+    this.log.warn(`[UserService::update] User with Id '${userId}' not found`);
     return reply(HTTP_STATUS.NOT_FOUND, { userId });
   }
 
@@ -169,6 +171,7 @@ class UserService {
       await this.taskService.unassignUser(userId);
       return reply(HTTP_STATUS.NO_CONTENT);
     }
+    this.log.warn(`[UserService::delete] User with Id '${userId}' not found`);
     return reply(HTTP_STATUS.NOT_FOUND, { userId });
   }
 }
