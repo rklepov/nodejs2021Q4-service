@@ -1,6 +1,7 @@
 // logger.ts
 
 import path from 'path';
+import { FastifyReply, FastifyRequest } from 'fastify';
 
 import pino, { Level, Logger as PinoLogger } from 'pino';
 
@@ -12,6 +13,26 @@ class Logger {
 
   constructor(logLevel: Level, logsDir: string) {
     this.pinoLogger = pino({
+      serializers: {
+        req(q: FastifyRequest) {
+          // log http request url, query parameters
+          // (the request body is logged separately via Fastify hook)
+          return {
+            method: q.method,
+            url: q.url,
+            headers: q.headers,
+            params: q.params,
+            query: q.query,
+          };
+        },
+        res(p: FastifyReply) {
+          // log http response status code
+          // (the response  body is logged separately via Fastify hook)
+          return {
+            statusCode: p.statusCode,
+          };
+        },
+      },
       transport: {
         targets: [
           {
@@ -29,7 +50,8 @@ class Logger {
             },
           },
           {
-            // error+ log records additionally go to ${LOG_DIR}/error-${PID}.log
+            // error+ level log records additionally go to
+            // ${LOG_DIR}/error-${PID}.log
             target: 'pino/file',
             level: 'error',
             options: {
@@ -53,7 +75,7 @@ class Logger {
               destination: 1,
               colorize: true,
               translateTime: 'yyyy-mm-dd hh:MM:ss.l',
-              ignore: 'pid, hostname',
+              ignore: 'pid,hostname',
             },
           },
         ],
