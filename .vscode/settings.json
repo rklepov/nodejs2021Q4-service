@@ -6,7 +6,5 @@
   "[javascript]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
-  "cSpell.words": [
-    "fastify"
-  ]
+  "cSpell.words": ["fastify", "pino"]
 }
