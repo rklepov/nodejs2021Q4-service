@@ -1,0 +1,8 @@
+version: '3.8'
+
+services:
+  rs-rest-service:
+    build: ./
+    image: rklepov/rs-rest-service
+    ports:
+      - 4000:4000
