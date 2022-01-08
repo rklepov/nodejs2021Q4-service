@@ -2,6 +2,7 @@
 
 import HTTP_STATUS from 'http-status';
 
+import Logger from '../../common/logger';
 import { reply } from '../../common/utils';
 
 import { TasksTable } from '../../db/database';
@@ -31,6 +32,11 @@ import TaskRepo from './task.memory.repository';
  */
 class TaskService implements ITaskService {
   /**
+   * Logger instance.
+   */
+  log: Logger;
+
+  /**
    * Tasks repository: an interface to the database table.
    */
   repo: TaskRepo;
@@ -44,11 +50,17 @@ class TaskService implements ITaskService {
   /**
    * The constructor of the {@link TaskService} instance.
    *
+   * @param log - {@link Logger} instance.
    * @param tasks - An instance of the Users table.
    * @param boardService - The instance of {@link BoardService} that allows
    * operations on the {@link Board} object linked to the {@link Task} object.
    */
-  constructor(tasks: TasksTable, boardService: IBoardService | null = null) {
+  constructor(
+    log: Logger,
+    tasks: TasksTable,
+    boardService: IBoardService | null = null
+  ) {
+    this.log = log;
     this.repo = new TaskRepo(tasks);
     this.boardService = boardService;
   }
@@ -63,7 +75,13 @@ class TaskService implements ITaskService {
    * async, returns a Promise
    */
   async getAll() {
-    return reply(HTTP_STATUS.OK, await this.repo.ls());
+    const tasks = await this.repo.ls();
+    this.log.debug(`Returning ${tasks.length} task(s)`);
+    return reply(HTTP_STATUS.OK, tasks);
+  }
+
+  async f() {
+    await this.repo.ls();
   }
 
   /**
@@ -81,12 +99,20 @@ class TaskService implements ITaskService {
    * async, returns a Promise
    */
   async get({ params }: TaskGetRequest) {
-    const { taskId } = params;
+    const { boardId, taskId } = params;
     const task = await this.repo.read(taskId);
+
+    if (!(await this.boardService?.boardExists(boardId))) {
+      this.log.warn(`[TaskService::get] Board with Id '${boardId}' not found`);
+      return reply(HTTP_STATUS.NOT_FOUND, { boardId });
+    }
+
+    // TODO: check that the task with this Id is really assigned to the board
 
     if (task) {
       return reply(HTTP_STATUS.OK, task);
     }
+    this.log.warn(`[TaskService::get] Task with Id '${taskId}' not found`);
     return reply(HTTP_STATUS.NOT_FOUND, { taskId });
   }
 
@@ -108,6 +134,7 @@ class TaskService implements ITaskService {
     const { boardId } = params;
 
     if (!(await this.boardService?.boardExists(boardId))) {
+      this.log.warn(`[TaskService::add] Board with Id '${boardId}' not found`);
       return reply(HTTP_STATUS.NOT_FOUND, { boardId });
     }
 
@@ -135,6 +162,9 @@ class TaskService implements ITaskService {
     const { boardId, taskId } = params;
 
     if (!(await this.boardService?.boardExists(boardId))) {
+      this.log.warn(
+        `[TaskService::update] Board with Id '${boardId}' not found`
+      );
       return reply(HTTP_STATUS.NOT_FOUND, { boardId });
     }
 
@@ -145,6 +175,7 @@ class TaskService implements ITaskService {
     if (task) {
       return reply(HTTP_STATUS.OK, task);
     }
+    this.log.warn(`[TaskService::update] Task with Id '${taskId}' not found`);
     return reply(HTTP_STATUS.NOT_FOUND, { taskId });
   }
 
@@ -166,6 +197,9 @@ class TaskService implements ITaskService {
     const { boardId, taskId } = params;
 
     if (!(await this.boardService?.boardExists(boardId))) {
+      this.log.warn(
+        `[TaskService::delete] Board with Id '${boardId}' not found`
+      );
       return reply(HTTP_STATUS.NOT_FOUND, { boardId });
     }
 
@@ -174,6 +208,7 @@ class TaskService implements ITaskService {
     if (await this.repo.delete(taskId)) {
       return reply(HTTP_STATUS.NO_CONTENT);
     }
+    this.log.warn(`[TaskService::delete] Task with Id '${taskId}' not found`);
     return reply(HTTP_STATUS.NOT_FOUND, { taskId });
   }
 

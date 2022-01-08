@@ -2,6 +2,7 @@
 
 import HTTP_STATUS from 'http-status';
 
+import Logger from '../../common/logger';
 import { reply } from '../../common/utils';
 
 import { BoardsTable } from '../../db/database';
@@ -30,6 +31,11 @@ import BoardRepo from './board.memory.repository';
  */
 class BoardService implements IBoardService {
   /**
+   * Logger instance.
+   */
+  log: Logger;
+
+  /**
    * Boards repository: an interface to the database table.
    */
   repo: BoardRepo;
@@ -43,11 +49,13 @@ class BoardService implements IBoardService {
   /**
    * The constructor of the {@link BoardService} instance.
    *
+   * @param log - {@link Logger} instance.
    * @param boards - An instance of the Boards table.
    * @param taskService - The instance of {@link TaskService} that allows
    * operations on the {@link Task} object linked to the {@link Board} object.
    */
-  constructor(boards: BoardsTable, taskService?: ITaskService) {
+  constructor(log: Logger, boards: BoardsTable, taskService?: ITaskService) {
+    this.log = log;
     this.repo = new BoardRepo(boards);
     this.taskService = taskService;
   }
@@ -62,7 +70,9 @@ class BoardService implements IBoardService {
    * async, returns a Promise
    */
   async getAll() {
-    return reply(HTTP_STATUS.OK, await this.repo.ls());
+    const boards = await this.repo.ls();
+    this.log.debug(`Returning ${boards.length} board(s)`);
+    return reply(HTTP_STATUS.OK, boards);
   }
 
   /**
@@ -86,6 +96,7 @@ class BoardService implements IBoardService {
     if (board) {
       return reply(HTTP_STATUS.OK, board);
     }
+    this.log.warn(`[BoardService::get] Board with Id '${boardId}' not found`);
     return reply(HTTP_STATUS.NOT_FOUND, { boardId });
   }
 
@@ -134,6 +145,9 @@ class BoardService implements IBoardService {
     if (board) {
       return reply(HTTP_STATUS.OK, board);
     }
+    this.log.warn(
+      `[BoardService::update] Board with Id '${boardId}' not found`
+    );
     return reply(HTTP_STATUS.NOT_FOUND, { boardId });
   }
 
@@ -158,6 +172,9 @@ class BoardService implements IBoardService {
       await this.taskService?.deleteTasksFor(boardId);
       return reply(HTTP_STATUS.NO_CONTENT);
     }
+    this.log.warn(
+      `[BoardService::delete] Board with Id '${boardId}' not found`
+    );
     return reply(HTTP_STATUS.NOT_FOUND, { boardId });
   }
 

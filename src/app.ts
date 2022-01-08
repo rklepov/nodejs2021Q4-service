@@ -3,7 +3,10 @@
 import path from 'path';
 
 import fastify, { FastifyInstance } from 'fastify';
+import fastifySensible from 'fastify-sensible';
 import swagger from 'fastify-swagger';
+
+import Logger from './common/logger';
 
 import { Database, createDatabase } from './db/database';
 
@@ -24,6 +27,11 @@ class App {
    * Server instance.
    */
   fastify: ReturnType<typeof fastify>;
+
+  /**
+   * Logger instance.
+   */
+  log: Logger;
 
   /**
    * Database instance.
@@ -63,29 +71,18 @@ class App {
    *
    * The swagger will use the schemas defined in the routes to generate the UI
    * (available via `/doc` endpoint).
+   *
+   * @privateremarks
+   * TODO: the constructor function became too long, consider splitting it in
+   *       smaller chunks
    */
-  constructor() {
+  constructor(logger: Logger) {
+    this.log = logger;
+
     this.db = createDatabase();
 
     this.fastify = fastify({
-      logger: {
-        prettyPrint: true,
-        serializers: {
-          res(p) {
-            return {
-              statusCode: p.statusCode,
-            };
-          },
-          req(q) {
-            return {
-              method: q.method,
-              url: q.url,
-              params: q.params,
-              headers: q.headers,
-            };
-          },
-        },
-      },
+      logger: this.log.pinoLogger,
       ajv: {
         customOptions: {
           removeAdditional: true,
@@ -96,6 +93,7 @@ class App {
       },
     });
 
+    // hooks for printing the bodies of request and response to the log
     this.fastify
       .addHook('preHandler', (q, _, done) => {
         if (q.body) {
@@ -109,6 +107,31 @@ class App {
         }
         done();
       });
+
+    // error handler with extra logging
+    this.fastify.setErrorHandler(async (e, q, p) => {
+      const { statusCode } = e;
+      if (statusCode) {
+        if (statusCode >= 500) {
+          q.log.error(e);
+        } else if (statusCode >= 400) {
+          q.log.warn(e);
+        }
+        await p.status(statusCode).send(e);
+      } else {
+        q.log.error(e);
+        await p.send(e);
+      }
+    });
+
+    // 404 not found handler with extra warn logging
+    this.fastify.setNotFoundHandler({}, (q, p) => {
+      // https://github.com/fastify/fastify/issues/1025
+      // https://github.com/fastify/fastify/blob/v3.25.2/lib/fourOhFour.js#L50
+      const msg = `Route ${q.method}:${q.url} not found`;
+      q.log.warn(q, msg);
+      p.notFound(msg);
+    });
 
     this.apiSpec = path.join(__dirname, '../doc/api.yaml');
 
@@ -134,9 +157,9 @@ class App {
       },
     });
 
-    this.userRouter = new UserRouter(this.fastify, this.db);
-    this.boardRouter = new BoardRouter(this.fastify, this.db);
-    this.taskRouter = new TaskRouter(this.fastify, this.db);
+    this.userRouter = new UserRouter(this.log, this.fastify, this.db);
+    this.boardRouter = new BoardRouter(this.log, this.fastify, this.db);
+    this.taskRouter = new TaskRouter(this.log, this.fastify, this.db);
   }
 
   /**
@@ -145,11 +168,12 @@ class App {
    * @param port - The server port number.
    *
    * @throws Error
-   * In the case of the issue (for example if the specified port number is
+   * In the case of an issue (for example if the specified port number is
    * already occupied)
    */
   async start(port: number) {
     try {
+      await this.fastify.register(fastifySensible);
       const addr = await this.fastify.listen(port);
       this.fastify.log.info(`[start] App is running on ${addr}`);
     } catch (e) {

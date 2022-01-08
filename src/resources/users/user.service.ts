@@ -2,6 +2,7 @@
 
 import HTTP_STATUS from 'http-status';
 
+import Logger from '../../common/logger';
 import { reply } from '../../common/utils';
 
 import { UsersTable } from '../../db/database';
@@ -28,6 +29,11 @@ import UserRepo from './user.memory.repository';
  */
 class UserService {
   /**
+   * Logger instance.
+   */
+  log: Logger;
+
+  /**
    * Users repository: an interface to the database table.
    */
   repo: UserRepo;
@@ -41,11 +47,13 @@ class UserService {
   /**
    * The constructor of the {@link UserService} instance.
    *
+   * @param log - {@link Logger} instance.
    * @param users - An instance of the Users table.
    * @param taskService - The instance of {@link TaskService} that allows
    * operations on the {@link Task} object linked to the {@link User} object.
    */
-  constructor(users: UsersTable, taskService: ITaskService) {
+  constructor(log: Logger, users: UsersTable, taskService: ITaskService) {
+    this.log = log;
     this.repo = new UserRepo(users);
     this.taskService = taskService;
   }
@@ -60,7 +68,9 @@ class UserService {
    * async, returns a Promise
    */
   async getAll() {
-    return reply(HTTP_STATUS.OK, await this.repo.ls());
+    const users = await this.repo.ls();
+    this.log.debug(`Returning ${users.length} user(s)`);
+    return reply(HTTP_STATUS.OK, users);
   }
 
   /**
@@ -84,6 +94,7 @@ class UserService {
     if (user) {
       return reply(HTTP_STATUS.OK, user);
     }
+    this.log.warn(`[UserService::get] User with Id '${userId}' not found`);
     return reply(HTTP_STATUS.NOT_FOUND, { userId });
   }
 
@@ -103,6 +114,12 @@ class UserService {
    */
   async add({ body }: UserPostRequest) {
     const user = new User(body);
+
+    // ! pass the specific user nto model 500 internal server error
+    if (user.name === 'Harry Potter') {
+      throw new ReferenceError('Expelliarmus!');
+    }
+
     return reply(HTTP_STATUS.CREATED, await this.repo.create(user));
   }
 
@@ -129,6 +146,7 @@ class UserService {
     if (user) {
       return reply(HTTP_STATUS.OK, user);
     }
+    this.log.warn(`[UserService::update] User with Id '${userId}' not found`);
     return reply(HTTP_STATUS.NOT_FOUND, { userId });
   }
 
@@ -153,6 +171,7 @@ class UserService {
       await this.taskService.unassignUser(userId);
       return reply(HTTP_STATUS.NO_CONTENT);
     }
+    this.log.warn(`[UserService::delete] User with Id '${userId}' not found`);
     return reply(HTTP_STATUS.NOT_FOUND, { userId });
   }
 }

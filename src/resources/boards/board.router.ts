@@ -6,6 +6,8 @@ import fastify from 'fastify';
 
 // import { defineHandler } from '../../common/handler';
 
+import Logger from '../../common/logger';
+
 import { Database } from '../../db/database';
 
 import Board from './board.model';
@@ -16,6 +18,8 @@ import TaskService from '../tasks/task.service';
 
 /**
  * Fastify server instance.
+ *
+ * TODO: this declaration is repeated in several files.
  */
 type Server = ReturnType<typeof fastify>;
 
@@ -31,12 +35,17 @@ class BoardRouter {
    * The router constructor. Sets up the endpoint handles for all supported HTTP
    * methods.
    *
+   * @param log - {@link Logger} instance.
    * @param server - Fastify server instance.
    * @param db - Database instance.
    */
-  constructor(server: Server, db: Database) {
+  constructor(log: Logger, server: Server, db: Database) {
     this.fastify = server;
-    this.service = new BoardService(db.boards, new TaskService(db.tasks));
+    this.service = new BoardService(
+      log,
+      db.boards,
+      new TaskService(log, db.tasks)
+    );
 
     this.fastify.get<{ Params: Record<string, never> }>('/boards', {
       // handler: defineHandler(this, 'getAll'),

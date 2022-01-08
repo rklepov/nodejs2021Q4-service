@@ -14,7 +14,7 @@ git clone https://github.com/rklepov/nodejs2021Q4-service
 
 Go to the root directory of the cloned repository and do:
 ```
-git checkout task/05-Typescript-basics
+git checkout task/06-logging-error-handling
 ```
 
 ## Installing NPM modules
