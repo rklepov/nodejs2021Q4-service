@@ -9,6 +9,7 @@ dotenv.config({
 
 export const {
   PORT,
+  ADDR,
   NODE_ENV,
   MONGO_CONNECTION_STRING,
   JWT_SECRET_KEY,
