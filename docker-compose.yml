@@ -12,3 +12,8 @@ services:
     ports:
       - ${PORT}:${PORT}
     restart: on-failure
+    volumes:
+      - logs:${DOCKER_WORKD_DIR:-/usr/app}/${LOG_DIR:-logs}:rw
+
+volumes:
+  logs:
