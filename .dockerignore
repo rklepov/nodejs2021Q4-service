@@ -1,0 +1,8 @@
+build/
+logs/
+node_modules/
+test/
+ts-docs/
+
+./.*ignore
+./*lint*

@@ -8,9 +8,8 @@ COPY package*.json ./
 
 RUN npm install
 
-COPY ./src ./src
-COPY tsconfig.json ./
-COPY .env ./
+COPY .env nodemon.json tsconfig.json ./
+COPY src/ src/
 
 
 FROM node:16.13-alpine3.15
