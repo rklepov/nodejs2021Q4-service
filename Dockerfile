@@ -2,7 +2,9 @@
 
 FROM node:16.13-alpine3.15 AS base
 
-WORKDIR /usr/app
+ARG workdir
+
+WORKDIR $workdir
 
 COPY package*.json ./
 
@@ -14,9 +16,12 @@ COPY src/ src/
 
 FROM node:16.13-alpine3.15
 
-WORKDIR /usr/app
+ARG workdir
+ARG port
 
-COPY --from=base /usr/app ./
+WORKDIR $workdir
+
+COPY --from=base $workdir ./
 
 EXPOSE $port
 
