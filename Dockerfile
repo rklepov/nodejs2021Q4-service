@@ -8,7 +8,7 @@ COPY package*.json ./
 
 RUN npm install
 
-COPY .env nodemon.json tsconfig.json ./
+COPY nodemon.json tsconfig.json ./
 COPY src/ src/
 
 
@@ -18,8 +18,8 @@ WORKDIR /usr/app
 
 COPY --from=base /usr/app ./
 
-EXPOSE 4000
+EXPOSE $port
 
-CMD ["npm", "start"]
+CMD npm start
 
 #__EOF__
