@@ -1,4 +1,4 @@
-version: '3.8'
+version: '3.9'
 
 services:
   rs-rest-service:
@@ -10,3 +10,4 @@ services:
     image: rklepov/rs-rest-service
     ports:
       - ${PORT}:${PORT}
+    restart: on-failure
