@@ -2,7 +2,7 @@
 
 FROM node:16.13-alpine3.15 AS base
 
-ARG workdir
+ARG workdir=/usr/app
 
 WORKDIR $workdir
 
