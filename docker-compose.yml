@@ -52,3 +52,7 @@ volumes:
 networks:
   privatenet:
     driver: bridge
+    ipam:
+      options: {}
+      config:
+        - subnet: 172.28.0.0/28
