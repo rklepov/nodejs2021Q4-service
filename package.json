@@ -18,7 +18,7 @@
     "eslint": "eslint --ext .js,.ts --fix src/",
     "lint": "npm run build:check && npm run eslint",
     "start": "ts-node src/server.ts",
-    "start:container": "nodemon -L --config nodemon-docker.json",
+    "start:container": "nodemon -L --exitcrash --config nodemon-docker.json",
     "test": "cross-env DEBUG=rs:* jest --testMatch \"<rootDir>/test/e2e/test/*.test.js\" --noStackTrace --runInBand",
     "test:auth": "cross-env DEBUG=rs:* TEST_MODE=auth jest --noStackTrace"
   },
