@@ -2,7 +2,6 @@ version: '3.9'
 
 services:
   app:
-    env_file: .env
     build:
       context: ./
       args:
@@ -17,9 +16,16 @@ services:
     volumes:
       - logs:${DOCKER_WORKD_DIR:-/usr/app}/${LOG_DIR:-logs}:rw
       - ./src:${DOCKER_WORKD_DIR:-/usr/app}/src:ro
+    environment:
+      - PORT=${PORT}
+      - ADDR=${ADDR}
+      - LOG_LEVEL=${LOG_LEVEL}
+      - LOG_DIR=${LOG_DIR}
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
 
   db:
-    env_file: .env
     build:
       context: ./db/
     image: rklepov/rs-rest-svc-db
@@ -27,7 +33,13 @@ services:
       - ${PGPORT}:${PGPORT}
     restart: unless-stopped
     volumes:
-      - pgdata:${PGDATA}
+      - pgdata:${PGDATA}:rw
+    environment:
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - PGDATA=${PGDATA}
+      - PGPORT=${PGPORT}
 
 volumes:
   logs: null
