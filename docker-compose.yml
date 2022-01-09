@@ -1,3 +1,5 @@
+# docker-compose.yml
+
 version: '3.9'
 
 services:
@@ -19,13 +21,13 @@ services:
     networks:
       - privatenet
     environment:
-      - PORT=${PORT}
-      - ADDR=${ADDR}
-      - LOG_LEVEL=${LOG_LEVEL}
-      - LOG_DIR=${LOG_DIR}
-      - POSTGRES_DB=${POSTGRES_DB}
-      - POSTGRES_USER=${POSTGRES_USER}
-      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      PORT: ${PORT}
+      ADDR: ${ADDR}
+      LOG_LEVEL: ${LOG_LEVEL}
+      LOG_DIR: ${LOG_DIR}
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
 
   db:
     build:
@@ -39,11 +41,11 @@ services:
     networks:
       - privatenet
     environment:
-      - POSTGRES_DB=${POSTGRES_DB}
-      - POSTGRES_USER=${POSTGRES_USER}
-      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
-      - PGDATA=${PGDATA}
-      - PGPORT=${PGPORT}
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      PGDATA: ${PGDATA}
+      PGPORT: ${PGPORT}
 
 volumes:
   logs: null
@@ -56,3 +58,5 @@ networks:
       options: {}
       config:
         - subnet: 172.28.0.0/28
+
+#__EOF__
