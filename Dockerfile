@@ -10,7 +10,7 @@ COPY package*.json ./
 
 RUN npm install
 
-COPY nodemon.json tsconfig.json ./
+COPY nodemon-docker.json tsconfig.json ./
 COPY src/ src/
 
 
@@ -25,6 +25,6 @@ COPY --from=base $workdir ./
 
 EXPOSE $port
 
-CMD npm start
+CMD npm run start:container
 
 #__EOF__
