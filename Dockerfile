@@ -12,6 +12,7 @@ RUN npm install
 
 COPY nodemon-docker.json tsconfig.json ./
 COPY src/ src/
+COPY test/ test/
 
 
 FROM node:16.13-alpine3.15
