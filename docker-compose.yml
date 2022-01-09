@@ -19,9 +19,13 @@ services:
       - ./src:${DOCKER_WORKD_DIR:-/usr/app}/src:ro
 
   db:
+    env_file: .env
     build:
       context: ./db/
     image: rklepov/rs-rest-svc-db
+    ports:
+      - ${PGPORT}:${PGPORT}
+
 
 volumes:
   logs:
