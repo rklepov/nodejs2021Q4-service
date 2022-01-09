@@ -9,6 +9,8 @@ services:
         port: ${PORT}
         workdir: ${DOCKER_WORKD_DIR:-/usr/app}
     image: rklepov/rs-rest-svc-app
+    depends_on:
+      - db
     ports:
       - ${PORT}:${PORT}
     restart: on-failure
