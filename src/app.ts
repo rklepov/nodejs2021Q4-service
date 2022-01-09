@@ -142,7 +142,8 @@ class App {
         info: {
           title: 'Trello Service',
           description: "Let's try to create a competitor for Trello!",
-          version: '1.1.0',
+          // TODO: sync with package.json (via env var?)
+          version: '1.2.1',
         },
         tags: [
           { name: 'user', description: 'Users related end-points' },
