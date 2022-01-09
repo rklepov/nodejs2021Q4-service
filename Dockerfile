@@ -17,8 +17,8 @@ COPY test/ test/
 
 FROM node:16.13-alpine3.15
 
-ARG workdir
-ARG port
+ARG workdir=/usr/app
+ARG port=4000
 
 WORKDIR $workdir
 
