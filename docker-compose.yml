@@ -25,7 +25,10 @@ services:
     image: rklepov/rs-rest-svc-db
     ports:
       - ${PGPORT}:${PGPORT}
-
+    restart: unless-stopped
+    volumes:
+      - pgdata:${PGDATA}
 
 volumes:
-  logs:
+  logs: null
+  pgdata: null
