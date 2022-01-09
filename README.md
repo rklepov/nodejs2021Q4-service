@@ -2,52 +2,76 @@
 
 ## Prerequisites
 
-- Git - [Download & Install Git](https://git-scm.com/downloads).
-- Node.js - [Download & Install Node.js](https://nodejs.org/en/download/) `16.13.0` and **npm** package manager `^8.1.0`.
+- **Git** - [Download & Install Git](https://git-scm.com/downloads).
+- **Docker** - [Download & Install Docker](https://docs.docker.com/get-docker/).
 
-## Downloading
+> My personal development environment is `Docker Desktop 4.3.2` for [**Windows**](https://docs.docker.com/desktop/windows/install/) with `Docker 20.10.11` and `Docker Compose v2.2.1`
+
+- _\[Opt.\]_ **Node.js** - [Download & Install Node.js](https://nodejs.org/en/download/) `^16.13.0` and **npm** package manager `^8.1.0`
+
+> For this task you actually need **Node.js** only in the case if you'd like to run tests locally (outside the container).
+
+## Download
 
 Clone the repository:
-```
+
+```text
 git clone https://github.com/rklepov/nodejs2021Q4-service
 ```
 
 Go to the root directory of the cloned repository and do:
-```
-git checkout task/06-logging-error-handling
+
+```text
+git checkout task/07-docker
 ```
 
-## Installing NPM modules
+## Running the application
 
-```
-npm install
+:warning: It's important that the version of [`docker-compose`](https://docs.docker.com/compose/) is compatible with the version `3.9` of [Compose YAML file](https://docs.docker.com/compose/compose-file/compose-file-v3/). Please follow the [instructions](https://docs.docker.com/compose/install/) to upgrade to the newer version of `docker-compose` if necessary.
+
+### Build and run the containers
+
+Use the following command:
+
+```text
+docker-compose up --build
 ```
 
-## Running application
+It will build 2 containers (the application and the database) and run them. The DB container starts first because it's configured as the dependency for the app container in the Compose file.
 
-```
-npm start
+Once the application container is running on the configured port (4000 as default) you should be able to open in your browser OpenAPI documentation by typing http://localhost:4000/doc/
+
+### Stop the containers and clean up
+
+You can get back to the CLI propmt with <kbd>Ctrl+C</kbd> or just open a new terminal window and run:
+
+```text
+docker-compose down --volumes --rmi all
 ```
 
-After starting the app on port (4000 as default) you can open
-in your browser OpenAPI documentation by typing http://localhost:4000/doc/.
-For more information about OpenAPI/Swagger please visit https://swagger.io/.
+This will stop all the running containers (if they've not been stopped already after <kbd>Ctrl+C</kbd>) and do the full cleanup: remove the volumes and the container images.
 
 ## Testing
 
-After application running open new terminal and enter:
+### Installing NPM modules
 
-To run all tests without authorization
+:warning: In this task you need to run **npm** installation locally _only_ if you'd like to run the tests locally for the target service running in the container.
 
+```text
+npm install
 ```
+
+### Running the tests
+
+After the container with the application is up and running enter the following commands to run the tests:
+
+```text
 npm test
 ```
 
-To run only one of all test suites (users, boards or tasks)
+### Checking `src/` monitoring
 
-```
-npm test <suite name>
-```
+### Checking container restart after a failure
 
 ## Development
 
@@ -55,7 +79,7 @@ If you're using VSCode, you can get a better developer experience from integrati
 
 ### Auto-fix and format
 
-```
+```text
 npm run lint
 ```
 
