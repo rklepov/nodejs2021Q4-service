@@ -47,7 +47,7 @@ function run(port: number, addr: string, logLevel: LogLevel, logDir: string) {
       'Uncaught Exception'
     );
     stop(log, app);
-    process.exitCode = 127;
+    process.exitCode = 126;
     // don't want to exit here, need to stop the server first, the process will
     // exit automatically after that
     // process.exit();
@@ -60,7 +60,7 @@ function run(port: number, addr: string, logLevel: LogLevel, logDir: string) {
       'Unhandled Rejection'
     );
     stop(log, app);
-    process.exitCode = 126;
+    process.exitCode = 125;
     // don't want to exit here, need to stop the server first, the process will
     // exit automatically after that
     // process.exit();
