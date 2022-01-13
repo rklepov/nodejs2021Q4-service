@@ -20,7 +20,8 @@
     "start": "ts-node src/server.ts",
     "start:container": "nodemon -L --exitcrash --config nodemon-docker.json",
     "test": "cross-env DEBUG=rs:* jest --testMatch \"<rootDir>/test/e2e/test/*.test.js\" --noStackTrace --runInBand",
-    "test:auth": "cross-env DEBUG=rs:* TEST_MODE=auth jest --noStackTrace"
+    "test:auth": "cross-env DEBUG=rs:* TEST_MODE=auth jest --noStackTrace",
+    "prepare": "husky install"
   },
   "keywords": [
     "autotest",
@@ -40,11 +41,6 @@
     "setupFilesAfterEnv": [
       "./test/setup.js"
     ]
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged"
-    }
   },
   "lint-staged": {
     "src/**/*.js": [
@@ -87,7 +83,7 @@
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-prettier": "^4.0.0",
     "eslint-plugin-tsdoc": "^0.2.14",
-    "husky": "^4.3.8",
+    "husky": "^7.0.4",
     "jest": "27.4.7",
     "lint-staged": "^12.1.7",
     "nodemon": "^2.0.15",
