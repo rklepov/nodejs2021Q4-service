@@ -9,7 +9,7 @@ WORKDIR $workdir
 
 COPY package*.json ./
 
-RUN npm install && npm cache clean --force
+RUN npm install --omit optional && npm cache clean --force
 
 COPY nodemon-docker.json tsconfig.json ./
 COPY src/ src/
