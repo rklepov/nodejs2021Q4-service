@@ -11,7 +11,7 @@ COPY package*.json ./
 
 RUN npm install --omit optional && npm cache clean --force
 
-COPY nodemon-docker.json tsconfig.json ./
+COPY nodemon-docker.json tsconfig.json ormconfig.ts ./
 COPY src/ src/
 COPY test/ test/
 
