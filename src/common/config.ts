@@ -8,13 +8,14 @@ dotenv.config({
 });
 
 export const {
+  NODE_ENV,
+
   PORT,
   ADDR,
-  NODE_ENV,
-  MONGO_CONNECTION_STRING,
-  JWT_SECRET_KEY,
   LOG_LEVEL,
   LOG_DIR,
+
+  JWT_SECRET_KEY,
 } = process.env;
 
 export const AUTH_MODE = process.env.AUTH_MODE === 'true';
