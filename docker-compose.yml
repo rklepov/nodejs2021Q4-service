@@ -22,7 +22,7 @@ services:
       - privatenet
     environment:
       PORT: ${PORT}
-      ADDR: ${ADDR}
+      ADDR: 0.0.0.0
       LOG_LEVEL: ${LOG_LEVEL}
       LOG_DIR: ${LOG_DIR}
       POSTGRES_DB: ${POSTGRES_DB}
