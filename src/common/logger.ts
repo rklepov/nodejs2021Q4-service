@@ -1,6 +1,7 @@
 // logger.ts
 
 import path from 'path';
+import dayjs from 'dayjs';
 import { FastifyReply, FastifyRequest } from 'fastify';
 
 import pino, { Level as LogLevel, Logger as PinoLogger } from 'pino';
@@ -12,6 +13,8 @@ class Logger {
   pinoLogger: PinoLogger;
 
   constructor(logLevel: LogLevel, logsDir: string) {
+    const timestamp = dayjs().format('YYYYMMDDHHmmss');
+
     this.pinoLogger = pino({
       level: logLevel,
       serializers: {
@@ -37,7 +40,7 @@ class Logger {
       transport: {
         targets: [
           {
-            // all log records go to ${LOG_DIR}/full-${PID}.log
+            // all log records go to ${LOG_DIR}/full-{YYYYMMDDHHmmss}-${PID}.log
             target: 'pino/file',
             level: logLevel,
             options: {
@@ -45,14 +48,14 @@ class Logger {
                 __dirname,
                 '../../',
                 logsDir,
-                `full-${process.pid}.log`
+                `full-${timestamp}-${process.pid}.log`
               ),
               mkdir: true,
             },
           },
           {
             // error+ level log records additionally go to
-            // ${LOG_DIR}/error-${PID}.log
+            // ${LOG_DIR}/error-{YYYYMMDDHHmmss}-${PID}.log
             target: 'pino/file',
             level: 'error',
             options: {
@@ -60,7 +63,7 @@ class Logger {
                 __dirname,
                 '../../',
                 logsDir,
-                `error-${process.pid}.log`
+                `error-${timestamp}-${process.pid}.log`
               ),
               mkdir: true,
             },

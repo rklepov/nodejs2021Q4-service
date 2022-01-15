@@ -2,7 +2,7 @@
 
 import { Level as LogLevel } from 'pino';
 
-import { LOG_DIR, LOG_LEVEL, PORT } from './common/config';
+import { LOG_DIR, LOG_LEVEL, PORT, ADDR } from './common/config';
 import Logger from './common/logger';
 
 import App from './app';
@@ -25,12 +25,12 @@ function stop(log: Logger, app: App) {
  *
  * @param port - The server port number
  */
-function run(port: number, logLevel: LogLevel, logDir: string) {
+function run(port: number, addr: string, logLevel: LogLevel, logDir: string) {
   const log = new Logger(logLevel, logDir);
   const app = new App(log);
 
   app
-    .start(port)
+    .start(port, addr)
     .then(() => {
       log.info('The server has been started successfully');
     })
@@ -47,7 +47,7 @@ function run(port: number, logLevel: LogLevel, logDir: string) {
       'Uncaught Exception'
     );
     stop(log, app);
-    process.exitCode = 127;
+    process.exitCode = 126;
     // don't want to exit here, need to stop the server first, the process will
     // exit automatically after that
     // process.exit();
@@ -60,7 +60,7 @@ function run(port: number, logLevel: LogLevel, logDir: string) {
       'Unhandled Rejection'
     );
     stop(log, app);
-    process.exitCode = 126;
+    process.exitCode = 125;
     // don't want to exit here, need to stop the server first, the process will
     // exit automatically after that
     // process.exit();
@@ -69,6 +69,7 @@ function run(port: number, logLevel: LogLevel, logDir: string) {
 
 run(
   Number(PORT) || 4000,
+  ADDR || 'localhost',
   (LOG_LEVEL as LogLevel) || 'info',
   LOG_DIR || './logs'
 );

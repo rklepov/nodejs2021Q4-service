@@ -142,7 +142,8 @@ class App {
         info: {
           title: 'Trello Service',
           description: "Let's try to create a competitor for Trello!",
-          version: '1.1.0',
+          // TODO: sync with package.json (via env var?)
+          version: '1.2.1',
         },
         tags: [
           { name: 'user', description: 'Users related end-points' },
@@ -171,11 +172,11 @@ class App {
    * In the case of an issue (for example if the specified port number is
    * already occupied)
    */
-  async start(port: number) {
+  async start(port: number, addr?: string) {
     try {
       await this.fastify.register(fastifySensible);
-      const addr = await this.fastify.listen(port);
-      this.fastify.log.info(`[start] App is running on ${addr}`);
+      const addrPort = await this.fastify.listen(port, addr);
+      this.fastify.log.info(`[start] App is running on ${addrPort}`);
     } catch (e) {
       this.fastify.log.error(e);
       throw e;
