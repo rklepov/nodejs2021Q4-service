@@ -1,5 +1,9 @@
 // app.ts
 
+/* eslint max-classes-per-file: ["error", 2] */
+
+import 'reflect-metadata';
+
 import path from 'path';
 
 import fastify, { FastifyInstance } from 'fastify';
@@ -7,8 +11,9 @@ import fastifySensible from 'fastify-sensible';
 import swagger from 'fastify-swagger';
 
 import Logger from './common/logger';
+import { ApplicationException } from './common/except';
 
-import { Database, createDatabase } from './db/database';
+import { Database, createDatabase, DatabaseConnection } from './db/database';
 
 import UserRouter from './resources/users/user.router';
 import User from './resources/users/user.model';
@@ -18,6 +23,12 @@ import Board from './resources/boards/board.model';
 
 import TaskRouter from './resources/tasks/task.router';
 import Task from './resources/tasks/task.model';
+
+export class ServerStartError extends ApplicationException {
+  constructor(message: string) {
+    super(message, ServerStartError.SERVER_START_ERROR);
+  }
+}
 
 /**
  * The main application class representing the server instance.
@@ -35,8 +46,15 @@ class App {
 
   /**
    * Database instance.
+   *
+   * TODO: remove once migrated to postgres
    */
   db: Database;
+
+  /**
+   * The instance of typeorm database connection.
+   */
+  postgres: DatabaseConnection;
 
   /**
    * The path to the OpenAPI schema spec YAML.
@@ -76,10 +94,13 @@ class App {
    * TODO: the constructor function became too long, consider splitting it in
    *       smaller chunks
    */
-  constructor(logger: Logger) {
+  constructor(logger: Logger, db: DatabaseConnection) {
     this.log = logger;
 
+    // TODO: remove once migrated to postgres
     this.db = createDatabase();
+
+    this.postgres = db;
 
     this.fastify = fastify({
       logger: this.log.pinoLogger,
@@ -179,7 +200,16 @@ class App {
       this.fastify.log.info(`[start] App is running on ${addrPort}`);
     } catch (e) {
       this.fastify.log.error(e);
-      throw e;
+
+      let message = `Failed to start server`;
+
+      if (e instanceof Error) {
+        message = `${message}: [${e.name}] ${e.message}`;
+      } else {
+        message = `${message}: ${String(e)}]`;
+      }
+
+      throw new ServerStartError(message);
     }
   }
 

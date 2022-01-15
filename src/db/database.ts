@@ -1,6 +1,14 @@
 // database.ts
 
-import Table from './table';
+/* eslint max-classes-per-file: ["error", 2] */
+
+import pick from 'lodash.pick';
+
+import { Connection, ConnectionOptions } from 'typeorm';
+import { getConnectionOptions, createConnection } from 'typeorm';
+
+import Logger from '../common/logger';
+import { ApplicationException } from '../common/except';
 
 import User from '../resources/users/user.model';
 import { UserId } from '../resources/users/user.types';
@@ -8,6 +16,8 @@ import Board from '../resources/boards/board.model';
 import { BoardId } from '../resources/boards/board.types';
 import Task from '../resources/tasks/task.model';
 import { TaskId } from '../resources/tasks/task.types';
+
+import Table from './table';
 
 /**
  * Users table.
@@ -46,6 +56,46 @@ function createDatabase(): Database {
   };
 }
 
-export { UsersTable, BoardsTable, TasksTable, Database, createDatabase };
+class DatabaseConnectionError extends ApplicationException {
+  constructor(message: string) {
+    super(message, DatabaseConnectionError.DATABASE_CONNECTION_ERROR);
+  }
+}
+
+async function createDatabaseConnection(log: Logger) {
+  const connectionOptions = await getConnectionOptions();
+  try {
+    const connection = await createConnection({
+      ...connectionOptions,
+      entities: [User],
+    });
+
+    return connection;
+  } catch (e) {
+    let message = `Failed to set up database connection with ${JSON.stringify(
+      pick(connectionOptions, ['type', 'host', 'port', 'username', 'database'])
+    )}`;
+
+    if (e instanceof Error) {
+      message = `${message}: [${e.name} ${e.message}]`;
+    } else {
+      message = `${message}: ${String(e)}]`;
+    }
+
+    // rethrow typed error
+    throw new DatabaseConnectionError(message);
+  }
+}
+
+export {
+  UsersTable,
+  BoardsTable,
+  TasksTable,
+  Database,
+  createDatabase,
+  Connection as DatabaseConnection,
+  createDatabaseConnection,
+  DatabaseConnectionError,
+};
 
 // __EOF__

@@ -3,7 +3,11 @@
 import { Level as LogLevel } from 'pino';
 
 import { LOG_DIR, LOG_LEVEL, PORT, ADDR } from './common/config';
+
 import Logger from './common/logger';
+import { ApplicationException } from './common/except';
+
+import { createDatabaseConnection } from './db/database';
 
 import App from './app';
 
@@ -26,45 +30,71 @@ function stop(log: Logger, app: App) {
  * @param port - The server port number
  */
 function run(port: number, addr: string, logLevel: LogLevel, logDir: string) {
-  const log = new Logger(logLevel, logDir);
-  const app = new App(log);
+  const start = async (log: Logger) => {
+    try {
+      const databaseConnection = await createDatabaseConnection(log);
+      log.info('The database connection has been established successfully');
 
-  app
-    .start(port, addr)
+      const app = new App(log, databaseConnection);
+      await app.start(port, addr);
+
+      process.on('uncaughtException', (error, origin) => {
+        log.pinoLogger.error(error);
+        log.pinoLogger.fatal(
+          { origin, error: error.toString() },
+          'Uncaught Exception'
+        );
+        stop(log, app);
+        process.exitCode = ApplicationException.UNHANDLED_EXCEPTION;
+        // don't want to exit here, need to stop the server first, the process will
+        // exit automatically after that
+        // process.exit();
+      });
+
+      process.on('unhandledRejection', (reason, promise) => {
+        log.pinoLogger.error(reason);
+        log.pinoLogger.fatal(
+          { reason: String(reason), promise: String(promise) },
+          'Unhandled Rejection'
+        );
+        stop(log, app);
+        process.exitCode = ApplicationException.UNHANDLED_REJECTION;
+        // don't want to exit here, need to stop the server first, the process will
+        // exit automatically after that
+        // process.exit();
+      });
+    } catch (e) {
+      if (e instanceof ApplicationException) {
+        throw e;
+      } else if (e instanceof Error) {
+        throw new ApplicationException(
+          `root cause: [${e.name}] ${e.message}`,
+          ApplicationException.GENERAL_APPLICATION_ERROR
+        );
+      } else {
+        throw new ApplicationException(
+          `unexpected error: ${String(e)}`,
+          ApplicationException.UNEXPECTED
+        );
+      }
+    }
+  };
+
+  const log = new Logger(logLevel, logDir);
+
+  start(log)
     .then(() => {
       log.info('The server has been started successfully');
     })
     .catch((e) => {
-      const errMsg = e instanceof Error ? e.message : String(e);
-      log.fatal(`Failed to start the server on ${port}: ${errMsg}`);
-      process.exitCode = 1;
+      if (e instanceof ApplicationException) {
+        log.fatal(`[${e.name}]: ${e.message}`);
+        process.exitCode = e.statusCode;
+      } else {
+        log.fatal(`[UNEXPECTED ERROR] ${String(e)}`);
+        process.exit(ApplicationException.UNEXPECTED);
+      }
     });
-
-  process.on('uncaughtException', (error, origin) => {
-    log.pinoLogger.error(error);
-    log.pinoLogger.fatal(
-      { origin, error: error.toString() },
-      'Uncaught Exception'
-    );
-    stop(log, app);
-    process.exitCode = 126;
-    // don't want to exit here, need to stop the server first, the process will
-    // exit automatically after that
-    // process.exit();
-  });
-
-  process.on('unhandledRejection', (reason, promise) => {
-    log.pinoLogger.error(reason);
-    log.pinoLogger.fatal(
-      { reason: String(reason), promise: String(promise) },
-      'Unhandled Rejection'
-    );
-    stop(log, app);
-    process.exitCode = 125;
-    // don't want to exit here, need to stop the server first, the process will
-    // exit automatically after that
-    // process.exit();
-  });
 }
 
 run(
