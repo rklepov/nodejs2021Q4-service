@@ -24,6 +24,7 @@ export default {
     /* subscribersDir: 'subscriber', */
   },
   logging: true,
+  synchronize: true,
 };
 
 //__EOF__

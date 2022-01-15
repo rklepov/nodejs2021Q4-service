@@ -5,7 +5,7 @@ import HTTP_STATUS from 'http-status';
 import Logger from '../../common/logger';
 import { reply } from '../../common/utils';
 
-import { UsersTable } from '../../db/database';
+import { DatabaseConnection } from '../../db/database';
 
 import { ITaskService } from '../tasks/task.types';
 
@@ -48,13 +48,13 @@ class UserService {
    * The constructor of the {@link UserService} instance.
    *
    * @param log - {@link Logger} instance.
-   * @param users - An instance of the Users table.
+   * @param db - An instance of Typeorm database connection.
    * @param taskService - The instance of {@link TaskService} that allows
    * operations on the {@link Task} object linked to the {@link User} object.
    */
-  constructor(log: Logger, users: UsersTable, taskService: ITaskService) {
+  constructor(log: Logger, db: DatabaseConnection, taskService: ITaskService) {
     this.log = log;
-    this.repo = new UserRepo(users);
+    this.repo = new UserRepo(db);
     this.taskService = taskService;
   }
 

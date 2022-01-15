@@ -2,33 +2,39 @@
 
 import pick from 'lodash.pick';
 
-import { genId } from '../../common/utils';
+import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
+
 import { IUserId, IUser, UserId } from './user.types';
 
 /**
  * Models the User object which holds the unique **Id** along with the fields
  * describing a user.
  */
-class User implements IUserId, IUser {
+@Entity()
+class User implements IUser {
   // ? wonder if the class fields can be somehow inferred from the JSON schema below ?
   /**
    * The unique user **Id**.
    */
-  userId: UserId = genId(); // TODO: preferably should be private
+  @PrimaryGeneratedColumn('uuid')
+  userId?: UserId;
 
   /**
    * User name.
    */
+  @Column('varchar')
   name = '';
 
   /**
    * User login.
    */
+  @Column('varchar')
   login?: string | undefined;
 
   /**
    * User password.
    */
+  @Column('varchar')
   password?: string | undefined;
 
   /**
@@ -48,19 +54,6 @@ class User implements IUserId, IUser {
    */
   get id() {
     return this.userId;
-  }
-
-  /**
-   * Assigns **Id** to the user.
-   *
-   * @param userId - The **Id** of the user.
-   * @returns `this` {@link User} object.
-   *
-   * @deprecated The **Id** is now stored in {@link User} object itself.
-   */
-  assignId(userId: UserId) {
-    Object.assign(this, { userId });
-    return this;
   }
 
   /**
