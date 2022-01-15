@@ -17,7 +17,7 @@ import {
 } from './user.types';
 
 import User from './user.model';
-import UserRepo from './user.memory.repository';
+import UserRepo from './user.repo';
 
 /**
  * HTTP request handlers for {@link User}.

@@ -1,4 +1,4 @@
-// user.memory.repository.ts
+// user.repo.ts
 
 import { DatabaseConnection, UsersTable } from '../../db/database';
 

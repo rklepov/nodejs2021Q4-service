@@ -3,7 +3,7 @@
   "ignore": ["test/", "build/", "ts-docs/", "logs/"],
   "verbose": true,
   "exec": "npm run clean:logs && npm start",
-  "watch": ["src/", "./*.json", "./.env"],
+  "watch": ["src/", "./*.json", "./*.ts", "./.env"],
   "env": {
     "NODE_ENV": "development"
   },
