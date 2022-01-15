@@ -220,6 +220,8 @@ class App {
     try {
       await this.fastify.close();
       this.fastify.log.info('[stop] Server closed');
+      await this.postgres.close();
+      this.fastify.log.info('[stop] Database connection closed');
     } catch (e) {
       this.fastify.log.error(e);
       throw e;
