@@ -5,7 +5,12 @@ import pick from 'lodash.pick';
 import { genId } from '../../common/utils';
 
 import { BoardId, IBoardId } from './board.types';
-import { IBoardColumnId, IBoardColumn, BoardColumnId } from './column.types';
+
+import {
+  IBoardColumnId,
+  IBoardColumn,
+  BoardColumnId,
+} from './board-column.types';
 
 /**
  * Models the Column object which holds the unique **Id** along with the fields

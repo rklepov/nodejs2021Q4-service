@@ -5,8 +5,9 @@ import difference from 'lodash.difference';
 
 import { genId } from '../../common/utils';
 
-import BoardColumn from './column.model';
-import { IBoardColumn } from './column.types';
+import BoardColumn from './board-column.model';
+import { IBoardColumn } from './board-column.types';
+
 import { IBoardId, BoardId, IBoard } from './board.types';
 
 /**

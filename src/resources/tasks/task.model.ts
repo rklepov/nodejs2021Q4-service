@@ -10,10 +10,12 @@ import {
   JoinColumn,
 } from 'typeorm';
 
-import { BoardColumnId } from '../boards/column.types';
+import { BoardId, IBoardId } from '../boards/board.types';
 
+import { BoardColumnId } from '../boards/board-column.types';
+
+// eslint-disable-next-line import/no-cycle
 import Board from '../boards/board.model';
-import { IBoardId } from '../boards/board.types';
 
 // eslint-disable-next-line import/no-cycle
 import User from '../users/user.model';
