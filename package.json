@@ -13,15 +13,19 @@
     "build:check": "tsc --noEmit",
     "build:docs": "typedoc",
     "clean:logs": "del-cli ./logs/*.log",
+    "db:migration:gen": "ts-node --transpile-only ./node_modules/typeorm/cli.js migration:generate -p",
+    "db:migration:revert": "ts-node --transpile-only ./node_modules/typeorm/cli.js migration:revert",
+    "db:migration:run": "ts-node --transpile-only ./node_modules/typeorm/cli.js migration:run",
     "dev": "nodemon",
     "dev:docs": "nodemon --exec npm run build:docs",
     "eslint": "eslint --ext .js,.ts --fix src/",
     "lint": "npm run build:check && npm run eslint",
-    "start": "ts-node src/server.ts",
-    "start:container": "nodemon -L --exitcrash --config nodemon-docker.json",
+    "prepare": "husky install",
+    "start": "npm run db:migration:run && npm run start:tsnode",
+    "start:container": "npm run db:migration:run && nodemon -L --exitcrash --config nodemon-docker.json",
+    "start:tsnode": "ts-node src/server.ts",
     "test": "cross-env DEBUG=rs:* jest --testMatch \"<rootDir>/test/e2e/test/*.test.js\" --noStackTrace --runInBand",
-    "test:auth": "cross-env DEBUG=rs:* TEST_MODE=auth jest --noStackTrace",
-    "prepare": "husky install"
+    "test:auth": "cross-env DEBUG=rs:* TEST_MODE=auth jest --noStackTrace"
   },
   "keywords": [
     "autotest",

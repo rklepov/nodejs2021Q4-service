@@ -1,7 +1,7 @@
 {
   "restartable": "rs",
   "verbose": true,
-  "exec": "npm start",
+  "exec": "npm run start:tsnode",
   "watch": ["src/"],
   "env": {
     "NODE_ENV": "development"
