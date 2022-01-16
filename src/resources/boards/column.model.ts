@@ -5,7 +5,7 @@ import pick from 'lodash.pick';
 import { genId } from '../../common/utils';
 
 import { BoardId, IBoardId } from './board.types';
-import { IColumnId, IColumn, ColumnId } from './column.types';
+import { IBoardColumnId, IBoardColumn, BoardColumnId } from './column.types';
 
 /**
  * Models the Column object which holds the unique **Id** along with the fields
@@ -16,12 +16,12 @@ import { IColumnId, IColumn, ColumnId } from './column.types';
  * not so easy to achieve because columns are nested to a board and at the same
  * the columns needs to be assigned an Id).
  */
-class Column implements IColumnId, IBoardId, IColumn {
+class BoardColumn implements IBoardColumnId, IBoardId, IBoardColumn {
   // ? wonder if the class fields can be somehow inferred from the JSON schema below ?
   /**
    * The unique column **Id**.
    */
-  columnId: ColumnId = genId(); // TODO: preferably should be private
+  columnId: BoardColumnId = genId(); // TODO: preferably should be private
 
   /**
    * The title of the column.
@@ -39,14 +39,14 @@ class Column implements IColumnId, IBoardId, IColumn {
   boardId: BoardId = ''; // TODO: the id shouldn't be an empty string
 
   /**
-   * The {@link Column} object constructor.
+   * The {@link BoardColumn} object constructor.
    *
-   * @param column - An object with the fields matching {@link Column.schema}.
+   * @param column - An object with the fields matching {@link BoardColumn.schema}.
    */
-  constructor(column: IColumn) {
+  constructor(column: IBoardColumn) {
     Object.assign(
       this,
-      pick(column, Object.keys(Column.schema.request.properties))
+      pick(column, Object.keys(BoardColumn.schema.request.properties))
     );
   }
 
@@ -56,7 +56,7 @@ class Column implements IColumnId, IBoardId, IColumn {
    * @privateremarks
    * TODO: setter needed because the request can contain the column Id
    */
-  set id(columnId: ColumnId) {
+  set id(columnId: BoardColumnId) {
     this.columnId = columnId;
   }
 
@@ -73,7 +73,7 @@ class Column implements IColumnId, IBoardId, IColumn {
    * @param boardId - The **Id** of the {@link Board} to which the column is
    * assigned to.
    *
-   * @returns `this` {@link Column} object.
+   * @returns `this` {@link BoardColumn} object.
    */
   assignToBoard(boardId: BoardId) {
     Object.assign(this, { boardId });
@@ -87,7 +87,7 @@ class Column implements IColumnId, IBoardId, IColumn {
    * @returns The DTO equivalent of the **Column** object.
    */
   toJSON() {
-    return pick(this, Object.keys(Column.schema.response.properties));
+    return pick(this, Object.keys(BoardColumn.schema.response.properties));
   }
 
   /**
@@ -118,7 +118,11 @@ class Column implements IColumnId, IBoardId, IColumn {
   };
 }
 
-export { ColumnId, IColumnId, IColumn };
-export default Column;
+export {
+  BoardColumnId as ColumnId,
+  IBoardColumnId as IColumnId,
+  IBoardColumn as IColumn,
+};
+export default BoardColumn;
 
 // __EOF__

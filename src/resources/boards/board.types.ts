@@ -3,7 +3,7 @@
 import { FastifyRequest } from 'fastify';
 
 import { genId } from '../../common/utils';
-import { IColumn } from './column.types';
+import { IBoardColumn } from './column.types';
 
 /**
  * The unique **Id** of the board.
@@ -23,7 +23,7 @@ export interface IBoardId {
  */
 export interface IBoard {
   title: string;
-  columns: IColumn[];
+  columns: IBoardColumn[];
 }
 
 /**

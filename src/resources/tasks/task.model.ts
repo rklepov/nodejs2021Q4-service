@@ -10,7 +10,7 @@ import {
   JoinColumn,
 } from 'typeorm';
 
-import { ColumnId } from '../boards/column.types';
+import { BoardColumnId } from '../boards/column.types';
 
 import Board from '../boards/board.model';
 import { IBoardId } from '../boards/board.types';
@@ -75,7 +75,7 @@ class Task implements IBoardId, ITask {
    * The **Id** of the column of the task.
    */
   @Column('varchar', { nullable: true })
-  columnId?: ColumnId;
+  columnId?: BoardColumnId;
 
   /**
    * The {@link Task} object constructor.

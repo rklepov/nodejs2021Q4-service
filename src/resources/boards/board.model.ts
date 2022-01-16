@@ -5,8 +5,8 @@ import difference from 'lodash.difference';
 
 import { genId } from '../../common/utils';
 
-import Column from './column.model';
-import { IColumn } from './column.types';
+import BoardColumn from './column.model';
+import { IBoardColumn } from './column.types';
 import { IBoardId, BoardId, IBoard } from './board.types';
 
 /**
@@ -28,7 +28,7 @@ class Board implements IBoardId, IBoard {
   /**
    * The list of columns of the board.
    */
-  columns: Column[] = [];
+  columns: BoardColumn[] = [];
 
   /**
    * The {@link Board} object constructor.
@@ -46,7 +46,7 @@ class Board implements IBoardId, IBoard {
 
     this.assignColumns(
       pick(board, ['columns']).columns?.map(
-        (column: IColumn) => new Column(column)
+        (column: IBoardColumn) => new BoardColumn(column)
       )
     );
   }
@@ -78,7 +78,7 @@ class Board implements IBoardId, IBoard {
    * board.
    * @returns
    */
-  assignColumns(columns: Column[]) {
+  assignColumns(columns: BoardColumn[]) {
     this.columns = columns || [];
     return this;
   }
@@ -96,7 +96,7 @@ class Board implements IBoardId, IBoard {
         this,
         difference(Object.keys(Board.schema.response.properties), ['columns'])
       ),
-      columns: this.columns.map((column: Column) => column.toJSON()),
+      columns: this.columns.map((column: BoardColumn) => column.toJSON()),
     };
   }
 
@@ -123,7 +123,7 @@ class Board implements IBoardId, IBoard {
       required: ['title', 'columns'],
       properties: {
         title: { type: 'string' },
-        columns: { type: 'array', items: Column.schema.request },
+        columns: { type: 'array', items: BoardColumn.schema.request },
       },
     },
 
@@ -132,7 +132,7 @@ class Board implements IBoardId, IBoard {
       properties: {
         id: { type: 'string', format: 'uuid' },
         title: { type: 'string' },
-        columns: { type: 'array', items: Column.schema.response },
+        columns: { type: 'array', items: BoardColumn.schema.response },
       },
     },
   };

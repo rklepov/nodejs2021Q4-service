@@ -6,7 +6,7 @@ import { genId } from '../../common/utils';
 
 import { UserId } from '../users/user.types';
 import { BoardId, IBoardId } from '../boards/board.types';
-import { ColumnId } from '../boards/column.types';
+import { BoardColumnId } from '../boards/column.types';
 
 /**
  * The unique **Id** of the task.
@@ -29,7 +29,7 @@ export interface ITask {
   order: number;
   description?: string;
   userId?: UserId | null;
-  columnId?: ColumnId | null;
+  columnId?: BoardColumnId | null;
 }
 
 /**
