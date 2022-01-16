@@ -1,4 +1,4 @@
-// task.memory.repository.ts
+// task.repo.ts
 
 import { DatabaseConnection, TasksTable } from '../../db/database';
 

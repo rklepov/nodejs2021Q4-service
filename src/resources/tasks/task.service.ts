@@ -19,7 +19,7 @@ import {
 } from './task.types';
 
 import Task from './task.model';
-import TaskRepo from './task.memory.repository';
+import TaskRepo from './task.repo';
 
 /**
  * HTTP request handlers for {@link Task}.
