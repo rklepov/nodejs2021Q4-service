@@ -21,7 +21,7 @@ export default {
   username: POSTGRES_USER,
   password: POSTGRES_PASSWORD,
   database: POSTGRES_DB,
-  entities: [User, Task],
+  entities: [User, Task, Board],
   migrations: ['src/db/migrations/*.ts'],
   cli: {
     /* entitiesDir: 'entity', */
