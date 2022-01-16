@@ -21,13 +21,15 @@ export default {
   password: POSTGRES_PASSWORD,
   database: POSTGRES_DB,
   entities: [User, Task],
+  migrations: ['src/db/migrations/*.ts'],
   cli: {
     /* entitiesDir: 'entity', */
     migrationsDir: 'src/db/migrations',
     /* subscribersDir: 'subscriber', */
   },
   migrationsRun: true,
-  logging: false,
+  logging: true,
+  // synchronize: true,
 };
 
 //__EOF__

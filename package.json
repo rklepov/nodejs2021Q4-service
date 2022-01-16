@@ -13,7 +13,7 @@
     "build:check": "tsc --noEmit",
     "build:docs": "typedoc",
     "clean:logs": "del-cli ./logs/*.log",
-    "db:migration:gen": "ts-node --transpile-only ./node_modules/typeorm/cli.js migration:generate -p",
+    "db:migration:gen": "ts-node --transpile-only ./node_modules/typeorm/cli.js migration:generate -p -n",
     "db:migration:revert": "ts-node --transpile-only ./node_modules/typeorm/cli.js migration:revert",
     "db:migration:run": "ts-node --transpile-only ./node_modules/typeorm/cli.js migration:run",
     "dev": "nodemon",
