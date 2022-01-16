@@ -5,6 +5,7 @@ import path from 'path';
 
 import User from './src/resources/users/user.model';
 import Task from './src/resources/tasks/task.model';
+import Board from './src/resources/boards/board.model';
 
 dotenv.config({
   path: path.join(__dirname, '.env'),

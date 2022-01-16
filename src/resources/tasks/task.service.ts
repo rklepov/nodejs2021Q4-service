@@ -7,10 +7,9 @@ import { reply } from '../../common/utils';
 
 import { DatabaseConnection } from '../../db/database';
 
-import { BoardId, IBoardService } from '../boards/board.types';
+import { IBoardService } from '../boards/board.types';
 
 import {
-  ITaskService,
   TaskGetAllRequest,
   TaskGetRequest,
   TaskPostRequest,
@@ -24,7 +23,7 @@ import TaskRepo from './task.repo';
 /**
  * HTTP request handlers for {@link Task}.
  */
-class TaskService implements ITaskService {
+class TaskService {
   /**
    * Logger instance.
    */
@@ -207,16 +206,6 @@ class TaskService implements ITaskService {
     }
     this.log.warn(`[TaskService::delete] Task with Id '${taskId}' not found`);
     return reply(HTTP_STATUS.NOT_FOUND, { taskId });
-  }
-
-  /**
-   * For the deleted board with **Id** = {@link boardId} also deletes the tasks
-   * assigned to this board.
-   *
-   * @param boardId - The **Id** of the deleted {@link Board}.
-   */
-  async deleteTasksFor(boardId: BoardId) {
-    await this.repo.deleteTasksFor(boardId);
   }
 }
 

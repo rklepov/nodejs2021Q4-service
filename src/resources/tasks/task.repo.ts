@@ -107,25 +107,6 @@ class TaskRepo {
     }
     return this.tasks.find();
   }
-
-  /**
-   * Deletes all tasks associated with the provided board **Id**.
-   *
-   * @param boardId - The **Id** of the board which has been deleted.
-   *
-   * @returns The result of the deletion as defined in Typeorm's DeleteResult.
-   *
-   * @remarks
-   * async, returns a Promise
-   */
-  async deleteTasksFor(boardId: BoardId) {
-    return this.tasks
-      .createQueryBuilder()
-      .delete()
-      .from(Task)
-      .where('boardId = :boardId', { boardId })
-      .execute();
-  }
 }
 
 export default TaskRepo;

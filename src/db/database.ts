@@ -12,11 +12,7 @@ import { ApplicationException } from '../common/except';
 
 import User from '../resources/users/user.model';
 import Board from '../resources/boards/board.model';
-import { BoardId } from '../resources/boards/board.types';
 import Task from '../resources/tasks/task.model';
-import { TaskId } from '../resources/tasks/task.types';
-
-import Table from './table';
 
 /**
  * Users table.
@@ -26,30 +22,12 @@ type UsersTable = Repository<User>;
 /**
  * Boards table.
  */
-type BoardsTable = Table<BoardId, Board>;
+type BoardsTable = Repository<Board>;
 
 /**
  * Tasks table.
  */
 type TasksTable = Repository<Task>;
-
-/**
- * The abstraction of the database: an object containing 3 tables.
- */
-type Database = {
-  boards: BoardsTable;
-};
-
-/**
- * Creates an instance of the database.
- *
- * @returns Database instance.
- */
-function createDatabase(): Database {
-  return {
-    boards: new Table(),
-  };
-}
 
 class DatabaseConnectionError extends ApplicationException {
   constructor(message: string) {
@@ -83,8 +61,6 @@ export {
   UsersTable,
   BoardsTable,
   TasksTable,
-  Database,
-  createDatabase,
   Connection as DatabaseConnection,
   createDatabaseConnection,
   DatabaseConnectionError,

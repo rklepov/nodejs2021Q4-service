@@ -28,7 +28,7 @@ import { ITaskId, ITask, TaskId } from './task.types';
  * describing a task assigned to a board.
  */
 @Entity()
-class Task implements IBoardId, ITask {
+class Task implements ITask {
   // ? wonder if the class fields can be somehow inferred from the JSON schema below ?
   /**
    * The unique task **Id**.
@@ -49,10 +49,17 @@ class Task implements IBoardId, ITask {
   order = NaN;
 
   /**
-   * The **Id** of the board to which this task belongs.
+   * The reference to the parent board of the task.
    */
-  @Column('varchar')
-  boardId = '';
+  @ManyToOne(() => Board, (board) => board.tasks, { onDelete: 'CASCADE' })
+  @JoinColumn({ name: 'boardId' })
+  board?: Board;
+
+  /**
+   * The **Id** of the parent board of the task.
+   */
+  @Column({ nullable: false })
+  boardId?: BoardId;
 
   /**
    * The task description.

@@ -8,7 +8,7 @@ import fastify from 'fastify';
 
 import Logger from '../../common/logger';
 
-import { Database, DatabaseConnection } from '../../db/database';
+import {  DatabaseConnection } from '../../db/database';
 
 import Task from './task.model';
 import { ITask, ITaskId } from './task.types';
@@ -43,19 +43,10 @@ class TaskRouter {
    * @param server - Fastify server instance.
    * @param db - Database instance.
    */
-  constructor(
-    log: Logger,
-    server: Server,
-    inmemDb: Database, // TODO: temporary
-    db: DatabaseConnection
-  ) {
+  constructor(log: Logger, server: Server, db: DatabaseConnection) {
     this.log = log;
     this.fastify = server;
-    this.service = new TaskService(
-      log,
-      db,
-      new BoardService(log, inmemDb.boards) // TODO: temporary
-    );
+    this.service = new TaskService(log, db, new BoardService(log, db));
 
     this.fastify.get<{ Params: IBoardId }>('/boards/:boardId/tasks', {
       // handler: defineHandler(this, 'getAll'),

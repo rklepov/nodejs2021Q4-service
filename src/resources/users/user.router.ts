@@ -14,8 +14,6 @@ import User from './user.model';
 import { IUser, IUserId } from './user.types';
 import UserService from './user.service';
 
-import TaskService from '../tasks/task.service';
-
 /**
  * Fastify server instance.
  *
@@ -44,7 +42,7 @@ class UserRouter {
   constructor(log: Logger, server: Server, db: DatabaseConnection) {
     this.log = log;
     this.fastify = server;
-    this.service = new UserService(log, db, new TaskService(log, db));
+    this.service = new UserService(log, db);
 
     this.fastify.get<{ Params: Record<string, never> }>('/users', {
       // handler: defineHandler(this, 'getAll'),

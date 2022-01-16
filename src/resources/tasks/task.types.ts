@@ -5,7 +5,7 @@ import { FastifyRequest } from 'fastify';
 import { genId } from '../../common/utils';
 
 import { UserId } from '../users/user.types';
-import { BoardId, IBoardId } from '../boards/board.types';
+import { IBoardId } from '../boards/board.types';
 import { BoardColumnId } from '../boards/board-column.types';
 
 /**
@@ -30,14 +30,6 @@ export interface ITask {
   description?: string;
   userId?: UserId | null;
   columnId?: BoardColumnId | null;
-}
-
-/**
- * Defines extra methods provide by the {@link TaskService} object (apart from
- * the regular HTTP request handlers).
- */
-export interface ITaskService {
-  deleteTasksFor(boardId: BoardId): Promise<void>;
 }
 
 export type TaskGetAllRequest = FastifyRequest<{ Params: IBoardId }>;

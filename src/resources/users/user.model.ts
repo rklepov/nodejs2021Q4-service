@@ -41,7 +41,7 @@ class User implements IUser {
   password?: string | undefined;
 
   /**
-   * The tasks associated with the user.
+   * The tasks associated with the user (relation).
    */
   @OneToMany(() => Task, (task) => task.user)
   tasks?: Task[];

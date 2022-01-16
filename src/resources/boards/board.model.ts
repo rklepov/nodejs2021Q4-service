@@ -1,12 +1,13 @@
 // board.model.ts
 
 import pick from 'lodash.pick';
-import difference from 'lodash.difference';
 
-import { genId } from '../../common/utils';
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
+
+// eslint-disable-next-line import/no-cycle
+import Task from '../tasks/task.model';
 
 import BoardColumn from './board-column.model';
-import { IBoardColumn } from './board-column.types';
 
 import { IBoardId, BoardId, IBoard } from './board.types';
 
@@ -14,22 +15,32 @@ import { IBoardId, BoardId, IBoard } from './board.types';
  * Models the Board object which holds the unique **Id** along with the fields
  * describing a board.
  */
-class Board implements IBoardId, IBoard {
+@Entity()
+class Board implements IBoard {
   // ? wonder if the class fields can be somehow inferred from the JSON schema below ?
   /**
    * The unique board **Id**.
    */
-  boardId: BoardId = genId(); // TODO: preferably should be private
+  @PrimaryGeneratedColumn('uuid')
+  boardId?: BoardId;
 
   /**
    * The title of the board.
    */
+  @Column('varchar')
   title = '';
 
   /**
    * The list of columns of the board.
    */
+  @Column('simple-json') // TODO: change to entity relation
   columns: BoardColumn[] = [];
+
+  /**
+   * The tasks of the board (relation).
+   */
+  @OneToMany(() => Task, (task) => task.user)
+  tasks?: Task[];
 
   /**
    * The {@link Board} object constructor.
@@ -39,16 +50,7 @@ class Board implements IBoardId, IBoard {
   constructor(board: IBoard) {
     Object.assign(
       this,
-      pick(
-        board,
-        difference(Object.keys(Board.schema.request.properties), ['columns'])
-      )
-    );
-
-    this.assignColumns(
-      pick(board, ['columns']).columns?.map(
-        (column: IBoardColumn) => new BoardColumn(column)
-      )
+      pick(board, Object.keys(Board.schema.request.properties))
     );
   }
 
@@ -60,31 +62,6 @@ class Board implements IBoardId, IBoard {
   }
 
   /**
-   * Assigns **Id** to the user.
-   *
-   * @param boardId - The **Id** of the board.
-   * @returns `this` {@link Board} object.
-   *
-   * @deprecated The **Id** is now stored in {@link Board} object itself.
-   */
-  assignId(boardId: BoardId) {
-    Object.assign(this, { boardId });
-    return this;
-  }
-
-  /**
-   * Assigns the list of columns to the board.
-   *
-   * @param columns - The array of {@link Column} objects that belong to the
-   * board.
-   * @returns
-   */
-  assignColumns(columns: BoardColumn[]) {
-    this.columns = columns || [];
-    return this;
-  }
-
-  /**
    * Returns DTO equivalent of the **Board** object (will also include the list
    * of the columns of the board). Eventually used as the JSON body of HTTP
    * response.
@@ -92,13 +69,7 @@ class Board implements IBoardId, IBoard {
    * @returns The DTO equivalent of the **Board** object.
    */
   toJSON() {
-    return {
-      ...pick(
-        this,
-        difference(Object.keys(Board.schema.response.properties), ['columns'])
-      ),
-      columns: this.columns.map((column: BoardColumn) => column.toJSON()),
-    };
+    return pick(this, Object.keys(Board.schema.response.properties));
   }
 
   /**

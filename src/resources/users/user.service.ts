@@ -7,8 +7,6 @@ import { reply } from '../../common/utils';
 
 import { DatabaseConnection } from '../../db/database';
 
-import { ITaskService } from '../tasks/task.types';
-
 import {
   UserGetRequest,
   UserPostRequest,
@@ -34,23 +32,15 @@ class UserService {
   repo: UserRepo;
 
   /**
-   * Task service. Allows operations on the {@link Task} objects which are
-   * linked to the {@link User}.
-   */
-  taskService: ITaskService;
-
-  /**
    * The constructor of the {@link UserService} instance.
    *
    * @param log - {@link Logger} instance.
    * @param db - An instance of Typeorm database connection.
-   * @param taskService - The instance of {@link TaskService} that allows
    * operations on the {@link Task} object linked to the {@link User} object.
    */
-  constructor(log: Logger, db: DatabaseConnection, taskService: ITaskService) {
+  constructor(log: Logger, db: DatabaseConnection) {
     this.log = log;
     this.repo = new UserRepo(db);
-    this.taskService = taskService;
   }
 
   /**

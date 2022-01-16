@@ -13,7 +13,7 @@ import swagger from 'fastify-swagger';
 import Logger from './common/logger';
 import { ApplicationException } from './common/except';
 
-import { Database, createDatabase, DatabaseConnection } from './db/database';
+import { DatabaseConnection } from './db/database';
 
 import UserRouter from './resources/users/user.router';
 import User from './resources/users/user.model';
@@ -43,13 +43,6 @@ class App {
    * Logger instance.
    */
   log: Logger;
-
-  /**
-   * Database instance.
-   *
-   * TODO: remove once migrated to postgres
-   */
-  db: Database;
 
   /**
    * The instance of typeorm database connection.
@@ -96,9 +89,6 @@ class App {
    */
   constructor(logger: Logger, db: DatabaseConnection) {
     this.log = logger;
-
-    // TODO: remove once migrated to postgres
-    this.db = createDatabase();
 
     this.postgres = db;
 
@@ -180,18 +170,8 @@ class App {
     });
 
     this.userRouter = new UserRouter(this.log, this.fastify, this.postgres);
-    this.boardRouter = new BoardRouter(
-      this.log,
-      this.fastify,
-      this.db,
-      this.postgres
-    );
-    this.taskRouter = new TaskRouter(
-      this.log,
-      this.fastify,
-      this.db,
-      this.postgres
-    );
+    this.boardRouter = new BoardRouter(this.log, this.fastify, this.postgres);
+    this.taskRouter = new TaskRouter(this.log, this.fastify, this.postgres);
   }
 
   /**
