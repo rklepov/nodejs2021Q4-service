@@ -21,11 +21,6 @@ import UserRepo from './user.repo';
 
 /**
  * HTTP request handlers for {@link User}.
- *
- * @privateremarks
- * TODO: some return types of the methods below are not inferred by TS
- * correctly, need to understand the reason of that and maybe specify the types
- * explicitly
  */
 class UserService {
   /**
@@ -168,7 +163,6 @@ class UserService {
     const { userId } = params;
 
     if (await this.repo.delete(userId)) {
-      await this.taskService.unassignUser(userId);
       return reply(HTTP_STATUS.NO_CONTENT);
     }
     this.log.warn(`[UserService::delete] User with Id '${userId}' not found`);

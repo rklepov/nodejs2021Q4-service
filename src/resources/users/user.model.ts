@@ -2,7 +2,10 @@
 
 import pick from 'lodash.pick';
 
-import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
+
+// eslint-disable-next-line import/no-cycle
+import Task from '../tasks/task.model';
 
 import { IUserId, IUser, UserId } from './user.types';
 
@@ -36,6 +39,12 @@ class User implements IUser {
    */
   @Column('varchar')
   password?: string | undefined;
+
+  /**
+   * The tasks associated with the user.
+   */
+  @OneToMany(() => Task, (task) => task.user)
+  tasks?: Task[];
 
   /**
    * The {@link User} object constructor.

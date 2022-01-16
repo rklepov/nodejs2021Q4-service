@@ -4,6 +4,7 @@ import dotenv from 'dotenv';
 import path from 'path';
 
 import User from './src/resources/users/user.model';
+import Task from './src/resources/tasks/task.model';
 
 dotenv.config({
   path: path.join(__dirname, '.env'),
@@ -19,8 +20,7 @@ export default {
   username: POSTGRES_USER,
   password: POSTGRES_PASSWORD,
   database: POSTGRES_DB,
-  entities: [User],
-  migrations: ['src/db/migrations/*.ts'],
+  entities: [User, Task],
   cli: {
     /* entitiesDir: 'entity', */
     migrationsDir: 'src/db/migrations',

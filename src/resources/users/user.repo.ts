@@ -31,9 +31,6 @@ class UserRepo {
    *
    * @remarks
    * async, returns a Promise
-   *
-   * @privateRemarks
-   * TODO: the object now stores the Id itself, no need to explicity assign it.
    */
   async create(user: User) {
     return this.users.save(user);

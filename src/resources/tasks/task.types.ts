@@ -28,6 +28,7 @@ export interface ITask {
   title: string;
   order: number;
   description?: string;
+  userId?: UserId | null;
   columnId?: ColumnId | null;
 }
 
@@ -36,10 +37,10 @@ export interface ITask {
  * the regular HTTP request handlers).
  */
 export interface ITaskService {
-  unassignUser(userId: UserId): Promise<void>;
   deleteTasksFor(boardId: BoardId): Promise<void>;
 }
 
+export type TaskGetAllRequest = FastifyRequest<{ Params: IBoardId }>;
 export type TaskGetRequest = FastifyRequest<{ Params: IBoardId & ITaskId }>;
 export type TaskPostRequest = FastifyRequest<{ Params: IBoardId; Body: ITask }>;
 export type TaskPutRequest = FastifyRequest<{

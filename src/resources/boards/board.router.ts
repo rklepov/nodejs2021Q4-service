@@ -8,7 +8,7 @@ import fastify from 'fastify';
 
 import Logger from '../../common/logger';
 
-import { Database } from '../../db/database';
+import { Database, DatabaseConnection } from '../../db/database';
 
 import Board from './board.model';
 import { IBoard, IBoardId } from './board.types';
@@ -37,14 +37,19 @@ class BoardRouter {
    *
    * @param log - {@link Logger} instance.
    * @param server - Fastify server instance.
-   * @param db - Database instance.
+   * @param db - Database connection.
    */
-  constructor(log: Logger, server: Server, db: Database) {
+  constructor(
+    log: Logger,
+    server: Server,
+    inmemDb: Database, // TODO: temporary
+    db: DatabaseConnection
+  ) {
     this.fastify = server;
     this.service = new BoardService(
       log,
-      db.boards,
-      new TaskService(log, db.tasks)
+      inmemDb.boards, // TODO: temporary
+      new TaskService(log, db)
     );
 
     this.fastify.get<{ Params: Record<string, never> }>('/boards', {

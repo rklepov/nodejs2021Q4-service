@@ -179,14 +179,19 @@ class App {
       },
     });
 
-    this.userRouter = new UserRouter(
+    this.userRouter = new UserRouter(this.log, this.fastify, this.postgres);
+    this.boardRouter = new BoardRouter(
       this.log,
       this.fastify,
       this.db,
       this.postgres
     );
-    this.boardRouter = new BoardRouter(this.log, this.fastify, this.db);
-    this.taskRouter = new TaskRouter(this.log, this.fastify, this.db);
+    this.taskRouter = new TaskRouter(
+      this.log,
+      this.fastify,
+      this.db,
+      this.postgres
+    );
   }
 
   /**

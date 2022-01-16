@@ -1,6 +1,8 @@
 // task.memory.repository.ts
 
-import { TasksTable } from '../../db/database';
+import { DatabaseConnection, TasksTable } from '../../db/database';
+
+import { BoardId } from '../boards/board.types';
 
 import Task from './task.model';
 import { TaskId } from './task.types';
@@ -17,8 +19,8 @@ class TaskRepo {
    *
    * @param tasks - An instance of the Tasks table.
    */
-  constructor(tasks: TasksTable) {
-    this.tasks = tasks;
+  constructor(db: DatabaseConnection) {
+    this.tasks = db.getRepository(Task);
   }
 
   /**
@@ -31,13 +33,9 @@ class TaskRepo {
    *
    * @remarks
    * async, returns a Promise
-   *
-   * @privateRemarks
-   * TODO: the object now stores the Id itself, no need to explicity assign it.
    */
   async create(task: Task) {
-    const { key: taskId } = await this.tasks.create(task.id, task);
-    return task.assignId(taskId);
+    return this.tasks.save(task);
   }
 
   /**
@@ -52,11 +50,8 @@ class TaskRepo {
    * async, returns a Promise
    */
   async read(taskId: TaskId) {
-    const { hasValue: found, value: task } = await this.tasks.read(taskId);
-    // TODO: ?. is not needed here, the contract is that if found: true
-    //       then the task is guaranteed to be present.
-    //       Any way to describe this in TS?
-    return found ? task?.assignId(taskId) || null : null;
+    const task = await this.tasks.findOne(taskId);
+    return task ?? null;
   }
 
   /**
@@ -72,12 +67,11 @@ class TaskRepo {
    * async, returns a Promise
    */
   async update(taskId: TaskId, task: Task) {
-    const { updated: found, value: updatedTask } = await this.tasks.update(
-      taskId,
-      task
-    );
-    // TODO: same as in read() above
-    return found ? updatedTask?.assignId(taskId) || null : null;
+    const updatedTask = await this.tasks.findOne({ taskId });
+    if (updatedTask) {
+      return this.tasks.save({ ...task, taskId });
+    }
+    return null;
   }
 
   /**
@@ -92,48 +86,45 @@ class TaskRepo {
    * async, returns a Promise
    */
   async delete(taskId: TaskId) {
-    const { deleted } = await this.tasks.delete(taskId);
-    return deleted;
+    const result = await this.tasks.delete({ taskId });
+    return !!result.affected;
   }
 
   /**
    * List all tasks stored in the database table.
+   *
+   * @param boardId - The **Id** of the {@link Board} which task list is
+   * requested. If not provided all tasks for all boards are returned.
    *
    * @returns An array of {@link Task} objects stored in the table.
    *
    * @remarks
    * async, returns a Promise
    */
-  async ls() {
-    return TaskRepo.assignIds(await this.tasks.ls());
+  async ls(boardId?: BoardId) {
+    if (boardId) {
+      return this.tasks.find({ boardId });
+    }
+    return this.tasks.find();
   }
 
   /**
-   * Return the tasks matching the provided predicate.
+   * Deletes all tasks associated with the provided board **Id**.
    *
-   * @param pred - The function that returns `true` if the task should be
-   * returned or `false` otherwise.
+   * @param boardId - The **Id** of the board which has been deleted.
    *
-   * @returns The array of {@link Task} object for which the predicate returns
-   * `true`.
+   * @returns The result of the deletion as defined in Typeorm's DeleteResult.
    *
    * @remarks
    * async, returns a Promise
    */
-  async getTasksFor(pred: (task: Task) => boolean) {
-    return TaskRepo.assignIds(await this.tasks.where(pred));
-  }
-
-  /**
-   * The utility function used to assign the Ids to the tasks from the list.
-   * @param tasks - The array of `{ key, value }` pairs where the `key` is the
-   * **Id** of the task which will be assigned to the respective task in
-   * `value`.
-   * @returns The array of tasks with the Ids assigned.
-   * @deprecated The **Id** is now stored in {@link Task} object itself.
-   */
-  private static assignIds(tasks: { key: TaskId; value: Task }[]) {
-    return tasks.map(({ key: taskId, value: task }) => task.assignId(taskId));
+  async deleteTasksFor(boardId: BoardId) {
+    return this.tasks
+      .createQueryBuilder()
+      .delete()
+      .from(Task)
+      .where('boardId = :boardId', { boardId })
+      .execute();
   }
 }
 

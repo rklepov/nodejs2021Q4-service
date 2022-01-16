@@ -31,14 +31,13 @@ type BoardsTable = Table<BoardId, Board>;
 /**
  * Tasks table.
  */
-type TasksTable = Table<TaskId, Task>;
+type TasksTable = Repository<Task>;
 
 /**
  * The abstraction of the database: an object containing 3 tables.
  */
 type Database = {
   boards: BoardsTable;
-  tasks: TasksTable;
 };
 
 /**
@@ -49,7 +48,6 @@ type Database = {
 function createDatabase(): Database {
   return {
     boards: new Table(),
-    tasks: new Table(),
   };
 }
 
