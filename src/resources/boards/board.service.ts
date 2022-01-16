@@ -17,7 +17,7 @@ import {
 } from './board.types';
 
 import Board from './board.model';
-import BoardRepo from './board.memory.repository';
+import BoardRepo from './board.repo';
 
 /**
  * HTTP request handlers for {@link Board}.
