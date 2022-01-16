@@ -29,8 +29,8 @@ export default {
     /* subscribersDir: 'subscriber', */
   },
   migrationsRun: true,
-  logging: true,
-  // synchronize: true,
+  logging: false,
+  synchronize: false,
 };
 
 //__EOF__
