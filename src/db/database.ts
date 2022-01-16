@@ -62,10 +62,7 @@ class DatabaseConnectionError extends ApplicationException {
 async function createDatabaseConnection(log: Logger) {
   const connectionOptions = await getConnectionOptions();
   try {
-    const connection = await createConnection({
-      ...connectionOptions,
-      entities: [User],
-    });
+    const connection = await createConnection(connectionOptions);
 
     return connection;
   } catch (e) {

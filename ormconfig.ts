@@ -3,6 +3,8 @@
 import dotenv from 'dotenv';
 import path from 'path';
 
+import User from './src/resources/users/user.model';
+
 dotenv.config({
   path: path.join(__dirname, '.env'),
 });
@@ -17,14 +19,15 @@ export default {
   username: POSTGRES_USER,
   password: POSTGRES_PASSWORD,
   database: POSTGRES_DB,
-  migrations: ['migration/*.ts'],
+  entities: [User],
+  migrations: ['src/db/migrations/*.ts'],
   cli: {
     /* entitiesDir: 'entity', */
-    migrationsDir: 'migration',
+    migrationsDir: 'src/db/migrations',
     /* subscribersDir: 'subscriber', */
   },
-  logging: true,
-  synchronize: true,
+  migrationsRun: true,
+  logging: false,
 };
 
 //__EOF__
