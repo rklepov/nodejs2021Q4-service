@@ -29,9 +29,9 @@ export default {
     migrationsDir: 'src/db/migrations',
     /* subscribersDir: 'subscriber', */
   },
-  migrationsRun: false,
+  migrationsRun: true,
   logging: true,
-  synchronize: true,
+  synchronize: false,
 };
 
 //__EOF__
