@@ -30,7 +30,7 @@ export default {
     /* subscribersDir: 'subscriber', */
   },
   migrationsRun: true,
-  logging: true,
+  logging: false,
   synchronize: false,
 };
 

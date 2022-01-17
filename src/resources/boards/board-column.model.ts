@@ -20,7 +20,9 @@ import { IBoardColumn, BoardColumnId } from './board-column.types';
  * Models the Column object which holds the unique **Id** along with the fields
  * describing a column that belongs to a board.
  */
-@Entity()
+@Entity('board_column', {
+  orderBy: { order: 'ASC' }, // TODO: this doesn't seem to work
+})
 class BoardColumn implements IBoardColumn {
   // ? wonder if the class fields can be somehow inferred from the JSON schema below ?
   /**

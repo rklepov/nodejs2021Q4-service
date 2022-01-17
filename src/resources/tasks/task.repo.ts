@@ -103,9 +103,19 @@ class TaskRepo {
    */
   async ls(boardId?: BoardId) {
     if (boardId) {
-      return this.tasks.find({ boardId });
+      return this.tasks.find({
+        where: { boardId },
+        // TODO: order is repeated
+        order: {
+          order: 'ASC',
+        },
+      });
     }
-    return this.tasks.find();
+    return this.tasks.find({
+      order: {
+        order: 'ASC',
+      },
+    });
   }
 }
 
