@@ -7,9 +7,6 @@ import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
 // eslint-disable-next-line import/no-cycle
 import BoardColumn from './board-column.model';
 
-// eslint-disable-next-line import/no-cycle
-import Task from '../tasks/task.model';
-
 import { IBoardId, BoardId, IBoard } from './board.types';
 
 /**
@@ -39,12 +36,6 @@ class Board implements IBoard {
     cascade: true,
   })
   columns?: BoardColumn[];
-
-  /**
-   * The tasks of the board (relation).
-   */
-  @OneToMany(() => Task, (task) => task.user)
-  tasks?: Task[];
 
   /**
    * The {@link Board} object constructor.

@@ -50,7 +50,7 @@ class Task implements ITask {
   /**
    * The reference to the parent board of the task.
    */
-  @ManyToOne(() => Board, (board) => board.tasks, { onDelete: 'CASCADE' })
+  @ManyToOne(() => Board, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'boardId' })
   board?: Board;
 
@@ -69,7 +69,7 @@ class Task implements ITask {
   /**
    * The reference to the user of the task.
    */
-  @ManyToOne(() => User, (user) => user.tasks, { onDelete: 'SET NULL' })
+  @ManyToOne(() => User, { onDelete: 'SET NULL' })
   @JoinColumn({ name: 'userId' })
   user?: User;
 
