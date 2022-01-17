@@ -5,9 +5,10 @@ import pick from 'lodash.pick';
 import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
 
 // eslint-disable-next-line import/no-cycle
-import Task from '../tasks/task.model';
-
 import BoardColumn from './board-column.model';
+
+// eslint-disable-next-line import/no-cycle
+import Task from '../tasks/task.model';
 
 import { IBoardId, BoardId, IBoard } from './board.types';
 
@@ -33,8 +34,11 @@ class Board implements IBoard {
   /**
    * The list of columns of the board.
    */
-  @Column('simple-json') // TODO: change to entity relation
-  columns: BoardColumn[] = [];
+  @OneToMany(() => BoardColumn, (col) => col.board, {
+    eager: true,
+    cascade: true,
+  })
+  columns?: BoardColumn[];
 
   /**
    * The tasks of the board (relation).

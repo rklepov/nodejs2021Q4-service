@@ -23,12 +23,12 @@ export interface IBoardId {
  */
 export interface IBoard {
   title: string;
-  columns: IBoardColumn[];
+  columns?: IBoardColumn[];
 }
 
 /**
- * Defines extra methods provide by the {@link BoardService} object (apart from
- * the regular HTTP request handlers).
+ * Defines extra methods provided by {@link BoardService} class (apart from the
+ * regular HTTP request handlers).
  */
 export interface IBoardService {
   boardExists(boardId: BoardId): Promise<boolean>;
