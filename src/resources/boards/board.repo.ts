@@ -51,7 +51,13 @@ class BoardRepo {
    * async, returns a Promise
    */
   async read(boardId: BoardId) {
-    const board = await this.boards.findOne({ boardId });
+    const board = this.boards
+      .createQueryBuilder('board')
+      .leftJoinAndSelect('board.columns', 'column')
+      .where('board.boardId = :boardId', { boardId })
+      .orderBy({ 'board.boardId': 'ASC', 'column.order': 'ASC' })
+      .getOne();
+
     return board ?? null;
   }
 
@@ -100,7 +106,11 @@ class BoardRepo {
    * async, returns a Promise
    */
   async ls() {
-    return this.boards.find();
+    return this.boards
+      .createQueryBuilder('board')
+      .leftJoinAndSelect('board.columns', 'column')
+      .orderBy({ 'board.boardId': 'ASC', 'column.order': 'ASC' })
+      .getMany();
   }
 }
 
