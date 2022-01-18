@@ -2,12 +2,12 @@
 
 import { FastifyRequest } from 'fastify';
 
-import { genId } from '../../common/utils';
+import { UUIDString } from '../../common/utils';
 
 /**
  * The unique **Id** of the user.
  */
-export type UserId = ReturnType<typeof genId>;
+export type UserId = UUIDString;
 
 /**
  * An abstraction of the object having **userId** property (request message and

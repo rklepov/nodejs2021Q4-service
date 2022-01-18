@@ -2,13 +2,13 @@
 
 import { FastifyRequest } from 'fastify';
 
-import { genId } from '../../common/utils';
+import { UUIDString } from '../../common/utils';
 import { IBoardColumn } from './board-column.types';
 
 /**
  * The unique **Id** of the board.
  */
-export type BoardId = ReturnType<typeof genId>;
+export type BoardId = UUIDString;
 
 /**
  * An abstraction of the object having **boardId** property (request message and

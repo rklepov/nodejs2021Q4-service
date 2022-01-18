@@ -63,7 +63,6 @@
     "pino": "^7.6.3",
     "reflect-metadata": "^0.1.13",
     "typeorm": "^0.2.41",
-    "uuid": "^8.3.2",
     "yamljs": "^0.3.0"
   },
   "devDependencies": {

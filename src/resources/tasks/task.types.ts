@@ -2,7 +2,7 @@
 
 import { FastifyRequest } from 'fastify';
 
-import { genId } from '../../common/utils';
+import { UUIDString } from '../../common/utils';
 
 import { UserId } from '../users/user.types';
 import { IBoardId } from '../boards/board.types';
@@ -11,7 +11,7 @@ import { BoardColumnId } from '../boards/board-column.types';
 /**
  * The unique **Id** of the task.
  */
-export type TaskId = ReturnType<typeof genId>;
+export type TaskId = UUIDString;
 
 /**
  * An abstraction of the object having **taskId** property (request message and
