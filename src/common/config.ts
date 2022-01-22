@@ -16,6 +16,7 @@ export const {
   LOG_DIR,
 
   JWT_SECRET_KEY,
+  BCRYPT_SALT_ROUNDS,
 } = process.env;
 
 export const AUTH_MODE = process.env.AUTH_MODE === 'true';
