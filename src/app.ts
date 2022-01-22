@@ -23,6 +23,7 @@ import Board from './resources/boards/board.model';
 
 import TaskRouter from './resources/tasks/task.router';
 import Task from './resources/tasks/task.model';
+import LoginRouter from './resources/login/login.router';
 
 export class ServerStartError extends ApplicationException {
   constructor(message: string) {
@@ -68,6 +69,11 @@ class App {
    * Router instance for tasks endpoints.
    */
   taskRouter: TaskRouter;
+
+  /**
+   * Router instance for user login endpoint.
+   */
+  loginRouter: LoginRouter;
 
   /**
    * Swagger instance.
@@ -169,6 +175,7 @@ class App {
       },
     });
 
+    this.loginRouter = new LoginRouter(this.log, this.fastify, this.postgres);
     this.userRouter = new UserRouter(this.log, this.fastify, this.postgres);
     this.boardRouter = new BoardRouter(this.log, this.fastify, this.postgres);
     this.taskRouter = new TaskRouter(this.log, this.fastify, this.postgres);
