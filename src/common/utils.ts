@@ -32,4 +32,8 @@ export async function hashPassword(password: string) {
   return bcrypt.hash(password, Number(BCRYPT_SALT_ROUNDS));
 }
 
+export async function checkPassword(password: string, hash: string) {
+  return bcrypt.compare(password, hash);
+}
+
 // __EOF__
