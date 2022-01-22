@@ -4,6 +4,8 @@
 
 import 'reflect-metadata';
 
+import omit from 'lodash.omit';
+
 import path from 'path';
 
 import fastify, { FastifyInstance } from 'fastify';
@@ -114,7 +116,10 @@ class App {
     this.fastify
       .addHook('preHandler', (q, _, done) => {
         if (q.body) {
-          q.log.info({ body: q.body }, 'parsed request body');
+          q.log.info(
+            { body: omit(q.body as Record<string, unknown>, ['password']) },
+            'parsed request body'
+          );
         }
         done();
       })
