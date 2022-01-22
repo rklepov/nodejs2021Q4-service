@@ -1,6 +1,6 @@
 // board.memory.repository.ts
 
-import { BoardsTable } from '../../db/database';
+import { BoardsTable, DatabaseConnection } from '../../db/database';
 
 import Board from './board.model';
 import { BoardId } from './board.types';
@@ -17,8 +17,8 @@ class BoardRepo {
    *
    * @param boards - An instance of the Boards table.
    */
-  constructor(boards: BoardsTable) {
-    this.boards = boards;
+  constructor(db: DatabaseConnection) {
+    this.boards = db.getRepository(Board);
   }
 
   /**
@@ -36,9 +36,7 @@ class BoardRepo {
    * TODO: the object now stores the Id itself, no need to explicity assign it.
    */
   async create(board: Board) {
-    const { key: boardId } = await this.boards.create(board.id, board);
-    board.columns.forEach((col) => col.assignToBoard(boardId));
-    return board.assignId(boardId);
+    return this.boards.save(board);
   }
 
   /**
@@ -53,11 +51,14 @@ class BoardRepo {
    * async, returns a Promise
    */
   async read(boardId: BoardId) {
-    const { hasValue: found, value: board } = await this.boards.read(boardId);
-    // TODO: ?. is not needed here, the contract is that if found: true
-    //       then the board is guaranteed to be present.
-    //       Any way to describe this in TS?
-    return found ? board?.assignId(boardId) || null : null;
+    const board = this.boards
+      .createQueryBuilder('board')
+      .leftJoinAndSelect('board.columns', 'column')
+      .where('board.boardId = :boardId', { boardId })
+      .orderBy({ 'board.boardId': 'ASC', 'column.order': 'ASC' })
+      .getOne();
+
+    return board ?? null;
   }
 
   /**
@@ -73,12 +74,11 @@ class BoardRepo {
    * async, returns a Promise
    */
   async update(boardId: BoardId, board: Board) {
-    const { updated: found, value: updatedBoard } = await this.boards.update(
-      boardId,
-      board
-    );
-    // TODO: same as in read() above
-    return found ? updatedBoard?.assignId(boardId) || null : null;
+    const updatedBoard = await this.boards.findOne({ boardId });
+    if (updatedBoard) {
+      return this.boards.save({ ...board, boardId });
+    }
+    return null;
   }
 
   /**
@@ -93,8 +93,8 @@ class BoardRepo {
    * async, returns a Promise
    */
   async delete(boardId: BoardId) {
-    const { deleted } = await this.boards.delete(boardId);
-    return deleted;
+    const result = await this.boards.delete({ boardId });
+    return !!result.affected;
   }
 
   /**
@@ -106,10 +106,11 @@ class BoardRepo {
    * async, returns a Promise
    */
   async ls() {
-    const boards = await this.boards.ls();
-    return boards.map(({ key: boardId, value: board }) =>
-      board.assignId(boardId)
-    );
+    return this.boards
+      .createQueryBuilder('board')
+      .leftJoinAndSelect('board.columns', 'column')
+      .orderBy({ 'board.boardId': 'ASC', 'column.order': 'ASC' })
+      .getMany();
   }
 }
 

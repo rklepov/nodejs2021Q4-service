@@ -1,5 +1,9 @@
 // app.ts
 
+/* eslint max-classes-per-file: ["error", 2] */
+
+import 'reflect-metadata';
+
 import path from 'path';
 
 import fastify, { FastifyInstance } from 'fastify';
@@ -7,8 +11,9 @@ import fastifySensible from 'fastify-sensible';
 import swagger from 'fastify-swagger';
 
 import Logger from './common/logger';
+import { ApplicationException } from './common/except';
 
-import { Database, createDatabase } from './db/database';
+import { DatabaseConnection } from './db/database';
 
 import UserRouter from './resources/users/user.router';
 import User from './resources/users/user.model';
@@ -18,6 +23,12 @@ import Board from './resources/boards/board.model';
 
 import TaskRouter from './resources/tasks/task.router';
 import Task from './resources/tasks/task.model';
+
+export class ServerStartError extends ApplicationException {
+  constructor(message: string) {
+    super(message, ServerStartError.SERVER_START_ERROR);
+  }
+}
 
 /**
  * The main application class representing the server instance.
@@ -34,9 +45,9 @@ class App {
   log: Logger;
 
   /**
-   * Database instance.
+   * The instance of typeorm database connection.
    */
-  db: Database;
+  postgres: DatabaseConnection;
 
   /**
    * The path to the OpenAPI schema spec YAML.
@@ -76,10 +87,10 @@ class App {
    * TODO: the constructor function became too long, consider splitting it in
    *       smaller chunks
    */
-  constructor(logger: Logger) {
+  constructor(logger: Logger, db: DatabaseConnection) {
     this.log = logger;
 
-    this.db = createDatabase();
+    this.postgres = db;
 
     this.fastify = fastify({
       logger: this.log.pinoLogger,
@@ -143,7 +154,7 @@ class App {
           title: 'Trello Service',
           description: "Let's try to create a competitor for Trello!",
           // TODO: sync with package.json (via env var?)
-          version: '1.2.1',
+          version: '2.1.1',
         },
         tags: [
           { name: 'user', description: 'Users related end-points' },
@@ -158,9 +169,9 @@ class App {
       },
     });
 
-    this.userRouter = new UserRouter(this.log, this.fastify, this.db);
-    this.boardRouter = new BoardRouter(this.log, this.fastify, this.db);
-    this.taskRouter = new TaskRouter(this.log, this.fastify, this.db);
+    this.userRouter = new UserRouter(this.log, this.fastify, this.postgres);
+    this.boardRouter = new BoardRouter(this.log, this.fastify, this.postgres);
+    this.taskRouter = new TaskRouter(this.log, this.fastify, this.postgres);
   }
 
   /**
@@ -179,7 +190,16 @@ class App {
       this.fastify.log.info(`[start] App is running on ${addrPort}`);
     } catch (e) {
       this.fastify.log.error(e);
-      throw e;
+
+      let message = `Failed to start server`;
+
+      if (e instanceof Error) {
+        message = `${message}: [${e.name}] ${e.message}`;
+      } else {
+        message = `${message}: ${String(e)}]`;
+      }
+
+      throw new ServerStartError(message);
     }
   }
 
@@ -190,6 +210,8 @@ class App {
     try {
       await this.fastify.close();
       this.fastify.log.info('[stop] Server closed');
+      await this.postgres.close();
+      this.fastify.log.info('[stop] Database connection closed');
     } catch (e) {
       this.fastify.log.error(e);
       throw e;

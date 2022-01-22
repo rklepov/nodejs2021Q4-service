@@ -5,14 +5,12 @@ import HTTP_STATUS from 'http-status';
 import Logger from '../../common/logger';
 import { reply } from '../../common/utils';
 
-import { TasksTable } from '../../db/database';
+import { DatabaseConnection } from '../../db/database';
 
-import { UserId } from '../users/user.types';
-
-import { BoardId, IBoardService } from '../boards/board.types';
+import { IBoardService } from '../boards/board.types';
 
 import {
-  ITaskService,
+  TaskGetAllRequest,
   TaskGetRequest,
   TaskPostRequest,
   TaskPutRequest,
@@ -20,17 +18,12 @@ import {
 } from './task.types';
 
 import Task from './task.model';
-import TaskRepo from './task.memory.repository';
+import TaskRepo from './task.repo';
 
 /**
  * HTTP request handlers for {@link Task}.
- *
- * @privateremarks
- * TODO: some return types of the methods below are not inferred by TS
- * correctly, need to understand the reason of that and maybe specify the types
- * explicitly
  */
-class TaskService implements ITaskService {
+class TaskService {
   /**
    * Logger instance.
    */
@@ -51,22 +44,28 @@ class TaskService implements ITaskService {
    * The constructor of the {@link TaskService} instance.
    *
    * @param log - {@link Logger} instance.
-   * @param tasks - An instance of the Users table.
+   * @param db - An instance of Typeorm database connection.
    * @param boardService - The instance of {@link BoardService} that allows
    * operations on the {@link Board} object linked to the {@link Task} object.
    */
   constructor(
     log: Logger,
-    tasks: TasksTable,
+    db: DatabaseConnection,
     boardService: IBoardService | null = null
   ) {
     this.log = log;
-    this.repo = new TaskRepo(tasks);
+    this.repo = new TaskRepo(db);
     this.boardService = boardService;
   }
 
   /**
    * GET (all) request handler. List all stored tasks.
+   *
+   * @param __namedParameters - HTTP request parameters holding the **Id** of
+   * the board which tasks are requested.
+   *
+   * @param params - HTTP request parameters holding the **Id** of the board
+   * which tasks are requested.
    *
    * @returns An array of the currently stored tasks along with the
    * `HTTP.OK(200)` status code
@@ -74,14 +73,11 @@ class TaskService implements ITaskService {
    * @remarks
    * async, returns a Promise
    */
-  async getAll() {
-    const tasks = await this.repo.ls();
+  async getAll({ params }: TaskGetAllRequest) {
+    const { boardId } = params;
+    const tasks = await this.repo.ls(boardId);
     this.log.debug(`Returning ${tasks.length} task(s)`);
     return reply(HTTP_STATUS.OK, tasks);
-  }
-
-  async f() {
-    await this.repo.ls();
   }
 
   /**
@@ -210,42 +206,6 @@ class TaskService implements ITaskService {
     }
     this.log.warn(`[TaskService::delete] Task with Id '${taskId}' not found`);
     return reply(HTTP_STATUS.NOT_FOUND, { taskId });
-  }
-
-  /**
-   * For the deleted user with **Id** = {@link userId} sets the respective field
-   * of the task to `null`.
-   *
-   * @param userId - The **Id** of the deleted {@link User}.
-   */
-  async unassignUser(userId: UserId) {
-    // set userId of the deleted users' tasks to null
-    const tasks = await this.repo.getTasksFor(
-      (task) => task?.userId === userId
-    );
-
-    tasks.map(async (task) => {
-      const updatedTask = new Task(task); // TODO: new taskId now generated
-      updatedTask.assignId(task.id);
-      updatedTask.userId = null;
-      await this.repo.update(task.id, updatedTask);
-    });
-  }
-
-  /**
-   * For the deleted board with **Id** = {@link boardId} also deletes the tasks
-   * assigned to this board.
-   *
-   * @param boardId - The **Id** of the deleted {@link Board}.
-   */
-  async deleteTasksFor(boardId: BoardId) {
-    const tasks = await this.repo.getTasksFor(
-      (task: Task) => task.boardId === boardId
-    );
-
-    tasks.map(async (task: Task) => {
-      await this.repo.delete(task.taskId);
-    });
   }
 }
 

@@ -1,20 +1,5 @@
 # Dockerfile
 
-FROM node:16.13-alpine3.15 AS base
-
-ARG workdir=/usr/app
-
-WORKDIR $workdir
-
-COPY package*.json ./
-
-RUN npm install
-
-COPY nodemon-docker.json tsconfig.json ./
-COPY src/ src/
-COPY test/ test/
-
-
 FROM node:16.13-alpine3.15
 
 ARG workdir=/usr/app
@@ -22,7 +7,13 @@ ARG port=4000
 
 WORKDIR $workdir
 
-COPY --from=base $workdir ./
+COPY package*.json ./
+
+RUN npm install --omit optional && npm cache clean --force
+
+COPY nodemon-docker.json tsconfig.json ormconfig.ts ./
+COPY src/ src/
+COPY test/ test/
 
 EXPOSE $port
 

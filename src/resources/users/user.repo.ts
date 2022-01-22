@@ -1,6 +1,6 @@
-// user.memory.repository.ts
+// user.repo.ts
 
-import { UsersTable } from '../../db/database';
+import { DatabaseConnection, UsersTable } from '../../db/database';
 
 import User from './user.model';
 import { UserId } from './user.types';
@@ -15,10 +15,10 @@ class UserRepo {
    * The constructor takes аn instance of the Users table and saves it in the
    * object property.
    *
-   * @param users - An instance of the Users table.
+   * @param db - An instance of Typeorm database connection.
    */
-  constructor(users: UsersTable) {
-    this.users = users;
+  constructor(db: DatabaseConnection) {
+    this.users = db.getRepository(User);
   }
 
   /**
@@ -31,13 +31,9 @@ class UserRepo {
    *
    * @remarks
    * async, returns a Promise
-   *
-   * @privateRemarks
-   * TODO: the object now stores the Id itself, no need to explicity assign it.
    */
   async create(user: User) {
-    const { key: userId } = await this.users.create(user.id, user);
-    return user.assignId(userId);
+    return this.users.save(user);
   }
 
   /**
@@ -52,10 +48,8 @@ class UserRepo {
    * async, returns a Promise
    */
   async read(userId: UserId) {
-    const { hasValue: found, value: user } = await this.users.read(userId);
-    // TODO: ?. is not needed here, the contract is that if found: true then the
-    // user is guaranteed to be present.  Any way to describe this in TS?
-    return found ? user?.assignId(userId) || null : null;
+    const user = await this.users.findOne({ userId });
+    return user ?? null;
   }
 
   /**
@@ -71,12 +65,11 @@ class UserRepo {
    * async, returns a Promise
    */
   async update(userId: UserId, user: User) {
-    const { updated: found, value: updatedUser } = await this.users.update(
-      userId,
-      user
-    );
-    // TODO: same as in read() above
-    return found ? updatedUser?.assignId(userId) || null : null;
+    const updatedUser = await this.users.findOne({ userId });
+    if (updatedUser) {
+      return this.users.save({ ...user, userId });
+    }
+    return null;
   }
 
   /**
@@ -91,8 +84,8 @@ class UserRepo {
    * async, returns a Promise
    */
   async delete(userId: UserId) {
-    const { deleted } = await this.users.delete(userId);
-    return deleted;
+    const result = await this.users.delete({ userId });
+    return !!result.affected;
   }
 
   /**
@@ -104,8 +97,7 @@ class UserRepo {
    * async, returns a Promise
    */
   async ls() {
-    const users = await this.users.ls();
-    return users.map(({ key: userId, value: user }) => user.assignId(userId));
+    return this.users.find();
   }
 }
 

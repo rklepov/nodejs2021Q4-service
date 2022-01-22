@@ -2,16 +2,16 @@
 
 import { FastifyRequest } from 'fastify';
 
-import { genId } from '../../common/utils';
+import { UUIDString } from '../../common/utils';
 
 import { UserId } from '../users/user.types';
-import { BoardId, IBoardId } from '../boards/board.types';
-import { ColumnId } from '../boards/column.types';
+import { IBoardId } from '../boards/board.types';
+import { BoardColumnId } from '../boards/board-column.types';
 
 /**
  * The unique **Id** of the task.
  */
-export type TaskId = ReturnType<typeof genId>;
+export type TaskId = UUIDString;
 
 /**
  * An abstraction of the object having **taskId** property (request message and
@@ -28,18 +28,11 @@ export interface ITask {
   title: string;
   order: number;
   description?: string;
-  columnId?: ColumnId | null;
+  userId?: UserId | null;
+  columnId?: BoardColumnId | null;
 }
 
-/**
- * Defines extra methods provide by the {@link TaskService} object (apart from
- * the regular HTTP request handlers).
- */
-export interface ITaskService {
-  unassignUser(userId: UserId): Promise<void>;
-  deleteTasksFor(boardId: BoardId): Promise<void>;
-}
-
+export type TaskGetAllRequest = FastifyRequest<{ Params: IBoardId }>;
 export type TaskGetRequest = FastifyRequest<{ Params: IBoardId & ITaskId }>;
 export type TaskPostRequest = FastifyRequest<{ Params: IBoardId; Body: ITask }>;
 export type TaskPutRequest = FastifyRequest<{

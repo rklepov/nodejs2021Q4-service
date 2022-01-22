@@ -8,13 +8,11 @@ import fastify from 'fastify';
 
 import Logger from '../../common/logger';
 
-import { Database } from '../../db/database';
+import { DatabaseConnection } from '../../db/database';
 
 import User from './user.model';
 import { IUser, IUserId } from './user.types';
 import UserService from './user.service';
-
-import TaskService from '../tasks/task.service';
 
 /**
  * Fastify server instance.
@@ -39,16 +37,12 @@ class UserRouter {
    *
    * @param log - {@link Logger} instance.
    * @param server - Fastify server instance.
-   * @param db - Database instance.
+   * @param db - Database connection.
    */
-  constructor(log: Logger, server: Server, db: Database) {
+  constructor(log: Logger, server: Server, db: DatabaseConnection) {
     this.log = log;
     this.fastify = server;
-    this.service = new UserService(
-      log,
-      db.users,
-      new TaskService(log, db.tasks)
-    );
+    this.service = new UserService(log, db);
 
     this.fastify.get<{ Params: Record<string, never> }>('/users', {
       // handler: defineHandler(this, 'getAll'),

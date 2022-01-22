@@ -2,52 +2,88 @@
 
 import pick from 'lodash.pick';
 
-import { genId } from '../../common/utils';
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  ManyToOne,
+  JoinColumn,
+} from 'typeorm';
 
+// eslint-disable-next-line import/no-cycle
 import Board from '../boards/board.model';
 import { BoardId, IBoardId } from '../boards/board.types';
+
+import { BoardColumnId } from '../boards/board-column.types';
+
+// eslint-disable-next-line import/no-cycle
+import User from '../users/user.model';
+import { UserId } from '../users/user.types';
+
 import { ITaskId, ITask, TaskId } from './task.types';
 
 /**
  * Models the Task object which holds the unique **Id** along with the fields
  * describing a task assigned to a board.
  */
-class Task implements IBoardId, ITaskId, ITask {
+@Entity()
+class Task implements ITask {
   // ? wonder if the class fields can be somehow inferred from the JSON schema below ?
   /**
    * The unique task **Id**.
    */
-  taskId: TaskId = genId(); // TODO: preferably should be private
+  @PrimaryGeneratedColumn('uuid')
+  taskId?: TaskId;
 
   /**
    * The title of the task.
    */
+  @Column('varchar')
   title = '';
 
   /**
    * The order number of the task.
    */
+  @Column('int')
   order = NaN;
 
   /**
-   * The **Id** of the board to which this task belongs.
+   * The reference to the parent board of the task.
    */
-  boardId: BoardId = '';
+  @ManyToOne(() => Board, { onDelete: 'CASCADE' })
+  @JoinColumn({ name: 'boardId' })
+  board?: Board;
+
+  /**
+   * The **Id** of the parent board of the task.
+   */
+  @Column({ nullable: false })
+  boardId?: BoardId;
 
   /**
    * The task description.
    */
+  @Column('varchar')
   description? = '';
 
   /**
-   * The **Id** of the use of the task.
+   * The reference to the user of the task.
    */
-  userId?: string | null | undefined;
+  @ManyToOne(() => User, { onDelete: 'SET NULL' })
+  @JoinColumn({ name: 'userId' })
+  user?: User;
+
+  /**
+   * The **Id** of the user of the task (foreign key column)
+   */
+  @Column({ nullable: true })
+  userId?: UserId;
 
   /**
    * The **Id** of the column of the task.
    */
-  columnId?: string | null | undefined;
+  @Column('varchar', { nullable: true })
+  columnId?: BoardColumnId;
 
   /**
    * The {@link Task} object constructor.
@@ -71,19 +107,6 @@ class Task implements IBoardId, ITaskId, ITask {
    */
   get id() {
     return this.taskId;
-  }
-
-  /**
-   * Assigns **Id** to the user.
-   *
-   * @param taskId - The **Id** of the task.
-   * @returns `this` {@link Task} object.
-   *
-   * @deprecated The **Id** is now stored in {@link Task} object itself.
-   */
-  assignId(taskId: TaskId) {
-    Object.assign(this, { taskId });
-    return this;
   }
 
   /**

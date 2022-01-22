@@ -2,13 +2,13 @@
 
 import { FastifyRequest } from 'fastify';
 
-import { genId } from '../../common/utils';
-import { IColumn } from './column.types';
+import { UUIDString } from '../../common/utils';
+import { IBoardColumn } from './board-column.types';
 
 /**
  * The unique **Id** of the board.
  */
-export type BoardId = ReturnType<typeof genId>;
+export type BoardId = UUIDString;
 
 /**
  * An abstraction of the object having **boardId** property (request message and
@@ -23,12 +23,12 @@ export interface IBoardId {
  */
 export interface IBoard {
   title: string;
-  columns: IColumn[];
+  columns?: IBoardColumn[];
 }
 
 /**
- * Defines extra methods provide by the {@link BoardService} object (apart from
- * the regular HTTP request handlers).
+ * Defines extra methods provided by {@link BoardService} class (apart from the
+ * regular HTTP request handlers).
  */
 export interface IBoardService {
   boardExists(boardId: BoardId): Promise<boolean>;

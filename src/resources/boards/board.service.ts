@@ -5,9 +5,7 @@ import HTTP_STATUS from 'http-status';
 import Logger from '../../common/logger';
 import { reply } from '../../common/utils';
 
-import { BoardsTable } from '../../db/database';
-
-import { ITaskService } from '../tasks/task.types';
+import { DatabaseConnection } from '../../db/database';
 
 import {
   IBoardService,
@@ -19,15 +17,10 @@ import {
 } from './board.types';
 
 import Board from './board.model';
-import BoardRepo from './board.memory.repository';
+import BoardRepo from './board.repo';
 
 /**
  * HTTP request handlers for {@link Board}.
- *
- * @privateremarks
- * TODO: some return types of the methods below are not inferred by TS
- * correctly, need to understand the reason of that and maybe specify the types
- * explicitly
  */
 class BoardService implements IBoardService {
   /**
@@ -41,23 +34,15 @@ class BoardService implements IBoardService {
   repo: BoardRepo;
 
   /**
-   * Task service. Allows operations on the {@link Task} objects which are
-   * linked to the {@link Board}.
-   */
-  taskService?: ITaskService;
-
-  /**
    * The constructor of the {@link BoardService} instance.
    *
    * @param log - {@link Logger} instance.
-   * @param boards - An instance of the Boards table.
-   * @param taskService - The instance of {@link TaskService} that allows
+   * @param db - An instance of Typeorm database connection.
    * operations on the {@link Task} object linked to the {@link Board} object.
    */
-  constructor(log: Logger, boards: BoardsTable, taskService?: ITaskService) {
+  constructor(log: Logger, db: DatabaseConnection) {
     this.log = log;
-    this.repo = new BoardRepo(boards);
-    this.taskService = taskService;
+    this.repo = new BoardRepo(db);
   }
 
   /**
@@ -169,7 +154,6 @@ class BoardService implements IBoardService {
     const { boardId } = params;
 
     if (await this.repo.delete(boardId)) {
-      await this.taskService?.deleteTasksFor(boardId);
       return reply(HTTP_STATUS.NO_CONTENT);
     }
     this.log.warn(

@@ -5,9 +5,7 @@ import HTTP_STATUS from 'http-status';
 import Logger from '../../common/logger';
 import { reply } from '../../common/utils';
 
-import { UsersTable } from '../../db/database';
-
-import { ITaskService } from '../tasks/task.types';
+import { DatabaseConnection } from '../../db/database';
 
 import {
   UserGetRequest,
@@ -17,15 +15,10 @@ import {
 } from './user.types';
 
 import User from './user.model';
-import UserRepo from './user.memory.repository';
+import UserRepo from './user.repo';
 
 /**
  * HTTP request handlers for {@link User}.
- *
- * @privateremarks
- * TODO: some return types of the methods below are not inferred by TS
- * correctly, need to understand the reason of that and maybe specify the types
- * explicitly
  */
 class UserService {
   /**
@@ -39,23 +32,15 @@ class UserService {
   repo: UserRepo;
 
   /**
-   * Task service. Allows operations on the {@link Task} objects which are
-   * linked to the {@link User}.
-   */
-  taskService: ITaskService;
-
-  /**
    * The constructor of the {@link UserService} instance.
    *
    * @param log - {@link Logger} instance.
-   * @param users - An instance of the Users table.
-   * @param taskService - The instance of {@link TaskService} that allows
+   * @param db - An instance of Typeorm database connection.
    * operations on the {@link Task} object linked to the {@link User} object.
    */
-  constructor(log: Logger, users: UsersTable, taskService: ITaskService) {
+  constructor(log: Logger, db: DatabaseConnection) {
     this.log = log;
-    this.repo = new UserRepo(users);
-    this.taskService = taskService;
+    this.repo = new UserRepo(db);
   }
 
   /**
@@ -168,7 +153,6 @@ class UserService {
     const { userId } = params;
 
     if (await this.repo.delete(userId)) {
-      await this.taskService.unassignUser(userId);
       return reply(HTTP_STATUS.NO_CONTENT);
     }
     this.log.warn(`[UserService::delete] User with Id '${userId}' not found`);

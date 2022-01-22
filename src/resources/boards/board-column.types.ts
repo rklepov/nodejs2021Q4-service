@@ -1,24 +1,24 @@
 // column.types.ts
 
-import { genId } from '../../common/utils';
+import { UUIDString } from '../../common/utils';
 
 /**
  * The unique **Id** of the column.
  */
-export type ColumnId = ReturnType<typeof genId>;
+export type BoardColumnId = UUIDString;
 
 /**
  * An abstraction of the object having **columnId** property (request message
  * and {@link Column} class)
  */
-export interface IColumnId {
-  columnId: ColumnId;
+export interface IBoardColumnId {
+  columnId: BoardColumnId;
 }
 
 /**
  * An abstraction of the **Column** object.
  */
-export interface IColumn {
+export interface IBoardColumn {
   title: string;
   order: number;
 }
