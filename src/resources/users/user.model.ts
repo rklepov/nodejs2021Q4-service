@@ -29,13 +29,13 @@ class User implements IUser {
    * User login.
    */
   @Column('varchar')
-  login?: string | undefined;
+  login!: string;
 
   /**
    * User password.
    */
   @Column('varchar')
-  password?: string | undefined;
+  password!: string;
 
   /**
    * The {@link User} object constructor.
