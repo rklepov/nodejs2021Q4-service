@@ -48,7 +48,7 @@ class App {
   /**
    * The instance of typeorm database connection.
    */
-  postgres: DatabaseConnection;
+  db: DatabaseConnection;
 
   /**
    * The path to the OpenAPI schema spec YAML.
@@ -96,7 +96,7 @@ class App {
   constructor(logger: Logger, db: DatabaseConnection) {
     this.log = logger;
 
-    this.postgres = db;
+    this.db = db;
 
     this.fastify = fastify({
       logger: this.log.pinoLogger,
@@ -175,10 +175,10 @@ class App {
       },
     });
 
-    this.loginRouter = new LoginRouter(this.log, this.fastify, this.postgres);
-    this.userRouter = new UserRouter(this.log, this.fastify, this.postgres);
-    this.boardRouter = new BoardRouter(this.log, this.fastify, this.postgres);
-    this.taskRouter = new TaskRouter(this.log, this.fastify, this.postgres);
+    this.loginRouter = new LoginRouter(this.log, this.fastify, this.db);
+    this.userRouter = new UserRouter(this.log, this.fastify, this.db);
+    this.boardRouter = new BoardRouter(this.log, this.fastify, this.db);
+    this.taskRouter = new TaskRouter(this.log, this.fastify, this.db);
   }
 
   /**
@@ -217,7 +217,7 @@ class App {
     try {
       await this.fastify.close();
       this.fastify.log.info('[stop] Server closed');
-      await this.postgres.close();
+      await this.db.close();
       this.fastify.log.info('[stop] Database connection closed');
     } catch (e) {
       this.fastify.log.error(e);
