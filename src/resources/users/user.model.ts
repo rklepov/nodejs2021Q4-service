@@ -4,7 +4,7 @@ import pick from 'lodash.pick';
 
 import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
 
-import { IUserId, IUser, UserId } from './user.types';
+import { IUser, UserId } from './user.types';
 
 /**
  * Models the User object which holds the unique **Id** along with the fields
@@ -105,7 +105,6 @@ class User implements IUser {
   };
 }
 
-export { UserId, IUserId, IUser };
 export default User;
 
 // __EOF__

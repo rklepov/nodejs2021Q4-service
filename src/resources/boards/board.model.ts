@@ -7,7 +7,7 @@ import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
 // eslint-disable-next-line import/no-cycle
 import BoardColumn from './board-column.model';
 
-import { IBoardId, BoardId, IBoard } from './board.types';
+import { BoardId, IBoard } from './board.types';
 
 /**
  * Models the Board object which holds the unique **Id** along with the fields
@@ -105,7 +105,6 @@ class Board implements IBoard {
   };
 }
 
-export { BoardId, IBoardId, IBoard };
 export default Board;
 
 // __EOF__

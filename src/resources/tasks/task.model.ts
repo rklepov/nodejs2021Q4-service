@@ -20,7 +20,7 @@ import { BoardColumnId } from '../boards/board-column.types';
 import User from '../users/user.model';
 import { UserId } from '../users/user.types';
 
-import { ITaskId, ITask, TaskId } from './task.types';
+import { ITask, TaskId } from './task.types';
 
 /**
  * Models the Task object which holds the unique **Id** along with the fields
@@ -165,7 +165,6 @@ class Task implements ITask {
   };
 }
 
-export { TaskId, ITaskId, ITask };
 export default Task;
 
 // __EOF__
