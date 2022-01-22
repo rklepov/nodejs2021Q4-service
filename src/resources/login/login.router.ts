@@ -32,7 +32,7 @@ class LoginRouter {
   constructor(log: Logger, server: Server, db: DatabaseConnection) {
     this.log = log;
     this.fastify = server;
-    this.service = new LoginService(log, db);
+    this.service = new LoginService(log, db, server);
 
     this.fastify.post<{ Body: ILogin }>('/login', {
       handler: async (q, p) => {

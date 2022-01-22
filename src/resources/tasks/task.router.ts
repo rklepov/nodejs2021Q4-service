@@ -7,8 +7,9 @@ import fastify from 'fastify';
 // import { defineHandler } from '../../common/handler';
 
 import Logger from '../../common/logger';
+import { validateAuth } from '../../common/validate-auth';
 
-import {  DatabaseConnection } from '../../db/database';
+import { DatabaseConnection } from '../../db/database';
 
 import Task from './task.model';
 import { ITask, ITaskId } from './task.types';
@@ -59,6 +60,7 @@ class TaskRouter {
         const { status, payload } = await this.service.getAll(q);
         await p.code(status).send(payload);
       },
+      preValidation: validateAuth,
       schema: {
         tags: Task.schema.tags,
         params: Board.schema.params,
@@ -84,6 +86,7 @@ class TaskRouter {
           const { status, payload } = await this.service.get(q);
           await p.code(status).send(payload);
         },
+        preValidation: validateAuth,
         schema: {
           tags: Task.schema.tags,
           params: Task.schema.params,
@@ -107,6 +110,7 @@ class TaskRouter {
           const { status, payload } = await this.service.add(q);
           await p.code(status).send(payload);
         },
+        preValidation: validateAuth,
         schema: {
           tags: Task.schema.tags,
           params: Board.schema.params,
@@ -132,6 +136,7 @@ class TaskRouter {
           const { status, payload } = await this.service.update(q);
           await p.code(status).send(payload);
         },
+        preValidation: validateAuth,
         schema: {
           tags: Task.schema.tags,
           params: Task.schema.params,
@@ -157,6 +162,7 @@ class TaskRouter {
           const { status, payload } = await this.service.delete(q);
           await p.code(status).send(payload);
         },
+        preValidation: validateAuth,
         schema: { tags: Task.schema.tags, params: Task.schema.params },
       }
     );

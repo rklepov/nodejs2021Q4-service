@@ -15,7 +15,7 @@ class LoginRepo {
 
   async getByLogin(login: ILogin['login']) {
     const user = await this.users.findOne({ login });
-    return (user as ILogin) ?? null;
+    return user ?? null;
   }
 }
 

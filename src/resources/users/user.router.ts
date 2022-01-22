@@ -7,6 +7,7 @@ import fastify from 'fastify';
 // import { defineHandler } from '../../common/handler';
 
 import Logger from '../../common/logger';
+import { validateAuth } from '../../common/validate-auth';
 
 import { DatabaseConnection } from '../../db/database';
 
@@ -55,6 +56,7 @@ class UserRouter {
         const { status, payload } = await this.service.getAll();
         await p.code(status).send(payload);
       },
+      preValidation: validateAuth,
       schema: {
         tags: ['user'],
         response: {
@@ -77,6 +79,7 @@ class UserRouter {
         const { status, payload } = await this.service.get(q);
         await p.code(status).send(payload);
       },
+      preValidation: validateAuth,
       schema: {
         tags: User.schema.tags,
         params: User.schema.params,
@@ -97,6 +100,7 @@ class UserRouter {
         const { status, payload } = await this.service.add(q);
         await p.code(status).send(payload);
       },
+      preValidation: validateAuth,
       schema: {
         tags: User.schema.tags,
         body: User.schema.request,
@@ -117,6 +121,7 @@ class UserRouter {
         const { status, payload } = await this.service.update(q);
         await p.code(status).send(payload);
       },
+      preValidation: validateAuth,
       schema: {
         tags: User.schema.tags,
         params: User.schema.params,
@@ -138,6 +143,7 @@ class UserRouter {
         const { status, payload } = await this.service.delete(q);
         await p.code(status).send(payload);
       },
+      preValidation: validateAuth,
       schema: { tags: User.schema.tags, params: User.schema.params },
     });
   }
