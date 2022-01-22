@@ -2,6 +2,11 @@
 
 import HTTP_STATUS from 'http-status';
 
+import bcrypt from 'bcryptjs';
+
+// ? rather pass this to the UserService instance as a constructor argument ?
+import { BCRYPT_SALT_ROUNDS } from '../../common/config';
+
 import Logger from '../../common/logger';
 import { reply } from '../../common/utils';
 
@@ -104,6 +109,11 @@ class UserService {
     if (user.name === 'Harry Potter') {
       throw new ReferenceError('Expelliarmus!');
     }
+
+    user.password = await bcrypt.hash(
+      user.password || '',
+      Number(BCRYPT_SALT_ROUNDS)
+    );
 
     return reply(HTTP_STATUS.CREATED, await this.repo.create(user));
   }
