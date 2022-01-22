@@ -10,10 +10,12 @@ import path from 'path';
 
 import fastify, { FastifyInstance } from 'fastify';
 import fastifySensible from 'fastify-sensible';
+import fastifyJwt from 'fastify-jwt';
 import swagger from 'fastify-swagger';
 
 import Logger from './common/logger';
 import { ApplicationException } from './common/except';
+import { JWT_SECRET_KEY } from './common/config';
 
 import { DatabaseConnection } from './db/database';
 
@@ -198,6 +200,10 @@ class App {
   async start(port: number, addr?: string) {
     try {
       await this.fastify.register(fastifySensible);
+      if (JWT_SECRET_KEY) {
+        await this.fastify.register(fastifyJwt, { secret: JWT_SECRET_KEY });
+      }
+
       const addrPort = await this.fastify.listen(port, addr);
       this.fastify.log.info(`[start] App is running on ${addrPort}`);
     } catch (e) {

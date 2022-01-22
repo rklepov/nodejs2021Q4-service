@@ -2,6 +2,8 @@
 
 import HTTP_STATUS from 'http-status';
 
+import { fastify } from 'fastify';
+
 import Logger from '../../common/logger';
 import { checkPassword, reply } from '../../common/utils';
 
@@ -9,6 +11,13 @@ import { DatabaseConnection } from '../../db/database';
 
 import { LoginRequest } from './login.types';
 import LoginRepo from './login.repo';
+
+/**
+ * Fastify server instance.
+ *
+ * TODO: this declaration is repeated in several files.
+ */
+type Server = ReturnType<typeof fastify>;
 
 class LoginService {
   /**
@@ -21,9 +30,15 @@ class LoginService {
    */
   repo: LoginRepo;
 
-  constructor(log: Logger, db: DatabaseConnection) {
+  /**
+   * fastify-jwt interface for working with JavaScript Web Token
+   */
+  fastify: Server;
+
+  constructor(log: Logger, db: DatabaseConnection, server: Server) {
     this.log = log;
     this.repo = new LoginRepo(db);
+    this.fastify = server;
   }
 
   async auth({ body }: LoginRequest) {
@@ -46,7 +61,12 @@ class LoginService {
       return reply(HTTP_STATUS.FORBIDDEN);
     }
 
-    return reply(HTTP_STATUS.OK, { token: 'token' }); // TODO
+    return reply(HTTP_STATUS.OK, {
+      token: this.fastify.jwt.sign(
+        { userId: user.userId, login },
+        { expiresIn: '60s' }
+      ),
+    }); // TODO
   }
 }
 
