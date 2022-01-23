@@ -1,4 +1,4 @@
-// board.memory.repository.ts
+// board.repo.ts
 
 import { BoardsTable, DatabaseConnection } from '../../db/database';
 

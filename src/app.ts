@@ -5,29 +5,29 @@
 import 'reflect-metadata';
 
 import omit from 'lodash.omit';
-
 import path from 'path';
 
 import fastify, { FastifyInstance } from 'fastify';
-import fastifySensible from 'fastify-sensible';
 import fastifyJwt from 'fastify-jwt';
+import fastifySensible from 'fastify-sensible';
 import swagger from 'fastify-swagger';
 
-import Logger from './common/logger';
-import { ApplicationException } from './common/except';
 import { JWT_SECRET_KEY } from './common/config';
+import { ApplicationException } from './common/except';
+import Logger from './common/logger';
 
 import { DatabaseConnection } from './db/database';
 
-import UserRouter from './resources/users/user.router';
-import User from './resources/users/user.model';
-
-import BoardRouter from './resources/boards/board.router';
 import Board from './resources/boards/board.model';
+import BoardRouter from './resources/boards/board.router';
 
-import TaskRouter from './resources/tasks/task.router';
-import Task from './resources/tasks/task.model';
 import LoginRouter from './resources/login/login.router';
+
+import Task from './resources/tasks/task.model';
+import TaskRouter from './resources/tasks/task.router';
+
+import User from './resources/users/user.model';
+import UserRouter from './resources/users/user.router';
 
 export class ServerStartError extends ApplicationException {
   constructor(message: string) {

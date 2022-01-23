@@ -2,17 +2,16 @@
 
 import HTTP_STATUS from 'http-status';
 
-// import { defineHandler } from '../../common/handler';
-
-import { Server } from '../../common/types';
 import Logger from '../../common/logger';
+// import { defineHandler } from '../../common/handler';
+import { Server } from '../../common/types';
 import { validateAuth } from '../../common/validate-auth';
 
 import { DatabaseConnection } from '../../db/database';
 
 import Board from './board.model';
-import { IBoard, IBoardId } from './board.types';
 import BoardService from './board.service';
+import { IBoard, IBoardId } from './board.types';
 
 /**
  * Router object for `boards` endpoints.

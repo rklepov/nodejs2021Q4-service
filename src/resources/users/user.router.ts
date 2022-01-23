@@ -2,17 +2,16 @@
 
 import HTTP_STATUS from 'http-status';
 
-// import { defineHandler } from '../../common/handler';
-
-import { Server } from '../../common/types';
 import Logger from '../../common/logger';
+// import { defineHandler } from '../../common/handler';
+import { Server } from '../../common/types';
 import { validateAuth } from '../../common/validate-auth';
 
 import { DatabaseConnection } from '../../db/database';
 
 import User from './user.model';
-import { IUser, IUserId } from './user.types';
 import UserService from './user.service';
+import { IUser, IUserId } from './user.types';
 
 /**
  * Router object for `users` endpoints.

@@ -2,11 +2,10 @@
 
 import pick from 'lodash.pick';
 
-import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 
 // eslint-disable-next-line import/no-cycle
 import BoardColumn from './board-column.model';
-
 import { BoardId, IBoard } from './board.types';
 
 /**

@@ -7,15 +7,14 @@ import { hashPassword, reply } from '../../common/utils';
 
 import { DatabaseConnection } from '../../db/database';
 
+import User from './user.model';
+import UserRepo from './user.repo';
 import {
+  UserDeleteRequest,
   UserGetRequest,
   UserPostRequest,
   UserPutRequest,
-  UserDeleteRequest,
 } from './user.types';
-
-import User from './user.model';
-import UserRepo from './user.repo';
 
 /**
  * HTTP request handlers for {@link User}.

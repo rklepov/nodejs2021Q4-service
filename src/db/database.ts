@@ -4,15 +4,19 @@
 
 import pick from 'lodash.pick';
 
-import { Connection, Repository } from 'typeorm';
-import { getConnectionOptions, createConnection } from 'typeorm';
+import {
+  Connection,
+  createConnection,
+  getConnectionOptions,
+  Repository,
+} from 'typeorm';
 
-import Logger from '../common/logger';
 import { ApplicationException } from '../common/except';
+import Logger from '../common/logger';
 
-import User from '../resources/users/user.model';
 import Board from '../resources/boards/board.model';
 import Task from '../resources/tasks/task.model';
+import User from '../resources/users/user.model';
 
 /**
  * Users table.

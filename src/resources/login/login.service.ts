@@ -2,14 +2,14 @@
 
 import HTTP_STATUS from 'http-status';
 
-import { Server } from '../../common/types';
 import Logger from '../../common/logger';
+import { Server } from '../../common/types';
 import { checkPassword, reply } from '../../common/utils';
 
 import { DatabaseConnection } from '../../db/database';
 
-import { LoginRequest } from './login.types';
 import LoginRepo from './login.repo';
+import { LoginRequest } from './login.types';
 
 class LoginService {
   /**

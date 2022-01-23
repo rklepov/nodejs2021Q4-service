@@ -3,6 +3,7 @@
 import { FastifyRequest } from 'fastify';
 
 import { UUIDString } from '../../common/utils';
+
 import { IBoardColumn } from './board-column.types';
 
 /**

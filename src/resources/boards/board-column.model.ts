@@ -3,18 +3,18 @@
 import pick from 'lodash.pick';
 
 import {
-  Entity,
-  PrimaryGeneratedColumn,
   Column,
-  ManyToOne,
+  Entity,
   JoinColumn,
+  ManyToOne,
+  PrimaryGeneratedColumn,
 } from 'typeorm';
+
+import { BoardColumnId, IBoardColumn } from './board-column.types';
 
 // eslint-disable-next-line import/no-cycle
 import Board from './board.model';
 import { IBoardId } from './board.types';
-
-import { IBoardColumn, BoardColumnId } from './board-column.types';
 
 /**
  * Models the Column object which holds the unique **Id** along with the fields

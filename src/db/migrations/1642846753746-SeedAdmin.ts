@@ -1,8 +1,8 @@
 // npm run db:migration:gen SeedAdmin
 
-import { MigrationInterface, QueryRunner } from 'typeorm';
-
 import bcrypt from 'bcryptjs';
+
+import { MigrationInterface, QueryRunner } from 'typeorm';
 
 import { BCRYPT_SALT_ROUNDS } from '../../common/config';
 

@@ -2,7 +2,7 @@
 
 import pick from 'lodash.pick';
 
-import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
+import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 import { IUser, UserId } from './user.types';
 

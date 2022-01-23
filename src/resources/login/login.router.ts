@@ -2,15 +2,14 @@
 
 import HTTP_STATUS from 'http-status';
 
-import { Server } from '../../common/types';
 import Logger from '../../common/logger';
+import { Server } from '../../common/types';
 
 import { DatabaseConnection } from '../../db/database';
 
 import Login from './login.model';
-import { ILogin } from './login.types';
 import LoginService from './login.service';
-
+import { ILogin } from './login.types';
 
 /**
  * Router object for `login` endpoint.

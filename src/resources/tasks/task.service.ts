@@ -9,16 +9,15 @@ import { DatabaseConnection } from '../../db/database';
 
 import { IBoardService } from '../boards/board.types';
 
+import Task from './task.model';
+import TaskRepo from './task.repo';
 import {
+  TaskDeleteRequest,
   TaskGetAllRequest,
   TaskGetRequest,
   TaskPostRequest,
   TaskPutRequest,
-  TaskDeleteRequest,
 } from './task.types';
-
-import Task from './task.model';
-import TaskRepo from './task.repo';
 
 /**
  * HTTP request handlers for {@link Task}.

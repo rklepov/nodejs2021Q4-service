@@ -1,8 +1,7 @@
 // validate-auth.ts
 
+import { FastifyReply, FastifyRequest } from 'fastify';
 import HTTP_STATUS from 'http-status';
-
-import { FastifyRequest, FastifyReply } from 'fastify';
 
 export async function validateAuth<Q>(q: FastifyRequest<Q>, p: FastifyReply) {
   try {

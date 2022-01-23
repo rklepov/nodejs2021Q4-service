@@ -2,22 +2,20 @@
 
 import HTTP_STATUS from 'http-status';
 
-// import { defineHandler } from '../../common/handler';
-
-import { Server } from '../../common/types';
 import Logger from '../../common/logger';
+// import { defineHandler } from '../../common/handler';
+import { Server } from '../../common/types';
 import { validateAuth } from '../../common/validate-auth';
-
 
 import { DatabaseConnection } from '../../db/database';
 
-import Task from './task.model';
-import { ITask, ITaskId } from './task.types';
-import TaskService from './task.service';
-
 import Board from '../boards/board.model';
-import { IBoardId } from '../boards/board.types';
 import BoardService from '../boards/board.service';
+import { IBoardId } from '../boards/board.types';
+
+import Task from './task.model';
+import TaskService from './task.service';
+import { ITask, ITaskId } from './task.types';
 
 /**
  * Router object for `boards/:boardId/tasks` endpoints.
