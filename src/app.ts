@@ -167,7 +167,7 @@ class App {
           title: 'Trello Service',
           description: "Let's try to create a competitor for Trello!",
           // TODO: sync with package.json (via env var?)
-          version: '2.1.1',
+          version: '2.2.0',
         },
         tags: [
           { name: 'user', description: 'Users related end-points' },
