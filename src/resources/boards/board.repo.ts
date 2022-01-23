@@ -31,9 +31,6 @@ class BoardRepo {
    *
    * @remarks
    * async, returns a Promise
-   *
-   * @privateRemarks
-   * TODO: the object now stores the Id itself, no need to explicity assign it.
    */
   async create(board: Board) {
     return this.boards.save(board);

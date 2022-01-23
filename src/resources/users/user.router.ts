@@ -2,10 +2,9 @@
 
 import HTTP_STATUS from 'http-status';
 
-import fastify from 'fastify';
-
 // import { defineHandler } from '../../common/handler';
 
+import { Server } from '../../common/types';
 import Logger from '../../common/logger';
 import { validateAuth } from '../../common/validate-auth';
 
@@ -14,13 +13,6 @@ import { DatabaseConnection } from '../../db/database';
 import User from './user.model';
 import { IUser, IUserId } from './user.types';
 import UserService from './user.service';
-
-/**
- * Fastify server instance.
- *
- * TODO: this declaration is repeated in several files.
- */
-type Server = ReturnType<typeof fastify>;
 
 /**
  * Router object for `users` endpoints.

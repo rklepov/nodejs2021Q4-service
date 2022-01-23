@@ -2,12 +2,12 @@
 
 import HTTP_STATUS from 'http-status';
 
-import fastify from 'fastify';
-
 // import { defineHandler } from '../../common/handler';
 
+import { Server } from '../../common/types';
 import Logger from '../../common/logger';
 import { validateAuth } from '../../common/validate-auth';
+
 
 import { DatabaseConnection } from '../../db/database';
 
@@ -18,13 +18,6 @@ import TaskService from './task.service';
 import Board from '../boards/board.model';
 import { IBoardId } from '../boards/board.types';
 import BoardService from '../boards/board.service';
-
-/**
- * Fastify server instance.
- *
- * TODO: this declaration is repeated in several files.
- */
-type Server = ReturnType<typeof fastify>;
 
 /**
  * Router object for `boards/:boardId/tasks` endpoints.

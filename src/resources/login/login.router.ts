@@ -2,8 +2,7 @@
 
 import HTTP_STATUS from 'http-status';
 
-import fastify from 'fastify';
-
+import { Server } from '../../common/types';
 import Logger from '../../common/logger';
 
 import { DatabaseConnection } from '../../db/database';
@@ -12,12 +11,6 @@ import Login from './login.model';
 import { ILogin } from './login.types';
 import LoginService from './login.service';
 
-/**
- * Fastify server instance.
- *
- * TODO: this declaration is repeated in several files.
- */
-type Server = ReturnType<typeof fastify>;
 
 /**
  * Router object for `login` endpoint.

@@ -2,8 +2,7 @@
 
 import HTTP_STATUS from 'http-status';
 
-import { fastify } from 'fastify';
-
+import { Server } from '../../common/types';
 import Logger from '../../common/logger';
 import { checkPassword, reply } from '../../common/utils';
 
@@ -11,13 +10,6 @@ import { DatabaseConnection } from '../../db/database';
 
 import { LoginRequest } from './login.types';
 import LoginRepo from './login.repo';
-
-/**
- * Fastify server instance.
- *
- * TODO: this declaration is repeated in several files.
- */
-type Server = ReturnType<typeof fastify>;
 
 class LoginService {
   /**
@@ -66,7 +58,7 @@ class LoginService {
         { userId: user.userId, login },
         { expiresIn: '60s' }
       ),
-    }); // TODO
+    });
   }
 }
 

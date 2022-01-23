@@ -21,7 +21,8 @@ import { IBoardColumn, BoardColumnId } from './board-column.types';
  * describing a column that belongs to a board.
  */
 @Entity('board_column', {
-  orderBy: { order: 'ASC' }, // TODO: this doesn't seem to work
+  // ! this doesn't seem to work https://github.com/typeorm/typeorm/issues/2620
+  orderBy: { order: 'ASC' },
 })
 class BoardColumn implements IBoardColumn {
   // ? wonder if the class fields can be somehow inferred from the JSON schema below ?
