@@ -12,11 +12,9 @@ import {
 
 import { BoardColumnId } from '../boards/board-column.types';
 
-// eslint-disable-next-line import/no-cycle
 import Board from '../boards/board.model';
 import { BoardId, IBoardId } from '../boards/board.types';
 
-// eslint-disable-next-line import/no-cycle
 import User from '../users/user.model';
 import { UserId } from '../users/user.types';
 import { ITask, TaskId } from './task.types';

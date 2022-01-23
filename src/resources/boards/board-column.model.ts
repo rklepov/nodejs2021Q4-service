@@ -12,9 +12,7 @@ import {
 
 import { BoardColumnId, IBoardColumn } from './board-column.types';
 
-// eslint-disable-next-line import/no-cycle
-import Board from './board.model';
-import { IBoardId } from './board.types';
+import { IBoard, IBoardId } from './board.types';
 
 /**
  * Models the Column object which holds the unique **Id** along with the fields
@@ -47,12 +45,12 @@ class BoardColumn implements IBoardColumn {
   /**
    * The reference to the board of the column.
    */
-  @ManyToOne(() => Board, (board) => board.columns, {
+  @ManyToOne('Board', {
     onDelete: 'CASCADE',
     orphanedRowAction: 'delete',
   })
   @JoinColumn({ name: 'boardId' })
-  board?: Board;
+  board?: IBoardId & IBoard;
 
   /**
    * The {@link BoardColumn} object constructor.
