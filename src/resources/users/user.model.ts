@@ -86,11 +86,11 @@ class User implements IUser {
 
     request: {
       type: 'object',
-      required: ['name'],
+      required: ['name', 'login', 'password'],
       properties: {
         name: { type: 'string' },
-        login: { type: 'string' },
-        password: { type: 'string' },
+        login: { type: 'string', nullable: false },
+        password: { type: 'string', nullable: false },
       },
     },
 

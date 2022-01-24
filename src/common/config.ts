@@ -19,6 +19,7 @@ export const {
   BCRYPT_SALT_ROUNDS,
 } = process.env;
 
+// TODO: this one is actually not used anywhere
 export const AUTH_MODE = process.env.AUTH_MODE === 'true';
 
 // __EOF__
