@@ -20,7 +20,7 @@ git clone https://github.com/rklepov/nodejs2021Q4-service
 Go to the root directory of the cloned repository and do:
 
 ```text
-git checkout task/08-postgresql-typeorm
+git checkout task/09-jwt-auth
 ```
 
 ## Running the application
