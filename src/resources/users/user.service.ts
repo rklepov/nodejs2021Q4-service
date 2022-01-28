@@ -104,7 +104,7 @@ class UserService {
       throw new ReferenceError('Expelliarmus!');
     }
 
-    user.password = await hashPassword(user.password || '');
+    user.password = await hashPassword(user.password);
 
     return reply(HTTP_STATUS.CREATED, await this.repo.create(user));
   }
@@ -127,7 +127,11 @@ class UserService {
    */
   async update({ params, body }: UserPutRequest) {
     const { userId } = params;
-    const user = await this.repo.update(userId, new User(body));
+
+    const newUser = new User(body);
+    newUser.password = await hashPassword(newUser.password);
+
+    const user = await this.repo.update(userId, newUser);
 
     if (user) {
       return reply(HTTP_STATUS.OK, user);
