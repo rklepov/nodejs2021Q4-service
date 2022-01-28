@@ -56,7 +56,7 @@ class LoginService {
     return reply(HTTP_STATUS.OK, {
       token: this.fastify.jwt.sign(
         { userId: user.userId, login },
-        { expiresIn: '60s' }
+        { expiresIn: '1hr' }
       ),
     });
   }
