@@ -1,18 +1,21 @@
 {
-  "editor.codeActionsOnSave": {
-    "source.fixAll.eslint": true
-  },
-  "javascript.validate.enable": false,
   "[javascript]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
   "cSpell.words": [
+    "Expelliarmus",
     "fastify",
     "PGHOST",
     "PGPORT",
     "pino",
+    "privateremarks",
     "serializer",
     "serializers",
+    "Trello",
     "typeorm"
-  ]
+  ],
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": true
+  },
+  "javascript.validate.enable": false
 }

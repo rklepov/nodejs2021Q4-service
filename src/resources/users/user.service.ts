@@ -3,19 +3,18 @@
 import HTTP_STATUS from 'http-status';
 
 import Logger from '../../common/logger';
-import { reply } from '../../common/utils';
+import { hashPassword, reply } from '../../common/utils';
 
 import { DatabaseConnection } from '../../db/database';
 
+import User from './user.model';
+import UserRepo from './user.repo';
 import {
+  UserDeleteRequest,
   UserGetRequest,
   UserPostRequest,
   UserPutRequest,
-  UserDeleteRequest,
 } from './user.types';
-
-import User from './user.model';
-import UserRepo from './user.repo';
 
 /**
  * HTTP request handlers for {@link User}.
@@ -104,6 +103,8 @@ class UserService {
     if (user.name === 'Harry Potter') {
       throw new ReferenceError('Expelliarmus!');
     }
+
+    user.password = await hashPassword(user.password || '');
 
     return reply(HTTP_STATUS.CREATED, await this.repo.create(user));
   }

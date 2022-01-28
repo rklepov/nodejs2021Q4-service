@@ -2,24 +2,16 @@
 
 import HTTP_STATUS from 'http-status';
 
-import fastify from 'fastify';
-
-// import { defineHandler } from '../../common/handler';
-
 import Logger from '../../common/logger';
+// import { defineHandler } from '../../common/handler';
+import { Server } from '../../common/types';
+import { validateAuth } from '../../common/validate-auth';
 
 import { DatabaseConnection } from '../../db/database';
 
 import User from './user.model';
-import { IUser, IUserId } from './user.types';
 import UserService from './user.service';
-
-/**
- * Fastify server instance.
- *
- * TODO: this declaration is repeated in several files.
- */
-type Server = ReturnType<typeof fastify>;
+import { IUser, IUserId } from './user.types';
 
 /**
  * Router object for `users` endpoints.
@@ -55,6 +47,7 @@ class UserRouter {
         const { status, payload } = await this.service.getAll();
         await p.code(status).send(payload);
       },
+      preValidation: validateAuth,
       schema: {
         tags: ['user'],
         response: {
@@ -77,6 +70,7 @@ class UserRouter {
         const { status, payload } = await this.service.get(q);
         await p.code(status).send(payload);
       },
+      preValidation: validateAuth,
       schema: {
         tags: User.schema.tags,
         params: User.schema.params,
@@ -97,6 +91,7 @@ class UserRouter {
         const { status, payload } = await this.service.add(q);
         await p.code(status).send(payload);
       },
+      preValidation: validateAuth,
       schema: {
         tags: User.schema.tags,
         body: User.schema.request,
@@ -117,6 +112,7 @@ class UserRouter {
         const { status, payload } = await this.service.update(q);
         await p.code(status).send(payload);
       },
+      preValidation: validateAuth,
       schema: {
         tags: User.schema.tags,
         params: User.schema.params,
@@ -138,6 +134,7 @@ class UserRouter {
         const { status, payload } = await this.service.delete(q);
         await p.code(status).send(payload);
       },
+      preValidation: validateAuth,
       schema: { tags: User.schema.tags, params: User.schema.params },
     });
   }

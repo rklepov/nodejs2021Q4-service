@@ -3,25 +3,24 @@
 import pick from 'lodash.pick';
 
 import {
-  Entity,
-  PrimaryGeneratedColumn,
   Column,
-  ManyToOne,
+  Entity,
   JoinColumn,
+  ManyToOne,
+  PrimaryGeneratedColumn,
 } from 'typeorm';
 
-// eslint-disable-next-line import/no-cycle
-import Board from './board.model';
-import { IBoardId } from './board.types';
+import { BoardColumnId, IBoardColumn } from './board-column.types';
 
-import { IBoardColumn, BoardColumnId } from './board-column.types';
+import { IBoard, IBoardId } from './board.types';
 
 /**
  * Models the Column object which holds the unique **Id** along with the fields
  * describing a column that belongs to a board.
  */
 @Entity('board_column', {
-  orderBy: { order: 'ASC' }, // TODO: this doesn't seem to work
+  // ! this doesn't seem to work https://github.com/typeorm/typeorm/issues/2620
+  orderBy: { order: 'ASC' },
 })
 class BoardColumn implements IBoardColumn {
   // ? wonder if the class fields can be somehow inferred from the JSON schema below ?
@@ -46,12 +45,12 @@ class BoardColumn implements IBoardColumn {
   /**
    * The reference to the board of the column.
    */
-  @ManyToOne(() => Board, (board) => board.columns, {
+  @ManyToOne('Board', {
     onDelete: 'CASCADE',
     orphanedRowAction: 'delete',
   })
   @JoinColumn({ name: 'boardId' })
-  board?: Board;
+  board?: IBoardId & IBoard;
 
   /**
    * The {@link BoardColumn} object constructor.

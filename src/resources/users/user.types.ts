@@ -22,8 +22,8 @@ export interface IUserId {
  */
 export interface IUser {
   name: string;
-  login?: string;
-  password?: string;
+  login: string;
+  password: string;
 }
 
 export type UserGetRequest = FastifyRequest<{ Params: IUserId }>;

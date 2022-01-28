@@ -7,17 +7,16 @@ import { reply } from '../../common/utils';
 
 import { DatabaseConnection } from '../../db/database';
 
-import {
-  IBoardService,
-  BoardId,
-  BoardDeleteRequest,
-  BoardGetRequest,
-  BoardPostRequest,
-  BoardPutRequest,
-} from './board.types';
-
 import Board from './board.model';
 import BoardRepo from './board.repo';
+import {
+  BoardDeleteRequest,
+  BoardGetRequest,
+  BoardId,
+  BoardPostRequest,
+  BoardPutRequest,
+  IBoardService,
+} from './board.types';
 
 /**
  * HTTP request handlers for {@link Board}.

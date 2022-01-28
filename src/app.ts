@@ -4,25 +4,30 @@
 
 import 'reflect-metadata';
 
+import omit from 'lodash.omit';
 import path from 'path';
 
 import fastify, { FastifyInstance } from 'fastify';
+import fastifyJwt from 'fastify-jwt';
 import fastifySensible from 'fastify-sensible';
 import swagger from 'fastify-swagger';
 
-import Logger from './common/logger';
+import { JWT_SECRET_KEY } from './common/config';
 import { ApplicationException } from './common/except';
+import Logger from './common/logger';
 
 import { DatabaseConnection } from './db/database';
 
-import UserRouter from './resources/users/user.router';
-import User from './resources/users/user.model';
-
-import BoardRouter from './resources/boards/board.router';
 import Board from './resources/boards/board.model';
+import BoardRouter from './resources/boards/board.router';
 
-import TaskRouter from './resources/tasks/task.router';
+import LoginRouter from './resources/login/login.router';
+
 import Task from './resources/tasks/task.model';
+import TaskRouter from './resources/tasks/task.router';
+
+import User from './resources/users/user.model';
+import UserRouter from './resources/users/user.router';
 
 export class ServerStartError extends ApplicationException {
   constructor(message: string) {
@@ -47,7 +52,7 @@ class App {
   /**
    * The instance of typeorm database connection.
    */
-  postgres: DatabaseConnection;
+  db: DatabaseConnection;
 
   /**
    * The path to the OpenAPI schema spec YAML.
@@ -70,6 +75,11 @@ class App {
   taskRouter: TaskRouter;
 
   /**
+   * Router instance for user login endpoint.
+   */
+  loginRouter: LoginRouter;
+
+  /**
    * Swagger instance.
    */
   swagger: FastifyInstance;
@@ -90,7 +100,7 @@ class App {
   constructor(logger: Logger, db: DatabaseConnection) {
     this.log = logger;
 
-    this.postgres = db;
+    this.db = db;
 
     this.fastify = fastify({
       logger: this.log.pinoLogger,
@@ -108,7 +118,10 @@ class App {
     this.fastify
       .addHook('preHandler', (q, _, done) => {
         if (q.body) {
-          q.log.info({ body: q.body }, 'parsed request body');
+          q.log.info(
+            { body: omit(q.body as Record<string, unknown>, ['password']) },
+            'parsed request body'
+          );
         }
         done();
       })
@@ -154,7 +167,7 @@ class App {
           title: 'Trello Service',
           description: "Let's try to create a competitor for Trello!",
           // TODO: sync with package.json (via env var?)
-          version: '2.1.1',
+          version: '2.2.0',
         },
         tags: [
           { name: 'user', description: 'Users related end-points' },
@@ -169,9 +182,10 @@ class App {
       },
     });
 
-    this.userRouter = new UserRouter(this.log, this.fastify, this.postgres);
-    this.boardRouter = new BoardRouter(this.log, this.fastify, this.postgres);
-    this.taskRouter = new TaskRouter(this.log, this.fastify, this.postgres);
+    this.loginRouter = new LoginRouter(this.log, this.fastify, this.db);
+    this.userRouter = new UserRouter(this.log, this.fastify, this.db);
+    this.boardRouter = new BoardRouter(this.log, this.fastify, this.db);
+    this.taskRouter = new TaskRouter(this.log, this.fastify, this.db);
   }
 
   /**
@@ -186,6 +200,10 @@ class App {
   async start(port: number, addr?: string) {
     try {
       await this.fastify.register(fastifySensible);
+      if (JWT_SECRET_KEY) {
+        await this.fastify.register(fastifyJwt, { secret: JWT_SECRET_KEY });
+      }
+
       const addrPort = await this.fastify.listen(port, addr);
       this.fastify.log.info(`[start] App is running on ${addrPort}`);
     } catch (e) {
@@ -210,7 +228,7 @@ class App {
     try {
       await this.fastify.close();
       this.fastify.log.info('[stop] Server closed');
-      await this.postgres.close();
+      await this.db.close();
       this.fastify.log.info('[stop] Database connection closed');
     } catch (e) {
       this.fastify.log.error(e);

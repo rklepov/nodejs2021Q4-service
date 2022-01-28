@@ -20,7 +20,7 @@ git clone https://github.com/rklepov/nodejs2021Q4-service
 Go to the root directory of the cloned repository and do:
 
 ```text
-git checkout task/08-postgresql-typeorm
+git checkout task/09-jwt-auth
 ```
 
 ## Running the application
@@ -79,10 +79,12 @@ Whether you've started the application in the container or locally it's easier t
 
 ### Running the tests
 
-Once the container with the application is up and running (look at the log messages in the console) enter the following command to run the tests:
+:warning: Please remember that in this task we added authentication to our REST server therefore you need to run the _auth_ test suite with the command below (_not_ with the regular `npm test` as we did before).
+
+Once the container with the application is up and running (look at the log messages in the console which confirm that) enter the following command to run the tests:
 
 ```text
-npm test
+npm run test:auth
 ```
 
 ## Development

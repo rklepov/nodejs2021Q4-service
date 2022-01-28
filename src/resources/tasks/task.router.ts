@@ -2,28 +2,20 @@
 
 import HTTP_STATUS from 'http-status';
 
-import fastify from 'fastify';
-
-// import { defineHandler } from '../../common/handler';
-
 import Logger from '../../common/logger';
+// import { defineHandler } from '../../common/handler';
+import { Server } from '../../common/types';
+import { validateAuth } from '../../common/validate-auth';
 
-import {  DatabaseConnection } from '../../db/database';
-
-import Task from './task.model';
-import { ITask, ITaskId } from './task.types';
-import TaskService from './task.service';
+import { DatabaseConnection } from '../../db/database';
 
 import Board from '../boards/board.model';
-import { IBoardId } from '../boards/board.types';
 import BoardService from '../boards/board.service';
+import { IBoardId } from '../boards/board.types';
 
-/**
- * Fastify server instance.
- *
- * TODO: this declaration is repeated in several files.
- */
-type Server = ReturnType<typeof fastify>;
+import Task from './task.model';
+import TaskService from './task.service';
+import { ITask, ITaskId } from './task.types';
 
 /**
  * Router object for `boards/:boardId/tasks` endpoints.
@@ -59,6 +51,7 @@ class TaskRouter {
         const { status, payload } = await this.service.getAll(q);
         await p.code(status).send(payload);
       },
+      preValidation: validateAuth,
       schema: {
         tags: Task.schema.tags,
         params: Board.schema.params,
@@ -84,6 +77,7 @@ class TaskRouter {
           const { status, payload } = await this.service.get(q);
           await p.code(status).send(payload);
         },
+        preValidation: validateAuth,
         schema: {
           tags: Task.schema.tags,
           params: Task.schema.params,
@@ -107,6 +101,7 @@ class TaskRouter {
           const { status, payload } = await this.service.add(q);
           await p.code(status).send(payload);
         },
+        preValidation: validateAuth,
         schema: {
           tags: Task.schema.tags,
           params: Board.schema.params,
@@ -132,6 +127,7 @@ class TaskRouter {
           const { status, payload } = await this.service.update(q);
           await p.code(status).send(payload);
         },
+        preValidation: validateAuth,
         schema: {
           tags: Task.schema.tags,
           params: Task.schema.params,
@@ -157,6 +153,7 @@ class TaskRouter {
           const { status, payload } = await this.service.delete(q);
           await p.code(status).send(payload);
         },
+        preValidation: validateAuth,
         schema: { tags: Task.schema.tags, params: Task.schema.params },
       }
     );

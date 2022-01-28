@@ -2,24 +2,16 @@
 
 import HTTP_STATUS from 'http-status';
 
-import fastify from 'fastify';
-
-// import { defineHandler } from '../../common/handler';
-
 import Logger from '../../common/logger';
+// import { defineHandler } from '../../common/handler';
+import { Server } from '../../common/types';
+import { validateAuth } from '../../common/validate-auth';
 
 import { DatabaseConnection } from '../../db/database';
 
 import Board from './board.model';
-import { IBoard, IBoardId } from './board.types';
 import BoardService from './board.service';
-
-/**
- * Fastify server instance.
- *
- * TODO: this declaration is repeated in several files.
- */
-type Server = ReturnType<typeof fastify>;
+import { IBoard, IBoardId } from './board.types';
 
 /**
  * Router object for `boards` endpoints.
@@ -52,6 +44,7 @@ class BoardRouter {
         const { status, payload } = await this.service.getAll();
         await p.code(status).send(payload);
       },
+      preValidation: validateAuth,
       schema: {
         tags: Board.schema.tags,
         response: {
@@ -74,6 +67,7 @@ class BoardRouter {
         const { status, payload } = await this.service.get(q);
         await p.code(status).send(payload);
       },
+      preValidation: validateAuth,
       schema: {
         tags: Board.schema.tags,
         params: Board.schema.params,
@@ -94,6 +88,7 @@ class BoardRouter {
         const { status, payload } = await this.service.add(q);
         await p.code(status).send(payload);
       },
+      preValidation: validateAuth,
       schema: {
         tags: Board.schema.tags,
         body: Board.schema.request,
@@ -114,6 +109,7 @@ class BoardRouter {
         const { status, payload } = await this.service.update(q);
         await p.code(status).send(payload);
       },
+      preValidation: validateAuth,
       schema: {
         tags: Board.schema.tags,
         params: Board.schema.params,
@@ -135,6 +131,7 @@ class BoardRouter {
         const { status, payload } = await this.service.delete(q);
         await p.code(status).send(payload);
       },
+      preValidation: validateAuth,
       schema: { tags: Board.schema.tags, params: Board.schema.params },
     });
   }

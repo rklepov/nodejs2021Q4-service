@@ -2,10 +2,9 @@
 
 import { Level as LogLevel } from 'pino';
 
-import { LOG_DIR, LOG_LEVEL, PORT, ADDR } from './common/config';
-
-import Logger from './common/logger';
+import { ADDR, LOG_DIR, LOG_LEVEL, PORT } from './common/config';
 import { ApplicationException } from './common/except';
+import Logger from './common/logger';
 
 import { createDatabaseConnection } from './db/database';
 

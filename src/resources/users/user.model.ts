@@ -2,9 +2,9 @@
 
 import pick from 'lodash.pick';
 
-import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
+import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
-import { IUserId, IUser, UserId } from './user.types';
+import { IUser, UserId } from './user.types';
 
 /**
  * Models the User object which holds the unique **Id** along with the fields
@@ -29,13 +29,13 @@ class User implements IUser {
    * User login.
    */
   @Column('varchar')
-  login?: string | undefined;
+  login!: string;
 
   /**
    * User password.
    */
   @Column('varchar')
-  password?: string | undefined;
+  password!: string;
 
   /**
    * The {@link User} object constructor.
@@ -105,7 +105,6 @@ class User implements IUser {
   };
 }
 
-export { UserId, IUserId, IUser };
 export default User;
 
 // __EOF__

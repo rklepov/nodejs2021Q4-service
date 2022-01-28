@@ -4,9 +4,10 @@ import { FastifyRequest } from 'fastify';
 
 import { UUIDString } from '../../common/utils';
 
-import { UserId } from '../users/user.types';
-import { IBoardId } from '../boards/board.types';
 import { BoardColumnId } from '../boards/board-column.types';
+import { IBoardId } from '../boards/board.types';
+
+import { UserId } from '../users/user.types';
 
 /**
  * The unique **Id** of the task.

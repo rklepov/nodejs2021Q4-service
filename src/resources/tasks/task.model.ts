@@ -3,24 +3,21 @@
 import pick from 'lodash.pick';
 
 import {
-  Entity,
   Column,
-  PrimaryGeneratedColumn,
-  ManyToOne,
+  Entity,
   JoinColumn,
+  ManyToOne,
+  PrimaryGeneratedColumn,
 } from 'typeorm';
-
-// eslint-disable-next-line import/no-cycle
-import Board from '../boards/board.model';
-import { BoardId, IBoardId } from '../boards/board.types';
 
 import { BoardColumnId } from '../boards/board-column.types';
 
-// eslint-disable-next-line import/no-cycle
+import Board from '../boards/board.model';
+import { BoardId, IBoardId } from '../boards/board.types';
+
 import User from '../users/user.model';
 import { UserId } from '../users/user.types';
-
-import { ITaskId, ITask, TaskId } from './task.types';
+import { ITask, TaskId } from './task.types';
 
 /**
  * Models the Task object which holds the unique **Id** along with the fields
@@ -165,7 +162,6 @@ class Task implements ITask {
   };
 }
 
-export { TaskId, ITaskId, ITask };
 export default Task;
 
 // __EOF__

@@ -1,5 +1,9 @@
 // utils.ts
 
+import bcrypt from 'bcryptjs';
+
+import { BCRYPT_SALT_ROUNDS } from './config';
+
 /**
  * A small utility function used for returning the result of the processing of
  * an HTTP request by a service. The result is subsequently passed to the server
@@ -22,5 +26,14 @@ export function reply<PayloadT>(status: number, payload?: PayloadT) {
  * The string representation of {@link https://www.ietf.org/rfc/rfc4122.txt | RFC4122} UUID.
  */
 export type UUIDString = string;
+
+export async function hashPassword(password: string) {
+  // ? should the salt be passed as an argument ?
+  return bcrypt.hash(password, Number(BCRYPT_SALT_ROUNDS));
+}
+
+export async function checkPassword(password: string, hash: string) {
+  return bcrypt.compare(password, hash);
+}
 
 // __EOF__
