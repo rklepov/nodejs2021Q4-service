@@ -59,6 +59,7 @@
     "@nestjs/platform-fastify": "^8.2.6",
     "@nestjs/typeorm": "^8.0.3",
     "bcryptjs": "^2.4.3",
+    "class-transformer": "^0.5.1",
     "cross-env": "7.0.3",
     "dayjs": "^1.10.7",
     "dotenv": "^14.3.2",

@@ -1,5 +1,6 @@
 // user.entity.ts
 
+import { Exclude } from 'class-transformer';
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 import { UserId } from '../interfaces/user.interface';
@@ -16,6 +17,7 @@ export class User {
   login!: string;
 
   @Column('varchar')
+  @Exclude()
   password!: string;
 }
 
