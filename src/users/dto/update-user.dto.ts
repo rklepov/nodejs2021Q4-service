@@ -2,11 +2,8 @@
 
 import { PartialType } from '@nestjs/mapped-types';
 
-import { UUIDString } from '../../common/types';
 import { CreateUserDto } from './create-user.dto';
 
-export class UpdateUserDto extends PartialType(CreateUserDto) {
-  userId: UUIDString = '';
-}
+export class UpdateUserDto extends PartialType(CreateUserDto) {}
 
 // __EOF__
