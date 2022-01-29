@@ -51,6 +51,12 @@
       {
         "ignores": ["modules"]
       }
+    ],
+    "prettier/prettier": [
+      "error",
+      {
+        "endOfLine": "auto"
+      }
     ]
   },
   "plugins": ["@typescript-eslint/eslint-plugin"]
