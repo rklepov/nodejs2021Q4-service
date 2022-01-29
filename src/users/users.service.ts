@@ -1,6 +1,6 @@
 // users.service.ts
 
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
@@ -26,7 +26,11 @@ export class UsersService {
   }
 
   async findOne(userId: UserId) {
-    return this.usersRepository.findOne({ userId });
+    const user = await this.usersRepository.findOne({ userId });
+    if (!user) {
+      throw new NotFoundException({ userId });
+    }
+    return user;
   }
 
   async edit(userId: UserId, editUserDto: CreateUserDto) {
@@ -35,7 +39,7 @@ export class UsersService {
       // TODO: password hash!
       return this.usersRepository.save({ ...editUserDto, userId });
     }
-    return null;
+    throw new NotFoundException({ userId });
   }
 
   async update(userId: UserId, updateUserDto: UpdateUserDto) {
@@ -44,11 +48,14 @@ export class UsersService {
       // TODO: password hash!
       return this.usersRepository.save({ ...user, ...updateUserDto, userId });
     }
-    return null;
+    throw new NotFoundException({ userId });
   }
 
   async remove(userId: UserId) {
     const result = await this.usersRepository.delete({ userId });
+    if (!result.affected) {
+      throw new NotFoundException({ userId });
+    }
     return !!result.affected;
   }
 }
