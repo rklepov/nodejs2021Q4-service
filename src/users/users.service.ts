@@ -29,6 +29,15 @@ export class UsersService {
     return this.usersRepository.findOne({ userId });
   }
 
+  async edit(userId: UserId, editUserDto: CreateUserDto) {
+    const user = await this.usersRepository.findOne({ userId });
+    if (user) {
+      // TODO: password hash!
+      return this.usersRepository.save({ ...editUserDto, userId });
+    }
+    return null;
+  }
+
   async update(userId: UserId, updateUserDto: UpdateUserDto) {
     const user = await this.usersRepository.findOne({ userId });
     if (user) {
