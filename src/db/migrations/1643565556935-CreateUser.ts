@@ -2,8 +2,8 @@
 
 import { MigrationInterface, QueryRunner } from 'typeorm';
 
-export class CreateUser1643530008396 implements MigrationInterface {
-  name = 'CreateUser1643530008396';
+export class CreateUser1643565556935 implements MigrationInterface {
+  name = 'CreateUser1643565556935';
 
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.query(`
@@ -12,7 +12,6 @@ export class CreateUser1643530008396 implements MigrationInterface {
                 "name" character varying NOT NULL,
                 "login" character varying NOT NULL,
                 "password" character varying NOT NULL,
-                CONSTRAINT "UQ_a62473490b3e4578fd683235c5e" UNIQUE ("login"),
                 CONSTRAINT "PK_d72ea127f30e21753c9e229891e" PRIMARY KEY ("userId")
             )
         `);
@@ -25,4 +24,4 @@ export class CreateUser1643530008396 implements MigrationInterface {
   }
 }
 
-// __EOF__
+//__EOF__

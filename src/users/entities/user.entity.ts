@@ -17,7 +17,7 @@ export class User {
   @Expose()
   name!: string;
 
-  @Column('varchar', { unique: true, nullable: false })
+  @Column('varchar', { nullable: false })
   @Expose()
   login!: string;
 
