@@ -5,6 +5,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UsersModule } from './users/users.module';
+import { TasksModule } from './tasks/tasks.module';
 
 import dbConfig from './db/config';
 
@@ -22,6 +23,7 @@ import dbConfig from './db/config';
       }),
     }),
     UsersModule,
+    TasksModule,
   ],
   providers: [],
 })

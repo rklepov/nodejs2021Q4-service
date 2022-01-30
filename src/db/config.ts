@@ -2,6 +2,7 @@
 
 import { ConfigService, registerAs } from '@nestjs/config';
 
+import { Task } from './../tasks/entities/task.entity';
 import { User } from './../users/entities/user.entity';
 
 export default registerAs('database', async () => {
@@ -13,7 +14,7 @@ export default registerAs('database', async () => {
     username: configService.get('POSTGRES_USER'),
     password: configService.get('POSTGRES_PASSWORD'),
     database: configService.get('POSTGRES_DB'),
-    entities: [User],
+    entities: [User, Task],
     autoLoadEntities: true,
     migrations: ['dist/db/migrations/*.js'],
     cli: {
