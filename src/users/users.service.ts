@@ -2,6 +2,7 @@
 
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import pick from 'lodash.pick';
 import { Repository } from 'typeorm';
 
 import { CreateUserDto } from './dto/create-user.dto';
@@ -17,7 +18,6 @@ export class UsersService {
   ) {}
 
   async create(createUserDto: CreateUserDto) {
-    // TODO: password hash!
     return new User(await this.usersRepository.save(createUserDto));
   }
 
@@ -36,7 +36,6 @@ export class UsersService {
   async edit(userId: UserId, editUserDto: CreateUserDto): Promise<User> {
     const user = await this.usersRepository.findOne({ userId });
     if (user) {
-      // TODO: password hash!
       return new User(
         await this.usersRepository.save({ ...editUserDto, userId }),
       );
@@ -45,9 +44,12 @@ export class UsersService {
   }
 
   async update(userId: UserId, updateUserDto: UpdateUserDto): Promise<User> {
-    const user = await this.usersRepository.findOne({ userId });
+    const user = await this.usersRepository.findOne({
+      select: Object.keys(updateUserDto) as (keyof CreateUserDto)[],
+      where: { userId },
+    });
+
     if (user) {
-      // TODO: password hash!
       return new User(
         await this.usersRepository.save({ ...user, ...updateUserDto, userId }),
       );
