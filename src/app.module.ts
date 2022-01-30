@@ -2,10 +2,11 @@
 
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { UsersModule } from './users/users.module';
+
+import { BoardColumnsModule } from './board-columns/board-columns.module';
 import { TasksModule } from './tasks/tasks.module';
+import { UsersModule } from './users/users.module';
 
 import dbConfig from './db/config';
 
@@ -24,6 +25,7 @@ import dbConfig from './db/config';
     }),
     UsersModule,
     TasksModule,
+    BoardColumnsModule,
   ],
   providers: [],
 })
