@@ -18,7 +18,7 @@ export class UsersService {
 
   async create(createUserDto: CreateUserDto) {
     // TODO: password hash!
-    return this.usersRepository.save(createUserDto);
+    return new User(await this.usersRepository.save(createUserDto));
   }
 
   async findAll() {
@@ -33,20 +33,24 @@ export class UsersService {
     return user;
   }
 
-  async edit(userId: UserId, editUserDto: CreateUserDto) {
+  async edit(userId: UserId, editUserDto: CreateUserDto): Promise<User> {
     const user = await this.usersRepository.findOne({ userId });
     if (user) {
       // TODO: password hash!
-      return this.usersRepository.save({ ...editUserDto, userId });
+      return new User(
+        await this.usersRepository.save({ ...editUserDto, userId }),
+      );
     }
     throw new NotFoundException({ userId });
   }
 
-  async update(userId: UserId, updateUserDto: UpdateUserDto) {
+  async update(userId: UserId, updateUserDto: UpdateUserDto): Promise<User> {
     const user = await this.usersRepository.findOne({ userId });
     if (user) {
       // TODO: password hash!
-      return this.usersRepository.save({ ...user, ...updateUserDto, userId });
+      return new User(
+        await this.usersRepository.save({ ...user, ...updateUserDto, userId }),
+      );
     }
     throw new NotFoundException({ userId });
   }
