@@ -14,9 +14,11 @@ export class User {
   userId!: UserId;
 
   @Column('varchar')
+  @Expose()
   name!: string;
 
   @Column('varchar', { unique: true, nullable: false })
+  @Expose()
   login!: string;
 
   @Column('varchar', {
