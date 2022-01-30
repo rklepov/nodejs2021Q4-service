@@ -1,8 +1,10 @@
 // user.entity.ts
 
+import { ConfigService } from '@nestjs/config';
 import { Exclude, Expose } from 'class-transformer';
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
+import { PasswordTransformer } from '../../common/password-transformer';
 import { UserId } from '../interfaces/user.interface';
 
 @Entity()
@@ -17,7 +19,10 @@ export class User {
   @Column('varchar', { unique: true, nullable: false })
   login!: string;
 
-  @Column('varchar', { nullable: false })
+  @Column('varchar', {
+    nullable: false,
+    transformer: new PasswordTransformer(new ConfigService()),
+  })
   @Exclude({ toPlainOnly: true })
   password!: string;
 
