@@ -1,9 +1,9 @@
-// npx ts-node --transpile-only ./node_modules/typeorm/cli.js migration:generate -n CreateUser -p
+// npm run db:migration:gen CreateUser
 
 import { MigrationInterface, QueryRunner } from 'typeorm';
 
-export class CreateUser1642286615619 implements MigrationInterface {
-  name = 'CreateUser1642286615619';
+export class CreateUser1643530008396 implements MigrationInterface {
+  name = 'CreateUser1643530008396';
 
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.query(`
@@ -12,6 +12,7 @@ export class CreateUser1642286615619 implements MigrationInterface {
                 "name" character varying NOT NULL,
                 "login" character varying NOT NULL,
                 "password" character varying NOT NULL,
+                CONSTRAINT "UQ_a62473490b3e4578fd683235c5e" UNIQUE ("login"),
                 CONSTRAINT "PK_d72ea127f30e21753c9e229891e" PRIMARY KEY ("userId")
             )
         `);
@@ -23,3 +24,5 @@ export class CreateUser1642286615619 implements MigrationInterface {
         `);
   }
 }
+
+// __EOF__

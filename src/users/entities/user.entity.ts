@@ -14,10 +14,10 @@ export class User {
   @Column('varchar')
   name!: string;
 
-  @Column('varchar')
+  @Column('varchar', { unique: true, nullable: false })
   login!: string;
 
-  @Column('varchar')
+  @Column('varchar', { nullable: false })
   @Exclude({ toPlainOnly: true })
   password!: string;
 
