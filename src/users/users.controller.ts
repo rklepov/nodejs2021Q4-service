@@ -18,6 +18,7 @@ import {
 
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { UserId } from './interfaces/user.interface';
 import { UsersService } from './users.service';
 
 @Controller('users')
@@ -39,13 +40,13 @@ export class UsersController {
   }
 
   @Get(':userId')
-  findOne(@Param('userId', ParseUUIDPipe) id: string) {
+  findOne(@Param('userId', ParseUUIDPipe) id: UserId) {
     return this.usersService.findOne(id);
   }
 
   @Put(':userId')
   edit(
-    @Param('userId', ParseUUIDPipe) id: string,
+    @Param('userId', ParseUUIDPipe) id: UserId,
     @Body()
     createUserDto: CreateUserDto,
   ) {
@@ -54,7 +55,7 @@ export class UsersController {
 
   @Patch(':userId')
   update(
-    @Param('userId', ParseUUIDPipe) id: string,
+    @Param('userId', ParseUUIDPipe) id: UserId,
     @Body()
     updateUserDto: UpdateUserDto,
   ) {
@@ -63,7 +64,7 @@ export class UsersController {
 
   @Delete(':userId')
   @HttpCode(HttpStatus.NO_CONTENT)
-  remove(@Param('userId', ParseUUIDPipe) id: string) {
+  remove(@Param('userId', ParseUUIDPipe) id: UserId) {
     return this.usersService.remove(id);
   }
 }

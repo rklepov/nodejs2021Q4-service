@@ -44,7 +44,7 @@ export class UsersService {
 
   async update(userId: UserId, updateUserDto: UpdateUserDto): Promise<User> {
     const user = await this.usersRepository.findOne({
-      select: Object.keys(updateUserDto) as (keyof CreateUserDto)[],
+      select: Object.keys(updateUserDto) as (keyof UpdateUserDto)[],
       where: { userId },
     });
 

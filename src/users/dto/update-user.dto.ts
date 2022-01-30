@@ -2,7 +2,7 @@
 
 import { IsAscii, IsOptional, IsString } from 'class-validator';
 
-export class UpdateUserDto {
+export class UpdateUserDto /* extends PartialType(CreateUserDto) */ {
   @IsOptional()
   @IsString()
   name?: string;
