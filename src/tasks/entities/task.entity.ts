@@ -15,7 +15,7 @@ import { User } from '../../users/entities/user.entity';
 import { UserId } from '../../users/interfaces/user.interface';
 import { TaskId } from '../interfaces/task.interface';
 
-@Entity()
+@Entity('task', { orderBy: { taskId: 'ASC', order: 'ASC' } })
 export class Task {
   @PrimaryGeneratedColumn('uuid')
   @Expose({ name: 'id' })
