@@ -14,7 +14,6 @@ import {
   Post,
   Put,
   UseInterceptors,
-  ValidationPipe,
 } from '@nestjs/common';
 
 import { CreateUserDto } from './dto/create-user.dto';
@@ -28,7 +27,7 @@ export class UsersController {
 
   @Post()
   create(
-    @Body(new ValidationPipe({ whitelist: true }))
+    @Body()
     createUserDto: CreateUserDto,
   ) {
     return this.usersService.create(createUserDto);
@@ -47,7 +46,7 @@ export class UsersController {
   @Put(':userId')
   edit(
     @Param('userId', ParseUUIDPipe) id: string,
-    @Body(new ValidationPipe({ whitelist: true }))
+    @Body()
     createUserDto: CreateUserDto,
   ) {
     return this.usersService.edit(id, createUserDto);
@@ -56,7 +55,7 @@ export class UsersController {
   @Patch(':userId')
   update(
     @Param('userId', ParseUUIDPipe) id: string,
-    @Body(new ValidationPipe({ whitelist: true }))
+    @Body()
     updateUserDto: UpdateUserDto,
   ) {
     return this.usersService.update(id, updateUserDto);
