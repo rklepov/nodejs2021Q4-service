@@ -11,7 +11,7 @@ import {
 } from 'class-validator';
 
 import { UserId } from '../../users/interfaces/user.interface';
-import { BoardColumnId } from '../interfaces/task.interface';
+import { BoardColumnId } from '../../board-columns/interfaces/board-columns.interface';
 
 export class CreateTaskDto {
   @IsDefined()

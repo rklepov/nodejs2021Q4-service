@@ -1,5 +1,4 @@
 // tasks.controller.ts
-
 import {
   Body,
   ClassSerializerInterceptor,
@@ -16,9 +15,10 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 
+import { BoardId } from '../boards/interfaces/board.interface';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { UpdateTaskDto } from './dto/update-task.dto';
-import { BoardId, TaskId } from './interfaces/task.interface';
+import { TaskId } from './interfaces/task.interface';
 import { TasksService } from './tasks.service';
 
 @Controller('/boards/:boardId/tasks')
@@ -51,9 +51,9 @@ export class TasksController {
   edit(
     @Param('boardId', ParseUUIDPipe) boardId: BoardId,
     @Param('taskId', ParseUUIDPipe) taskId: TaskId,
-    @Body() createTaskDto: CreateTaskDto,
+    @Body() editTaskDto: CreateTaskDto,
   ) {
-    return this.tasksService.edit(boardId, taskId, createTaskDto);
+    return this.tasksService.edit(boardId, taskId, editTaskDto);
   }
 
   @Patch(':taskId')

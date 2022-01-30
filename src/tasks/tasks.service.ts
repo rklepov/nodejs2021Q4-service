@@ -4,10 +4,11 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
+import { BoardId } from '../boards/interfaces/board.interface';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { UpdateTaskDto } from './dto/update-task.dto';
 import { Task } from './entities/task.entity';
-import { BoardId, TaskId } from './interfaces/task.interface';
+import { TaskId } from './interfaces/task.interface';
 
 @Injectable()
 export class TasksService {

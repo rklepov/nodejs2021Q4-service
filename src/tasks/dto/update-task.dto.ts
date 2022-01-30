@@ -9,8 +9,8 @@ import {
   Min,
 } from 'class-validator';
 
+import { BoardColumnId } from '../../board-columns/interfaces/board-columns.interface';
 import { UserId } from '../../users/interfaces/user.interface';
-import { BoardColumnId } from '../interfaces/task.interface';
 
 export class UpdateTaskDto /* extends PartialType(CreateTaskDto) */ {
   @IsOptional()

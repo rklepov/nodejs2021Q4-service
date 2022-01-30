@@ -9,9 +9,11 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
+import { BoardColumnId } from '../../board-columns/interfaces/board-columns.interface';
+import { BoardId } from '../../boards/interfaces/board.interface';
 import { User } from '../../users/entities/user.entity';
 import { UserId } from '../../users/interfaces/user.interface';
-import { BoardColumnId, BoardId, TaskId } from '../interfaces/task.interface';
+import { TaskId } from '../interfaces/task.interface';
 
 @Entity()
 export class Task {
@@ -39,7 +41,7 @@ export class Task {
   boardId?: BoardId; // TODO: ManyToOne to board
 
   @Column('uuid', { nullable: true })
-  columnId?: BoardColumnId; // TODO: ManyToOne to column
+  columnId?: BoardColumnId; // TODO: ManyToOne to board column
 
   constructor(partial: Partial<Task>) {
     Object.assign(this, partial);
