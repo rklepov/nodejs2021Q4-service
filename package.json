@@ -13,9 +13,9 @@
   "scripts": {
     "build": "nest build",
     "clean:logs": "del-cli ./logs/*.log",
-    "db:migration:gen": "ts-node --transpile-only ./node_modules/typeorm/cli.js migration:generate -p -n",
-    "db:migration:revert": "ts-node --transpile-only ./node_modules/typeorm/cli.js migration:revert",
-    "db:migration:run": "ts-node --transpile-only ./node_modules/typeorm/cli.js migration:run",
+    "db:migration:gen": "ts-node --transpile-only ./node_modules/typeorm/cli.js --config ./migration-gen-ormconfig.ts migration:generate -p -n",
+    "db:migration:revert": "ts-node --transpile-only ./node_modules/typeorm/cli.js --config ./migration-gen-ormconfig.ts migration:revert",
+    "db:migration:run": "ts-node --transpile-only ./node_modules/typeorm/cli.js --config ./migration-gen-ormconfig.ts migration:run",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
     "prebuild": "rimraf dist",
