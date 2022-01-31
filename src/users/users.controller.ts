@@ -27,10 +27,7 @@ export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @Post()
-  create(
-    @Body()
-    createUserDto: CreateUserDto,
-  ) {
+  create(@Body() createUserDto: CreateUserDto) {
     return this.usersService.create(createUserDto);
   }
 
@@ -47,8 +44,7 @@ export class UsersController {
   @Put(':userId')
   edit(
     @Param('userId', ParseUUIDPipe) id: UserId,
-    @Body()
-    createUserDto: CreateUserDto,
+    @Body() createUserDto: CreateUserDto,
   ) {
     return this.usersService.edit(id, createUserDto);
   }
@@ -56,8 +52,7 @@ export class UsersController {
   @Patch(':userId')
   update(
     @Param('userId', ParseUUIDPipe) id: UserId,
-    @Body()
-    updateUserDto: UpdateUserDto,
+    @Body() updateUserDto: UpdateUserDto,
   ) {
     return this.usersService.update(id, updateUserDto);
   }

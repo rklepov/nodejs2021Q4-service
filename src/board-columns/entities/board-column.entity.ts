@@ -1,8 +1,19 @@
 // board-column.entity.ts
 
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
-import { BoardColumnId } from '../interfaces/board-columns.interface';
+import { Exclude, Expose } from 'class-transformer';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
+
+// TODO:
+// eslint-disable-next-line import/no-cycle
+import { Board } from '../../boards/entities/board.entity';
 import { BoardId } from '../../boards/interfaces/board.interface';
+import { BoardColumnId } from '../interfaces/board-columns.interface';
 
 @Entity('board_column', {
   // ! https://github.com/typeorm/typeorm/issues/2620
@@ -10,6 +21,9 @@ import { BoardId } from '../../boards/interfaces/board.interface';
 })
 export class BoardColumn {
   @PrimaryGeneratedColumn('uuid')
+  // TODO: the column Id should be exposed through the dedicated
+  //       boards/:boardId/columns API endpoint only
+  @Expose({ groups: ['board-column'], name: 'id', toPlainOnly: true })
   columnId?: BoardColumnId;
 
   @Column('varchar')
@@ -18,15 +32,17 @@ export class BoardColumn {
   @Column('int')
   order = NaN;
 
-  @Column('uuid', { nullable: /* false */ true })
-  boardId?: BoardId; // TODO: ManyToOne to board
+  @ManyToOne('Board', {
+    onDelete: 'CASCADE',
+    orphanedRowAction: 'delete',
+  })
+  @JoinColumn({ name: 'boardId' })
+  // TODO: replace with interface to break cycle dependency ?
+  board?: Board;
 
-  //   @ManyToOne('Board', {
-  //     onDelete: 'CASCADE',
-  //     orphanedRowAction: 'delete',
-  //   })
-  //   @JoinColumn({ name: 'boardId' })
-  //   board?: Board;
+  @Column('uuid', { nullable: false })
+  @Exclude({ toPlainOnly: true })
+  boardId?: BoardId;
 
   constructor(partial: Partial<BoardColumn>) {
     Object.assign(this, partial);

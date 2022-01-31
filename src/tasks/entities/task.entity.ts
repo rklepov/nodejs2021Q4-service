@@ -11,6 +11,7 @@ import {
 
 import { BoardColumn } from '../../board-columns/entities/board-column.entity';
 import { BoardColumnId } from '../../board-columns/interfaces/board-columns.interface';
+import { Board } from '../../boards/entities/board.entity';
 import { BoardId } from '../../boards/interfaces/board.interface';
 import { User } from '../../users/entities/user.entity';
 import { UserId } from '../../users/interfaces/user.interface';
@@ -38,8 +39,12 @@ export class Task {
   @Column({ nullable: true })
   userId!: UserId;
 
-  @Column('uuid', { nullable: /* false */ true })
-  boardId?: BoardId; // TODO: ManyToOne to board
+  @ManyToOne(() => Board, { onDelete: 'CASCADE' })
+  @JoinColumn({ name: 'boardId' })
+  board?: Board;
+
+  @Column({ nullable: false })
+  boardId!: BoardId;
 
   @ManyToOne(() => BoardColumn, { onDelete: 'SET NULL' })
   @JoinColumn({ name: 'columnId' })

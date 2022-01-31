@@ -18,9 +18,7 @@ export class TasksService {
   ) {}
 
   async create(boardId: BoardId, createTaskDto: CreateTaskDto) {
-    return new Task(
-      await this.tasksRepository.save({ ...createTaskDto, boardId }),
-    );
+    return this.tasksRepository.save(new Task({ ...createTaskDto, boardId }));
   }
 
   async findAll(boardId: BoardId) {
@@ -38,8 +36,8 @@ export class TasksService {
   async edit(boardId: BoardId, taskId: TaskId, editTaskDto: CreateTaskDto) {
     const task = await this.tasksRepository.findOne({ boardId, taskId });
     if (task) {
-      return new Task(
-        await this.tasksRepository.save({ ...editTaskDto, boardId, taskId }),
+      return this.tasksRepository.save(
+        new Task({ ...editTaskDto, boardId, taskId }),
       );
     }
     throw new NotFoundException({ boardId, taskId });

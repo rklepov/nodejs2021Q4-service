@@ -1,7 +1,9 @@
 // config.ts
 
 import { ConfigService, registerAs } from '@nestjs/config';
+
 import { BoardColumn } from './../board-columns/entities/board-column.entity';
+import { Board } from './../boards/entities/board.entity';
 import { Task } from './../tasks/entities/task.entity';
 import { User } from './../users/entities/user.entity';
 
@@ -14,7 +16,7 @@ export default registerAs('database', async () => {
     username: configService.get('POSTGRES_USER'),
     password: configService.get('POSTGRES_PASSWORD'),
     database: configService.get('POSTGRES_DB'),
-    entities: [User, Task, BoardColumn],
+    entities: [User, Task, BoardColumn, Board],
     autoLoadEntities: true,
     migrations: ['dist/db/migrations/*.js'],
     cli: {
@@ -22,8 +24,8 @@ export default registerAs('database', async () => {
     },
     migrationsRun: true,
     synchronize: false,
-    logging: true,
+    logging: false,
   };
 });
 
-//__EOF__
+// __EOF__

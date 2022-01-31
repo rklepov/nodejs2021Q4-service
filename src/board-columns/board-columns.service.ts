@@ -18,8 +18,8 @@ export class BoardColumnsService {
   ) {}
 
   async create(boardId: BoardId, createBoardColumnDto: CreateBoardColumnDto) {
-    return new BoardColumn(
-      await this.colsRepository.save({ ...createBoardColumnDto, boardId }),
+    return this.colsRepository.save(
+      new BoardColumn({ ...createBoardColumnDto, boardId }),
     );
   }
 
@@ -44,9 +44,10 @@ export class BoardColumnsService {
       boardId,
       columnId,
     });
+
     if (col) {
-      return new BoardColumn(
-        await this.colsRepository.save({
+      return this.colsRepository.save(
+        new BoardColumn({
           ...editBoardColumnDto,
           boardId,
           columnId,

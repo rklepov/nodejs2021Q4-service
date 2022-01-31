@@ -17,7 +17,7 @@ export class UsersService {
   ) {}
 
   async create(createUserDto: CreateUserDto) {
-    return new User(await this.usersRepository.save(createUserDto));
+    return this.usersRepository.save(new User(createUserDto));
   }
 
   async findAll() {
@@ -32,17 +32,15 @@ export class UsersService {
     return user;
   }
 
-  async edit(userId: UserId, editUserDto: CreateUserDto): Promise<User> {
+  async edit(userId: UserId, editUserDto: CreateUserDto) {
     const user = await this.usersRepository.findOne({ userId });
     if (user) {
-      return new User(
-        await this.usersRepository.save({ ...editUserDto, userId }),
-      );
+      return this.usersRepository.save(new User({ ...editUserDto, userId }));
     }
     throw new NotFoundException({ userId });
   }
 
-  async update(userId: UserId, updateUserDto: UpdateUserDto): Promise<User> {
+  async update(userId: UserId, updateUserDto: UpdateUserDto) {
     const user = await this.usersRepository.findOne({
       select: Object.keys(updateUserDto) as (keyof UpdateUserDto)[],
       where: { userId },

@@ -2,6 +2,7 @@
 
 import {
   Body,
+  ClassSerializerInterceptor,
   Controller,
   Delete,
   Get,
@@ -12,6 +13,7 @@ import {
   Patch,
   Post,
   Put,
+  UseInterceptors,
 } from '@nestjs/common';
 
 import { BoardId } from '../boards/interfaces/board.interface';
@@ -21,6 +23,7 @@ import { UpdateBoardColumnDto } from './dto/update-board-column.dto';
 import { BoardColumnId } from './interfaces/board-columns.interface';
 
 @Controller('/boards/:boardId/columns')
+@UseInterceptors(ClassSerializerInterceptor)
 export class BoardColumnsController {
   constructor(private readonly boardColumnsService: BoardColumnsService) {}
 
