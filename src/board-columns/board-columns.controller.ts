@@ -14,16 +14,19 @@ import {
   Post,
   Put,
   SerializeOptions,
+  UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
 
 import { BoardId } from '../boards/interfaces/board.interface';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { BoardColumnsService } from './board-columns.service';
 import { CreateBoardColumnDto } from './dto/create-board-column.dto';
 import { UpdateBoardColumnDto } from './dto/update-board-column.dto';
 import { BoardColumnId } from './interfaces/board-columns.interface';
 
 @Controller('/boards/:boardId/columns')
+@UseGuards(JwtAuthGuard)
 @UseInterceptors(ClassSerializerInterceptor)
 @SerializeOptions({ groups: ['board-column'] })
 export class BoardColumnsController {

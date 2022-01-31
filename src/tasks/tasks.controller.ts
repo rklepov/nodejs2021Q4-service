@@ -1,4 +1,5 @@
 // tasks.controller.ts
+
 import {
   Body,
   ClassSerializerInterceptor,
@@ -12,16 +13,19 @@ import {
   Patch,
   Post,
   Put,
+  UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
 
 import { BoardId } from '../boards/interfaces/board.interface';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { UpdateTaskDto } from './dto/update-task.dto';
 import { TaskId } from './interfaces/task.interface';
 import { TasksService } from './tasks.service';
 
 @Controller('/boards/:boardId/tasks')
+@UseGuards(JwtAuthGuard)
 @UseInterceptors(ClassSerializerInterceptor)
 export class TasksController {
   constructor(private readonly tasksService: TasksService) {}
