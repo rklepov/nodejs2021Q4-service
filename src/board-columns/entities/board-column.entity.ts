@@ -19,11 +19,10 @@ import { BoardColumnId } from '../interfaces/board-columns.interface';
   // ! https://github.com/typeorm/typeorm/issues/2620
   orderBy: { columnId: 'ASC', order: 'ASC' },
 })
+@Expose()
 export class BoardColumn {
   @PrimaryGeneratedColumn('uuid')
-  // TODO: the column Id should be exposed through the dedicated
-  //       boards/:boardId/columns API endpoint only
-  @Expose({ groups: ['board-column'], name: 'id', toPlainOnly: true })
+  @Expose({ name: 'id', groups: ['board-column'] })
   columnId?: BoardColumnId;
 
   @Column('varchar')
@@ -37,7 +36,7 @@ export class BoardColumn {
     orphanedRowAction: 'delete',
   })
   @JoinColumn({ name: 'boardId' })
-  // TODO: replace with interface to break cycle dependency ?
+  // TODO: replace with an interface to break cycle dependency ?
   board?: Board;
 
   @Column('uuid', { nullable: false })

@@ -13,7 +13,10 @@ import {
   Patch,
   Post,
   Put,
+  SerializeOptions,
   UseInterceptors,
+  UsePipes,
+  ValidationPipe,
 } from '@nestjs/common';
 
 import { BoardId } from '../boards/interfaces/board.interface';
@@ -24,6 +27,7 @@ import { BoardColumnId } from './interfaces/board-columns.interface';
 
 @Controller('/boards/:boardId/columns')
 @UseInterceptors(ClassSerializerInterceptor)
+@SerializeOptions({ groups: ['board-column'] })
 export class BoardColumnsController {
   constructor(private readonly boardColumnsService: BoardColumnsService) {}
 
