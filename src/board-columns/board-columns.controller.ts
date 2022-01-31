@@ -15,8 +15,6 @@ import {
   Put,
   SerializeOptions,
   UseInterceptors,
-  UsePipes,
-  ValidationPipe,
 } from '@nestjs/common';
 
 import { BoardId } from '../boards/interfaces/board.interface';

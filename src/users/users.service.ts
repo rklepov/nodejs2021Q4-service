@@ -32,6 +32,13 @@ export class UsersService {
     return user;
   }
 
+  /**
+   * Used by auth service
+   */
+  async findByLogin(login: string) {
+    return this.usersRepository.findOne({ login });
+  }
+
   async edit(userId: UserId, editUserDto: CreateUserDto) {
     const user = await this.usersRepository.findOne({ userId });
     if (user) {
