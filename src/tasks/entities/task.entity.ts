@@ -9,6 +9,7 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
+import { BoardColumn } from '../../board-columns/entities/board-column.entity';
 import { BoardColumnId } from '../../board-columns/interfaces/board-columns.interface';
 import { BoardId } from '../../boards/interfaces/board.interface';
 import { User } from '../../users/entities/user.entity';
@@ -40,8 +41,12 @@ export class Task {
   @Column('uuid', { nullable: /* false */ true })
   boardId?: BoardId; // TODO: ManyToOne to board
 
-  @Column('uuid', { nullable: true })
-  columnId?: BoardColumnId; // TODO: ManyToOne to board column
+  @ManyToOne(() => BoardColumn, { onDelete: 'SET NULL' })
+  @JoinColumn({ name: 'columnId' })
+  boardColumn!: BoardColumn;
+
+  @Column({ nullable: true })
+  columnId!: BoardColumnId;
 
   constructor(partial: Partial<Task>) {
     Object.assign(this, partial);
