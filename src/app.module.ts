@@ -7,6 +7,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthModule } from './auth/auth.module';
 import { BoardColumnsModule } from './board-columns/board-columns.module';
 import { BoardsModule } from './boards/boards.module';
+import { LoggerModule } from './common/logger/logger.module';
 import { TasksModule } from './tasks/tasks.module';
 import { UsersModule } from './users/users.module';
 
@@ -18,6 +19,9 @@ import dbConfig from './db/config';
       isGlobal: true,
       load: [dbConfig],
     }),
+
+    LoggerModule,
+
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
@@ -25,6 +29,7 @@ import dbConfig from './db/config';
         ...configService.get('database'),
       }),
     }),
+
     UsersModule,
     TasksModule,
     BoardColumnsModule,
