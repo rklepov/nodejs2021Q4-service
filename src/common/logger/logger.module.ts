@@ -28,7 +28,7 @@ import { LoggerService } from './logger.service';
           pinoHttp: {
             level: logLevel,
             useLevelLabels: true,
-
+            wrapSerializers: false,
             serializers: {
               req(q: Request) {
                 // log http request url, query parameters
@@ -39,6 +39,7 @@ import { LoggerService } from './logger.service';
                   headers: q.headers,
                   params: q.params,
                   query: q.query,
+                  body: q.body as Record<string, unknown>,
                 };
               },
               res(p: Response) {
@@ -48,7 +49,7 @@ import { LoggerService } from './logger.service';
                 };
               },
             },
-            redact: ['*.password', 'req.headers.authorization'],
+            redact: ['req.*.password', 'req.headers.authorization'],
             transport: {
               targets: [
                 {
