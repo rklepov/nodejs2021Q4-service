@@ -11,10 +11,12 @@ import {
   Post,
   UseInterceptors,
 } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 
 import { AuthService } from './auth.service';
 import { LoginAuthDto } from './dto/login-auth.dto';
 
+@ApiTags('Auth')
 @Controller('login')
 @UseInterceptors(ClassSerializerInterceptor)
 export class AuthController {

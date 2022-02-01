@@ -17,14 +17,16 @@ import {
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 
-import { BoardId } from '../boards/interfaces/board.interface';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { BoardId } from '../boards/interfaces/board.interface';
 import { BoardColumnsService } from './board-columns.service';
 import { CreateBoardColumnDto } from './dto/create-board-column.dto';
 import { UpdateBoardColumnDto } from './dto/update-board-column.dto';
 import { BoardColumnId } from './interfaces/board-columns.interface';
 
+@ApiTags('Columns')
 @Controller('/boards/:boardId/columns')
 @UseGuards(JwtAuthGuard)
 @UseInterceptors(ClassSerializerInterceptor)

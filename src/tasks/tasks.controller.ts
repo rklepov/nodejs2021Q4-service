@@ -16,14 +16,16 @@ import {
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 
-import { BoardId } from '../boards/interfaces/board.interface';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { BoardId } from '../boards/interfaces/board.interface';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { UpdateTaskDto } from './dto/update-task.dto';
 import { TaskId } from './interfaces/task.interface';
 import { TasksService } from './tasks.service';
 
+@ApiTags('Tasks')
 @Controller('/boards/:boardId/tasks')
 @UseGuards(JwtAuthGuard)
 @UseInterceptors(ClassSerializerInterceptor)

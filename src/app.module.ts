@@ -31,11 +31,11 @@ import dbConfig from './db/config';
       }),
     }),
 
-    UsersModule,
-    TasksModule,
-    BoardColumnsModule,
-    BoardsModule,
     AuthModule,
+    UsersModule,
+    BoardsModule,
+    BoardColumnsModule,
+    TasksModule,
   ],
   providers: [],
 })

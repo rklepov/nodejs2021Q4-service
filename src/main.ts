@@ -13,6 +13,7 @@ import {
   NestFastifyApplication,
 } from '@nestjs/platform-fastify';
 import { Logger } from 'nestjs-pino';
+import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 
 import { AppModule } from './app.module';
 
@@ -49,6 +50,14 @@ async function bootstrap() {
   const app = await factory({
     bufferLogs: true,
   });
+
+  const swaggerConfig = new DocumentBuilder()
+    .setTitle('Trello Service')
+    .setDescription("Let's try to create a competitor for Trello!")
+    .setVersion('3.0')
+    .build();
+  const document = SwaggerModule.createDocument(app, swaggerConfig);
+  SwaggerModule.setup('doc', app, document);
 
   await start(app);
 }
