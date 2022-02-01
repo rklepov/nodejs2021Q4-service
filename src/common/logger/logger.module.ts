@@ -5,6 +5,7 @@ import path from 'path';
 import * as pino from 'pino';
 
 import { Request, Response } from 'express';
+import { FastifyReply, FastifyRequest } from 'fastify';
 
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
@@ -30,10 +31,10 @@ import { LoggerService } from './logger.service';
             useLevelLabels: true,
             wrapSerializers: false,
             serializers: {
-              req(q: Request) {
+              req(q: Request | FastifyRequest) {
                 // log http request url, query parameters
                 return {
-                  id: q.id,
+                  id: q.id as number | string,
                   method: q.method,
                   url: q.url,
                   headers: q.headers,
@@ -42,7 +43,7 @@ import { LoggerService } from './logger.service';
                   body: q.body as Record<string, unknown>,
                 };
               },
-              res(p: Response) {
+              res(p: Response | FastifyReply) {
                 // log http response status code
                 return {
                   statusCode: p.statusCode,

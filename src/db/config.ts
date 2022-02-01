@@ -12,7 +12,7 @@ export default registerAs('database', async () => {
   return {
     type: 'postgres',
     host: configService.get('PGHOST'),
-    port: configService.get<number>('PGPORT'),
+    port: configService.get('PGPORT'),
     username: configService.get('POSTGRES_USER'),
     password: configService.get('POSTGRES_PASSWORD'),
     database: configService.get('POSTGRES_DB'),

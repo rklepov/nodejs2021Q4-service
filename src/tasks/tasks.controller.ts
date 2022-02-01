@@ -71,11 +71,11 @@ export class TasksController {
 
   @Delete(':taskId')
   @HttpCode(HttpStatus.NO_CONTENT)
-  remove(
+  async remove(
     @Param('boardId', ParseUUIDPipe) boardId: BoardId,
     @Param('taskId', ParseUUIDPipe) taskId: TaskId,
   ) {
-    return this.tasksService.remove(boardId, taskId);
+    await this.tasksService.remove(boardId, taskId);
   }
 }
 

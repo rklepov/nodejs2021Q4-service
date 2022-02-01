@@ -1,6 +1,6 @@
 // logger.middleware.ts
 
-import { Request, Response } from 'express';
+import { IncomingMessage, ServerResponse } from 'http';
 
 import { Injectable, NestMiddleware } from '@nestjs/common';
 
@@ -8,7 +8,7 @@ import { Injectable, NestMiddleware } from '@nestjs/common';
 @Injectable()
 export class LoggerMiddleware implements NestMiddleware {
   // eslint-disable-next-line class-methods-use-this
-  use(req: Request, res: Response, next: () => void) {
+  use(req: IncomingMessage, res: ServerResponse, next: () => void) {
     // ! not really used anyhow for now, will keep for just in case
     next();
   }

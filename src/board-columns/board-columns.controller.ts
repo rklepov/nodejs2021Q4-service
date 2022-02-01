@@ -77,11 +77,11 @@ export class BoardColumnsController {
 
   @Delete(':columnId')
   @HttpCode(HttpStatus.NO_CONTENT)
-  remove(
+  async remove(
     @Param('boardId', ParseUUIDPipe) boardId: BoardId,
     @Param('columnId', ParseUUIDPipe) columnId: BoardColumnId,
   ) {
-    return this.boardColumnsService.remove(boardId, columnId);
+    await this.boardColumnsService.remove(boardId, columnId);
   }
 }
 

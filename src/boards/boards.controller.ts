@@ -62,8 +62,8 @@ export class BoardsController {
 
   @Delete(':boardId')
   @HttpCode(HttpStatus.NO_CONTENT)
-  remove(@Param('boardId', ParseUUIDPipe) boardId: BoardId) {
-    return this.boardsService.remove(boardId);
+  async remove(@Param('boardId', ParseUUIDPipe) boardId: BoardId) {
+    await this.boardsService.remove(boardId);
   }
 }
 
