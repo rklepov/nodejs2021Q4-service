@@ -1,5 +1,7 @@
 // config.ts
 
+import path from 'path';
+
 import { ConfigService, registerAs } from '@nestjs/config';
 
 import { BoardColumn } from './../board-columns/entities/board-column.entity';
@@ -18,7 +20,7 @@ export default registerAs('database', async () => {
     database: configService.get('POSTGRES_DB'),
     entities: [User, Task, BoardColumn, Board],
     autoLoadEntities: true,
-    migrations: ['dist/db/migrations/*.js'],
+    migrations: [`${path.join(__dirname, 'migrations', '*.js')}`],
     cli: {
       migrationsDir: 'src/db/migrations',
     },
