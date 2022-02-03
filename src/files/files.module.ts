@@ -22,14 +22,14 @@ import { FilesService } from './files.service';
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => ({
         storage: multer.diskStorage({
+          // TODO: this is duplicated in FilesService constructor
           destination: path.join(
             __dirname,
             '../../',
             configService.get<string>('STATIC_DIR') || 'static',
           ),
           filename: (req, file, callback) => {
-            const { url } = req;
-            callback(null, url.split('/').pop() || file.originalname);
+            callback(null, file.originalname);
           },
         }),
       }),

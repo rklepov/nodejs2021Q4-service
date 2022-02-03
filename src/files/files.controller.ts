@@ -12,11 +12,13 @@ import {
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 
+import { ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { LoggerService } from '../common/logger/logger.service';
 import { FilesService } from './files.service';
 import { FileName } from './interfaces/file.interface';
 
+@ApiTags('File')
 @Controller('file') // ! 'file' (not 'files')
 export class FilesController {
   constructor(
@@ -27,15 +29,12 @@ export class FilesController {
   }
 
   // eslint-disable-next-line class-methods-use-this
-  @Post(':file')
+  @Post()
   @UseGuards(JwtAuthGuard)
   @UseInterceptors(FileInterceptor('file'))
-  upload(
-    @Param('file') filename: FileName,
-    @UploadedFile() file: Express.Multer.File,
-  ) {
+  upload(@UploadedFile() file: Express.Multer.File) {
     this.logger.debug(`uploading to '${file.path}'`);
-    return { uploaded: filename };
+    return { uploaded: file.originalname };
   }
 
   @Get()
