@@ -9,6 +9,7 @@ import { BoardColumnsModule } from './board-columns/board-columns.module';
 import { BoardsModule } from './boards/boards.module';
 import { LoggerMiddleware } from './common/logger/logger.middleware';
 import { LoggerModule } from './common/logger/logger.module';
+import { FilesModule } from './files/files.module';
 import { TasksModule } from './tasks/tasks.module';
 import { UsersModule } from './users/users.module';
 
@@ -36,6 +37,7 @@ import dbConfig from './db/config';
     BoardsModule,
     BoardColumnsModule,
     TasksModule,
+    FilesModule,
   ],
   providers: [],
 })
