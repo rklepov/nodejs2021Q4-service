@@ -37,6 +37,7 @@ import { LoggerService } from './logger.service';
                   id: q.id as number | string,
                   method: q.method,
                   url: q.url,
+                  hostname: q.hostname,
                   headers: q.headers,
                   params: q.params,
                   query: q.query,
@@ -50,7 +51,11 @@ import { LoggerService } from './logger.service';
                 };
               },
             },
-            redact: ['req.*.password', 'req.headers.authorization'],
+            redact: [
+              'req.*.password',
+              'req.headers.authorization',
+              'req.headers.cookie',
+            ],
             transport: {
               targets: [
                 {
