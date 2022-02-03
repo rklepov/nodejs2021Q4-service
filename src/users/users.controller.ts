@@ -13,12 +13,15 @@ import {
   Patch,
   Post,
   Put,
+  UseFilters,
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { DatabaseExceptionFilter } from '../db/exceptions/database-exception.filter';
+import { UniqueConstraintExceptionFilter } from '../db/exceptions/unique-constraint-exception.filter';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UserId } from './interfaces/user.interface';
@@ -28,10 +31,12 @@ import { UsersService } from './users.service';
 @Controller('users')
 @UseGuards(JwtAuthGuard)
 @UseInterceptors(ClassSerializerInterceptor)
+@UseFilters(DatabaseExceptionFilter)
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @Post()
+  @UseFilters(UniqueConstraintExceptionFilter)
   create(@Body() createUserDto: CreateUserDto) {
     return this.usersService.create(createUserDto);
   }
@@ -47,6 +52,7 @@ export class UsersController {
   }
 
   @Put(':userId')
+  @UseFilters(UniqueConstraintExceptionFilter)
   edit(
     @Param('userId', ParseUUIDPipe) id: UserId,
     @Body() createUserDto: CreateUserDto,
@@ -55,6 +61,7 @@ export class UsersController {
   }
 
   @Patch(':userId')
+  @UseFilters(UniqueConstraintExceptionFilter)
   update(
     @Param('userId', ParseUUIDPipe) id: UserId,
     @Body() updateUserDto: UpdateUserDto,
