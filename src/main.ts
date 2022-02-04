@@ -12,10 +12,11 @@ import {
   FastifyAdapter,
   NestFastifyApplication,
 } from '@nestjs/platform-fastify';
+import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { Logger } from 'nestjs-pino';
-import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 
 import { AppModule } from './app.module';
+import { LoggerService } from './common/logger/logger.service';
 
 function createAppExpress(options?: NestApplicationOptions) {
   return NestFactory.create<NestExpressApplication>(AppModule, options);
@@ -29,16 +30,45 @@ function createAppFastify(options?: NestApplicationOptions) {
   );
 }
 
+function stop(logger: LoggerService, app: INestApplication) {
+  app
+    .close()
+    .then(() => {
+      logger.info('App closed');
+    })
+    .catch((e: Error) => {
+      logger.error(`Failed to close the app: ${e.name} ${e.message}`);
+    });
+}
+
 async function start(app: INestApplication) {
-  const logger = app.get(Logger);
-  app.useLogger(logger);
-  logger.log(`Running as '${app.getHttpAdapter().getType()}'`);
+  const logger = app.get(LoggerService);
+
+  process.on('uncaughtException', (error, origin) => {
+    logger.fatal('Uncaught Exception', { origin, error: error.toString() });
+    stop(logger, app);
+    process.exitCode = 125;
+  });
+
+  process.on('unhandledRejection', (reason, promise) => {
+    logger.fatal('Unhandled Rejection', {
+      reason: String(reason),
+      promise: String(promise),
+    });
+    stop(logger, app);
+    process.exitCode = 126;
+  });
+
+  app.useLogger(app.get(Logger));
+  logger.info(`Running as '${app.getHttpAdapter().getType()}'`);
+
   app.useGlobalPipes(new ValidationPipe({ transform: true, whitelist: true }));
+  app.enableShutdownHooks();
+
   const configService = app.get(ConfigService);
-  await app.listen(
-    configService.get<string>('PORT') || 4000,
-    configService.get<string>('ADDR') || 'localhost',
-  );
+  const port = configService.get<string>('PORT') || 4000;
+  await app.listen(port, configService.get<string>('ADDR') || 'localhost');
+  logger.info(`App listening on port ${port}`);
 }
 
 async function bootstrap() {
