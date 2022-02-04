@@ -2,11 +2,13 @@
 
 import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { APP_FILTER } from '@nestjs/core';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { AuthModule } from './auth/auth.module';
 import { BoardColumnsModule } from './board-columns/board-columns.module';
 import { BoardsModule } from './boards/boards.module';
+import { AllExceptionsFilter } from './common/exceptions/all-exceptions.filter';
 import { LoggerMiddleware } from './common/logger/logger.middleware';
 import { LoggerModule } from './common/logger/logger.module';
 import { FilesModule } from './files/files.module';
@@ -39,7 +41,7 @@ import dbConfig from './db/config';
     TasksModule,
     FilesModule,
   ],
-  providers: [],
+  providers: [{ provide: APP_FILTER, useClass: AllExceptionsFilter }],
 })
 export class AppModule implements NestModule {
   // eslint-disable-next-line class-methods-use-this
