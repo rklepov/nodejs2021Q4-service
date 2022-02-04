@@ -7,12 +7,14 @@ import {
   Param,
   Post,
   UploadedFile,
+  UseFilters,
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 
 import { ApiTags } from '@nestjs/swagger';
+import { FilesExceptionFilter } from './exceptions/files-exception.filter';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { LoggerService } from '../common/logger/logger.service';
 import { FilesService } from './files.service';
@@ -20,6 +22,7 @@ import { FileName } from './interfaces/file.interface';
 
 @ApiTags('File')
 @Controller('file') // ! 'file' (not 'files')
+@UseFilters(FilesExceptionFilter)
 export class FilesController {
   constructor(
     private readonly logger: LoggerService,
@@ -32,6 +35,7 @@ export class FilesController {
   @Post()
   @UseGuards(JwtAuthGuard)
   @UseInterceptors(FileInterceptor('file'))
+  @UseFilters(FilesExceptionFilter)
   upload(@UploadedFile() file: Express.Multer.File) {
     this.logger.debug(`uploading to '${file.path}'`);
     return { uploaded: file.originalname };

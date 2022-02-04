@@ -1,10 +1,9 @@
 // files.service.ts
 
-import { createReadStream } from 'fs';
-import { readdir, unlink } from 'fs/promises';
+import { open, readdir, unlink } from 'fs/promises';
 import path from 'path';
 
-import { Injectable, StreamableFile } from '@nestjs/common';
+import { Injectable, NotFoundException, StreamableFile } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 
 import { LoggerService } from '../common/logger/logger.service';
@@ -33,15 +32,28 @@ export class FilesService {
     return readdir(this.rootDir);
   }
 
-  read(filename: FileName): StreamableFile {
-    const filepath = this.getFilePath(filename);
-    this.logger.debug(`downloading from '${filepath}'`);
-    return new StreamableFile(createReadStream(filepath));
+  async read(filename: FileName) {
+    try {
+      const filepath = this.getFilePath(filename);
+
+      this.logger.debug(`downloading from '${filepath}'`);
+
+      const handle = await open(filepath, 'r');
+      const stream = handle.createReadStream();
+
+      return new StreamableFile(stream);
+    } catch (e) {
+      // the most likely error is that the requested file doesn't exist
+      this.logger.error(e);
+
+      throw new NotFoundException(filename);
+    }
   }
 
   async remove(filename: string) {
     const filepath = this.getFilePath(filename);
     this.logger.debug(`deleting '${filepath}'`);
+
     await unlink(filepath);
   }
 
