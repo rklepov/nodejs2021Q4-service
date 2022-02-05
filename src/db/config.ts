@@ -10,17 +10,17 @@ import { Task } from './../tasks/entities/task.entity';
 import { User } from './../users/entities/user.entity';
 
 export default registerAs('database', async () => {
-  const configService = new ConfigService();
+  const config = new ConfigService();
   return {
     type: 'postgres',
-    host: configService.get('PGHOST'),
-    port: configService.get('PGPORT'),
-    username: configService.get('POSTGRES_USER'),
-    password: configService.get('POSTGRES_PASSWORD'),
-    database: configService.get('POSTGRES_DB'),
+    host: config.get('PGHOST'),
+    port: config.get('PGPORT'),
+    username: config.get('POSTGRES_USER'),
+    password: config.get('POSTGRES_PASSWORD'),
+    database: config.get('POSTGRES_DB'),
     entities: [User, Task, BoardColumn, Board],
     autoLoadEntities: true,
-    migrations: [`${path.join(__dirname, 'migrations', '*.js')}`],
+    migrations: [`${path.join(__dirname, 'migrations', '*.{ts,js}')}`],
     cli: {
       migrationsDir: 'src/db/migrations',
     },

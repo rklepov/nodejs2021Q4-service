@@ -65,15 +65,15 @@ async function start(app: INestApplication) {
   app.useGlobalPipes(new ValidationPipe({ transform: true, whitelist: true }));
   app.enableShutdownHooks();
 
-  const configService = app.get(ConfigService);
-  const port = configService.get<string>('PORT') || 4000;
-  await app.listen(port, configService.get<string>('ADDR') || 'localhost');
+  const config = app.get(ConfigService);
+  const port = config.get<string>('PORT', '4000');
+  await app.listen(port, config.get<string>('ADDR', 'localhost'));
   logger.info(`App listening on port ${port}`);
 }
 
 async function bootstrap() {
   const config = new ConfigService();
-  const useFastify = config.get<string>('USE_FASTIFY') || 'false';
+  const useFastify = config.get<string>('USE_FASTIFY', 'false');
   const factory =
     useFastify.toLowerCase() === 'true' ? createAppFastify : createAppExpress;
 

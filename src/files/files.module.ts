@@ -20,13 +20,13 @@ import { FilesService } from './files.service';
     MulterModule.registerAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
-      useFactory: (configService: ConfigService) => ({
+      useFactory: (config: ConfigService) => ({
         storage: multer.diskStorage({
           // TODO: this is duplicated in FilesService constructor
           destination: path.join(
             __dirname,
             '../../',
-            configService.get<string>('STATIC_DIR') || 'static',
+            config.get('STATIC_DIR', 'static'),
           ),
           filename: (req, file, callback) => {
             callback(null, file.originalname);
