@@ -12,11 +12,11 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
-
 import { ApiTags } from '@nestjs/swagger';
-import { FilesExceptionFilter } from './exceptions/files-exception.filter';
+
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { LoggerService } from '../common/logger/logger.service';
+import { FilesExceptionFilter } from './exceptions/files-exception.filter';
 import { FilesService } from './files.service';
 import { FileName } from './interfaces/file.interface';
 
@@ -27,9 +27,7 @@ export class FilesController {
   constructor(
     private readonly logger: LoggerService,
     private readonly filesService: FilesService,
-  ) {
-    this.logger.setContext(FilesController.name);
-  }
+  ) {}
 
   // eslint-disable-next-line class-methods-use-this
   @Post()

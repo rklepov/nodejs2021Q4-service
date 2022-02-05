@@ -1,6 +1,6 @@
 // all-exceptions.filter.ts
 
-import { ArgumentsHost, Catch } from '@nestjs/common';
+import { ArgumentsHost, Catch, HttpException } from '@nestjs/common';
 import { BaseExceptionFilter } from '@nestjs/core';
 
 import { LoggerService } from '../logger/logger.service';
@@ -9,12 +9,17 @@ import { LoggerService } from '../logger/logger.service';
 export class AllExceptionsFilter<T> extends BaseExceptionFilter<T> {
   constructor(private readonly logger: LoggerService) {
     super();
-    this.logger.setContext(AllExceptionsFilter.name);
   }
 
   catch(exception: T, host: ArgumentsHost) {
-    this.logger.error('Exception caught', exception);
-    super.catch(exception, host);
+    if (exception instanceof HttpException) {
+      return super.catch(exception, host);
+    }
+
+    this.logger.setContext(AllExceptionsFilter.name);
+    this.logger.assign({ exception });
+    this.logger.error('Exception caught');
+    return super.catch(exception, host);
   }
 }
 

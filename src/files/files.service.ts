@@ -24,8 +24,6 @@ export class FilesService {
       '../../',
       this.config.get<string>('STATIC_DIR') || 'static',
     );
-
-    this.logger.setContext(FilesService.name);
   }
 
   async list() {
@@ -43,9 +41,8 @@ export class FilesService {
 
       return new StreamableFile(stream);
     } catch (e) {
-      // the most likely error is that the requested file doesn't exist
       this.logger.error(e);
-
+      // the most likely error is that the requested file doesn't exist
       throw new NotFoundException(filename);
     }
   }
