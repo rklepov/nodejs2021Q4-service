@@ -1,40 +1,17 @@
 // files.module.ts
 
-import * as multer from 'multer';
-import path from 'path';
-
 import { Module } from '@nestjs/common';
-import { ConfigModule, ConfigService } from '@nestjs/config';
-import { MulterModule as ExpressMulterModule } from '@nestjs/platform-express';
+import { ConfigModule } from '@nestjs/config';
 
 import { LoggerModule } from '../common/logger/logger.module';
 import { FilesController } from './files.controller';
 import { FilesService } from './files.service';
+import { MulterModule } from './multer/multer.module';
 
 @Module({
   controllers: [FilesController],
   providers: [FilesService],
-  imports: [
-    ConfigModule,
-    LoggerModule,
-    ExpressMulterModule.registerAsync({
-      imports: [ConfigModule],
-      inject: [ConfigService],
-      useFactory: (config: ConfigService) => ({
-        storage: multer.diskStorage({
-          // TODO: this is duplicated in FilesService constructor
-          destination: path.join(
-            __dirname,
-            '../../',
-            config.get('STATIC_DIR', 'static'),
-          ),
-          filename: (req, file, callback) => {
-            callback(null, file.originalname);
-          },
-        }),
-      }),
-    }),
-  ],
+  imports: [ConfigModule, LoggerModule, MulterModule.register()],
 })
 export class FilesModule {}
 
