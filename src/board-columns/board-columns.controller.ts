@@ -27,7 +27,7 @@ import { UpdateBoardColumnDto } from './dto/update-board-column.dto';
 import { BoardColumnId } from './interfaces/board-columns.interface';
 
 @ApiTags('Columns')
-@Controller('/boards/:boardId/columns')
+@Controller('boards/:boardId/columns')
 @UseGuards(JwtAuthGuard)
 @UseInterceptors(ClassSerializerInterceptor)
 @SerializeOptions({ groups: ['board-column'] })

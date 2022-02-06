@@ -26,7 +26,7 @@ import { TaskId } from './interfaces/task.interface';
 import { TasksService } from './tasks.service';
 
 @ApiTags('Tasks')
-@Controller('/boards/:boardId/tasks')
+@Controller('boards/:boardId/tasks')
 @UseGuards(JwtAuthGuard)
 @UseInterceptors(ClassSerializerInterceptor)
 export class TasksController {
