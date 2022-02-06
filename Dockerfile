@@ -13,6 +13,7 @@ RUN npm install --omit optional && npm cache clean --force
 
 COPY tsconfig*.json ./
 COPY src/ src/
+COPY static/lipsum.txt static/
 COPY test/ test/
 
 EXPOSE $port
