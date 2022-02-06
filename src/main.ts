@@ -13,6 +13,7 @@ import {
   NestFastifyApplication,
 } from '@nestjs/platform-fastify';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { contentParser } from 'fastify-file-interceptor';
 
 import { AppModule } from './app.module';
 import { LoggerService } from './common/logger/logger.service';
@@ -21,12 +22,16 @@ function createAppExpress(options?: NestApplicationOptions) {
   return NestFactory.create<NestExpressApplication>(AppModule, options);
 }
 
-function createAppFastify(options?: NestApplicationOptions) {
-  return NestFactory.create<NestFastifyApplication>(
+async function createAppFastify(options?: NestApplicationOptions) {
+  const fastifyApp = await NestFactory.create<NestFastifyApplication>(
     AppModule,
     new FastifyAdapter({ logger: false }),
     options,
   );
+
+  await fastifyApp.register(contentParser);
+
+  return fastifyApp;
 }
 
 function stop(logger: LoggerService, app: INestApplication) {

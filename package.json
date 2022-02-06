@@ -71,6 +71,7 @@
     "dotenv": "^16.0.0",
     "express": "^4.17.2",
     "fastify": "^3.27.0",
+    "fastify-file-interceptor": "^1.0.6",
     "fastify-swagger": "^4.14.0",
     "multer": "^1.4.4",
     "nestjs-pino": "^2.5.0",
