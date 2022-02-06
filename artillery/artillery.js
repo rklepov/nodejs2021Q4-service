@@ -18,16 +18,9 @@ function afterPostUsers(requestParams, response, context, ee, next) {
   return next();
 }
 
-function afterGetAllUsers(requestParams, response, context, ee, next) {
-  context.vars['totalUsers'] = JSON.parse(response.body).length;
-
-  return next();
-}
-
 module.exports = {
   beforePostUsers,
   afterPostUsers,
-  afterGetAllUsers,
 };
 
 //__EOF__

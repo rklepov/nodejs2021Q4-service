@@ -6,6 +6,7 @@ config:
   phases:
     - duration: 500
       arrivalRate: 1
+      name: Load testing
   variables:
     numUsers:
       - 5
@@ -42,15 +43,6 @@ scenarios:
               afterResponse: 'afterPostUsers'
           - log: "[VU {{ $uuid}}] Created user {{ $loopCount }} '{{ Id }}'"
         count: '{{ numUsers }}'
-
-      # get all users at once (n.b. returns the users created by the other vu's)
-      - log: '[VU {{ $uuid }}] Requesting list of users...'
-      - get:
-          url: '/users'
-          headers:
-            authorization: 'Bearer {{ JWT }}'
-          afterResponse: 'afterGetAllUsers'
-      - log: '[VU {{ $uuid }}] {{ totalUsers }} user(s) returned'
 
       # get each user individually
       - loop:
@@ -99,6 +91,13 @@ scenarios:
             name: 'New Name'
             login: 'username-4-{{ $uuid }}'
             password: 'password'
+
+      # get the updated user
+      - log: "[VU {{ $uuid }}] Requesting user 4 '{{ userId-4 }}'"
+      - get:
+          url: '/users/{{ userId-4 }}'
+          headers:
+            authorization: 'Bearer {{ JWT }}'
 
       # delete the created users
       - loop:
