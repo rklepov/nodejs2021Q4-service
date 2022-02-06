@@ -20,8 +20,8 @@ export class FilesExceptionFilter<T extends Error> extends BaseExceptionFilter {
       return super.catch(exception, host);
     }
 
-    this.logger.setContext(FilesExceptionFilter.name);
-    this.logger.assign({ exception });
+    this.logger.pino.setContext(FilesExceptionFilter.name);
+    this.logger.pino.assign({ exception });
     this.logger.error('Exception caught');
 
     return super.catch(
