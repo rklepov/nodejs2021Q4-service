@@ -5,7 +5,7 @@ import path from 'path';
 
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { MulterModule } from '@nestjs/platform-express';
+import { MulterModule as ExpressMulterModule } from '@nestjs/platform-express';
 
 import { LoggerModule } from '../common/logger/logger.module';
 import { FilesController } from './files.controller';
@@ -17,7 +17,7 @@ import { FilesService } from './files.service';
   imports: [
     ConfigModule,
     LoggerModule,
-    MulterModule.registerAsync({
+    ExpressMulterModule.registerAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: (config: ConfigService) => ({

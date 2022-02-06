@@ -11,7 +11,7 @@ import {
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
-import { FileInterceptor } from '@nestjs/platform-express';
+import { FileInterceptor as ExpressFileInterceptor } from '@nestjs/platform-express';
 import { ApiTags } from '@nestjs/swagger';
 
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
@@ -32,7 +32,7 @@ export class FilesController {
   // eslint-disable-next-line class-methods-use-this
   @Post()
   @UseGuards(JwtAuthGuard)
-  @UseInterceptors(FileInterceptor('file'))
+  @UseInterceptors(ExpressFileInterceptor('file'))
   @UseFilters(FilesExceptionFilter)
   upload(@UploadedFile() file: Express.Multer.File) {
     this.logger.debug(`uploading to '${file.path}'`);
