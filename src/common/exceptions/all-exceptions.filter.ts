@@ -16,8 +16,8 @@ export class AllExceptionsFilter<T> extends BaseExceptionFilter<T> {
       return super.catch(exception, host);
     }
 
-    this.logger.setContext(AllExceptionsFilter.name);
-    this.logger.assign({ exception });
+    this.logger.pino.setContext(AllExceptionsFilter.name);
+    this.logger.pino.assign({ exception });
     this.logger.error('Exception caught');
     return super.catch(exception, host);
   }

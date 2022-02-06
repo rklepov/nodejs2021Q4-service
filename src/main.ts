@@ -13,7 +13,6 @@ import {
   NestFastifyApplication,
 } from '@nestjs/platform-fastify';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-import { Logger } from 'nestjs-pino';
 
 import { AppModule } from './app.module';
 import { LoggerService } from './common/logger/logger.service';
@@ -34,7 +33,7 @@ function stop(logger: LoggerService, app: INestApplication) {
   app
     .close()
     .then(() => {
-      logger.info('App closed');
+      logger.log('App closed');
     })
     .catch((e: Error) => {
       logger.error(`Failed to close the app: ${e.name} ${e.message}`);
@@ -43,15 +42,19 @@ function stop(logger: LoggerService, app: INestApplication) {
 
 async function start(app: INestApplication) {
   const logger = app.get(LoggerService);
+  app.useLogger(logger);
 
   process.on('uncaughtException', (error, origin) => {
-    logger.fatal('Uncaught Exception', { origin, error: error.toString() });
+    logger.pino.fatal('Uncaught Exception', {
+      origin,
+      error: error.toString(),
+    });
     stop(logger, app);
     process.exitCode = 125;
   });
 
   process.on('unhandledRejection', (reason, promise) => {
-    logger.fatal('Unhandled Rejection', {
+    logger.pino.fatal('Unhandled Rejection', {
       reason: String(reason),
       promise: String(promise),
     });
@@ -59,8 +62,7 @@ async function start(app: INestApplication) {
     process.exitCode = 126;
   });
 
-  app.useLogger(app.get(Logger));
-  logger.info(`Running as '${app.getHttpAdapter().getType()}'`);
+  logger.log(`Running as '${app.getHttpAdapter().getType()}'`);
 
   app.useGlobalPipes(new ValidationPipe({ transform: true, whitelist: true }));
   app.enableShutdownHooks();
@@ -68,7 +70,7 @@ async function start(app: INestApplication) {
   const config = app.get(ConfigService);
   const port = config.get<string>('PORT', '4000');
   await app.listen(port, config.get<string>('ADDR', 'localhost'));
-  logger.info(`App listening on port ${port}`);
+  logger.log(`App listening on port ${port}`);
 }
 
 async function bootstrap() {
@@ -84,7 +86,7 @@ async function bootstrap() {
   const swaggerConfig = new DocumentBuilder()
     .setTitle('Trello Service')
     .setDescription("Let's try to create a competitor for Trello!")
-    .setVersion('3.0')
+    .setVersion(`3.0 (${app.getHttpAdapter().getType()})`)
     .build();
   const document = SwaggerModule.createDocument(app, swaggerConfig);
   SwaggerModule.setup('doc', app, document);
