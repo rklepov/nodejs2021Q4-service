@@ -29,7 +29,6 @@ export class FilesController {
     private readonly filesService: FilesService,
   ) {}
 
-  // eslint-disable-next-line class-methods-use-this
   @ApiConsumes('multipart/form-data')
   @Post()
   @UseGuards(JwtAuthGuard)

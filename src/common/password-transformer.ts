@@ -7,7 +7,6 @@ import { ValueTransformer } from 'typeorm';
 export class PasswordTransformer implements ValueTransformer {
   constructor(private config: ConfigService) {}
 
-  // eslint-disable-next-line class-methods-use-this
   from(v: string): string {
     return v;
   }
