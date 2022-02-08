@@ -1,5 +1,8 @@
 // logger.module.ts
 
+// don't want to install express and fastify explicitly for type defs only
+/* eslint-disable import/no-extraneous-dependencies */
+
 import dayjs from 'dayjs';
 import path from 'path';
 import * as pino from 'pino';

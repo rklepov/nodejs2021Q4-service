@@ -48,6 +48,12 @@
     "linebreak-style": "off",
     "no-underscore-dangle": "off",
     "no-useless-constructor": "off",
+    "node/no-extraneous-import": [
+      "error",
+      {
+        "allowModules": ["express", "fastify"]
+      }
+    ],
     "node/no-unsupported-features/es-syntax": [
       "error",
       {
