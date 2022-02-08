@@ -22,7 +22,7 @@ export class FilesService {
     this.rootDir = path.join(
       __dirname,
       '../../',
-      this.config.get<string>('STATIC_DIR') || 'static',
+      this.config.get<string>('STATIC_DIR', 'static'),
     );
   }
 

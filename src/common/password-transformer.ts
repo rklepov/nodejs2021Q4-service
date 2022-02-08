@@ -16,7 +16,7 @@ export class PasswordTransformer implements ValueTransformer {
     // https://github.com/typeorm/typeorm/pull/885#issuecomment-337920537
     return hashSync(
       password,
-      +(this.config.get<number>('BCRYPT_SALT_ROUNDS') || 10),
+      +this.config.get<number>('BCRYPT_SALT_ROUNDS', 10),
     );
   }
 }

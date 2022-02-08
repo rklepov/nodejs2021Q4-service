@@ -26,7 +26,7 @@ import { LoggerService } from './logger.service';
       useFactory: (config: ConfigService) => {
         const timestamp = dayjs().format('YYYYMMDDHHmmss');
         const logLevel = config.get('LOG_LEVEL') as pino.Level;
-        const logsDir = config.get<string>('LOG_DIR') || './logs';
+        const logsDir = config.get<string>('LOG_DIR', './logs');
 
         return {
           pinoHttp: {
