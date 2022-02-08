@@ -6,13 +6,13 @@ export class CreateBoardColumnDto {
   @IsDefined()
   @IsNotEmpty()
   @IsString()
-  title = '';
+  title!: string;
 
   @IsDefined()
   @IsNotEmpty()
   @IsInt()
   @Min(0)
-  order = NaN;
+  order!: number;
 }
 
 // __EOF__

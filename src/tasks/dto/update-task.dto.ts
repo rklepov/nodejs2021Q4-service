@@ -26,7 +26,7 @@ export class UpdateTaskDto /* extends PartialType(CreateTaskDto) */ {
 
   @IsOptional()
   @IsString()
-  description?: string;
+  description?: string = '';
 
   @IsOptional()
   @IsUUID()

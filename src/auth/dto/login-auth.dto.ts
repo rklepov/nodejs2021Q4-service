@@ -6,13 +6,13 @@ export class LoginAuthDto {
   @IsDefined()
   @IsNotEmpty()
   @IsString()
-  login = '';
+  login!: string;
 
   @IsDefined()
   @IsNotEmpty()
   @IsString()
   @IsAscii()
-  password = '';
+  password!: string;
 }
 
 // __EOF__

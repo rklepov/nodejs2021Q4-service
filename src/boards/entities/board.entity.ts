@@ -1,5 +1,6 @@
 // board.entity.ts
 
+import { ApiProperty } from '@nestjs/swagger';
 import { Expose } from 'class-transformer';
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 
@@ -12,10 +13,11 @@ import { BoardId } from '../interfaces/board.interface';
 export class Board {
   @PrimaryGeneratedColumn('uuid')
   @Expose({ name: 'id' })
+  @ApiProperty({ name: 'id' })
   boardId!: BoardId;
 
   @Column('varchar')
-  title = '';
+  title!: string;
 
   @OneToMany(() => BoardColumn, (col) => col.board, {
     eager: true,

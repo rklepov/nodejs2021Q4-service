@@ -1,5 +1,6 @@
 // board-column.entity.ts
 
+import { ApiHideProperty, ApiProperty } from '@nestjs/swagger';
 import { Exclude, Expose } from 'class-transformer';
 import {
   Column,
@@ -23,21 +24,22 @@ import { BoardColumnId } from '../interfaces/board-columns.interface';
 export class BoardColumn {
   @PrimaryGeneratedColumn('uuid')
   @Expose({ name: 'id', groups: ['board-column'] })
+  @ApiProperty({ name: 'id' })
   columnId?: BoardColumnId;
 
   @Column('varchar')
-  title = '';
+  title!: string;
 
   @Column('int')
-  order = NaN;
+  order!: number;
 
   @ManyToOne('Board', {
     onDelete: 'CASCADE',
     orphanedRowAction: 'delete',
   })
   @JoinColumn({ name: 'boardId' })
-  // TODO: replace with an interface to break cycle dependency ?
-  board?: Board;
+  @ApiHideProperty()
+  board?: Board; // TODO: replace with an interface to break cycle dependency ?
 
   @Column('uuid', { nullable: false })
   @Exclude({ toPlainOnly: true })

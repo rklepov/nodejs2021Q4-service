@@ -17,17 +17,17 @@ export class CreateTaskDto {
   @IsDefined()
   @IsNotEmpty()
   @IsString()
-  title = '';
+  title!: string;
 
   @IsDefined()
   @IsNotEmpty()
   @IsInt()
   @Min(0)
-  order = NaN;
+  order!: number;
 
   @IsOptional()
   @IsString()
-  description?: string;
+  description?: string = '';
 
   @IsOptional()
   @IsUUID()
