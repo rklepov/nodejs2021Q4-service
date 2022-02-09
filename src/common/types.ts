@@ -1,7 +1,5 @@
 // types.ts
 
-import fastify from 'fastify';
-
-export type Server = ReturnType<typeof fastify>;
+export type UUIDString = string;
 
 // __EOF__

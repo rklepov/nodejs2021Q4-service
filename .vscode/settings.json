@@ -5,9 +5,12 @@
   "cSpell.words": [
     "Expelliarmus",
     "fastify",
+    "nestjs",
+    "ormconfig",
     "PGHOST",
     "PGPORT",
     "pino",
+    "prebuild",
     "privateremarks",
     "serializer",
     "serializers",

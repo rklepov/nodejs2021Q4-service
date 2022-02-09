@@ -1,0 +1,111 @@
+config:
+  target: 'http://localhost:4004'
+  http:
+    timeout: 120
+  processor: './artillery.js'
+  phases:
+    - duration: 500
+      arrivalRate: 1
+      name: Load testing
+  variables:
+    numUsers:
+      - 5
+
+before:
+  flow:
+    - log: '[{{ $uuid }}] Get auth token'
+    - post:
+        url: '/login'
+        json:
+          login: 'admin'
+          password: 'admin'
+        capture:
+          - json: $.token
+            as: JWT
+
+scenarios:
+  - flow:
+      # create 5 users
+      - log: '[VU {{ $uuid }}] Creating {{ numUsers }} user(s)'
+      - loop:
+          - post:
+              beforeRequest: 'beforePostUsers'
+              url: '/users'
+              headers:
+                authorization: 'Bearer {{ JWT }}'
+              json:
+                name: 'user'
+                login: 'username-{{ userSeqNo }}-{{ $uuid }}'
+                password: 'password'
+              capture:
+                json: '$.id'
+                as: 'Id'
+              afterResponse: 'afterPostUsers'
+          - log: "[VU {{ $uuid}}] Created user {{ $loopCount }} '{{ Id }}'"
+        count: '{{ numUsers }}'
+
+      # get each user individually
+      - loop:
+          - log: "[VU {{ $uuid }}] Requesting user {{ $loopCount }} '{{ $loopElement }}'"
+          - get:
+              url: '/users/{{ $loopElement }}'
+              headers:
+                authorization: 'Bearer {{ JWT }}'
+        over: userIds
+
+      # edit some users individually
+      - log: "[VU {{ $uuid }}] Updating user 0 '{{ userId-0 }}'"
+      - put:
+          url: '/users/{{ userId-0 }}'
+          headers:
+            authorization: 'Bearer {{ JWT }}'
+          json:
+            name: 'user'
+            login: 'username-newlogin-0-{{ $uuid }}'
+            password: 'password'
+
+      - log: "[VU {{ $uuid }}] Updating user 2 '{{ userId-2 }}'"
+      - put:
+          url: '/users/{{ userId-2 }}'
+          headers:
+            authorization: 'Bearer {{ JWT }}'
+          json:
+            name: 'user'
+            login: 'username-2-{{ $uuid }}'
+            password: 'P@ssW0rd'
+
+      # get the updated user
+      - log: "[VU {{ $uuid }}] Requesting user 2 '{{ userId-2 }}'"
+      - get:
+          url: '/users/{{ userId-2 }}'
+          headers:
+            authorization: 'Bearer {{ JWT }}'
+
+      # edit one more user
+      - log: "[VU {{ $uuid }}] Updating user 4 '{{ userId-4 }}'"
+      - put:
+          url: '/users/{{ userId-4 }}'
+          headers:
+            authorization: 'Bearer {{ JWT }}'
+          json:
+            name: 'New Name'
+            login: 'username-4-{{ $uuid }}'
+            password: 'password'
+
+      # get the updated user
+      - log: "[VU {{ $uuid }}] Requesting user 4 '{{ userId-4 }}'"
+      - get:
+          url: '/users/{{ userId-4 }}'
+          headers:
+            authorization: 'Bearer {{ JWT }}'
+
+      # delete the created users
+      - loop:
+          - log: "[VU {{ $uuid }}] Deleting user {{ $loopCount }} '{{ $loopElement }}'"
+          - delete:
+              url: '/users/{{ $loopElement }}'
+              headers:
+                authorization: 'Bearer {{ JWT }}'
+        over: userIds
+
+      - log: '[VU {{ $uuid }}] COMPLETED'

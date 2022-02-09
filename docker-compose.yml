@@ -17,6 +17,7 @@ services:
     restart: on-failure
     volumes:
       - logs:${DOCKER_WORKD_DIR:-/usr/app}/${LOG_DIR:-logs}:rw
+      - static:${DOCKER_WORKD_DIR:-/usr/app}/${STATIC_DIR:-static}:rw
       - ./src:${DOCKER_WORKD_DIR:-/usr/app}/src:ro
     networks:
       - privatenet
@@ -33,6 +34,8 @@ services:
       AUTH_MODE: ${AUTH_MODE}
       JWT_SECRET_KEY: ${JWT_SECRET_KEY}
       BCRYPT_SALT_ROUNDS: ${BCRYPT_SALT_ROUNDS}
+      TEST_MODE: ${TEST_MODE}
+      USE_FASTIFY: ${USE_FASTIFY}
 
   db:
     build:
@@ -55,6 +58,7 @@ services:
 volumes:
   logs: null
   pgdata: null
+  static: null
 
 networks:
   privatenet:
