@@ -4,16 +4,11 @@ import dayjs from 'dayjs';
 import path from 'path';
 import * as pino from 'pino';
 
-// don't want to install express and fastify explicitly for type defs only
-// eslint-disable-next-line import/no-extraneous-dependencies
-import { Request, Response } from 'express';
-// eslint-disable-next-line import/no-extraneous-dependencies
-import { FastifyReply, FastifyRequest } from 'fastify';
-
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { LoggerModule as NestjsPinoLoggerModule } from 'nestjs-pino';
 
+import { NestRequest, NestResponse } from '../types';
 import { LoggerService } from './logger.service';
 
 @Module({
@@ -34,7 +29,7 @@ import { LoggerService } from './logger.service';
             useLevelLabels: true,
             wrapSerializers: false,
             serializers: {
-              req(q: Request | FastifyRequest) {
+              req(q: NestRequest) {
                 // log http request url, query parameters
                 return {
                   id: q.id as number | string,
@@ -47,7 +42,7 @@ import { LoggerService } from './logger.service';
                   body: q.body as Record<string, unknown>,
                 };
               },
-              res(p: Response | FastifyReply) {
+              res(p: NestResponse) {
                 // log http response status code
                 return {
                   statusCode: p.statusCode,
