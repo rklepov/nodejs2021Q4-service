@@ -69,7 +69,7 @@
     "dayjs": "^1.10.7",
     "dotenv": "^16.0.0",
     "fastify-file-interceptor": "^1.0.6",
-    "fastify-swagger": "^4.14.0",
+    "fastify-swagger": "^4.15.0",
     "lodash.pick": "^4.4.0",
     "multer": "^1.4.4",
     "nestjs-pino": "^2.5.0",
@@ -82,7 +82,7 @@
     "pino-pretty": "^7.5.1",
     "reflect-metadata": "^0.1.13",
     "rimraf": "^3.0.2",
-    "rxjs": "^7.5.2",
+    "rxjs": "^7.5.4",
     "swagger-ui-express": "^4.3.0",
     "typeorm": "^0.2.41"
   },
@@ -90,11 +90,10 @@
     "@commitlint/cli": "^16.1.0",
     "@commitlint/config-conventional": "^16.0.0",
     "@nestjs/cli": "^8.2.0",
-    "@nestjs/testing": "^8.2.6",
     "@types/bcryptjs": "^2.4.2",
     "@types/lodash.pick": "^4.4.6",
     "@types/multer": "^1.4.7",
-    "@types/node": "^17.0.16",
+    "@types/node": "^17.0.17",
     "@types/passport-jwt": "^3.0.6",
     "@types/passport-local": "^1.0.34",
     "@typescript-eslint/eslint-plugin": "^5.11.0",
@@ -110,7 +109,7 @@
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-prettier": "^4.0.0",
     "husky": "^7.0.4",
-    "jest": "27.5.0",
+    "jest": "27.5.1",
     "lint-staged": "^12.3.3",
     "prettier": "^2.5.1",
     "supertest": "6.2.2",
@@ -120,6 +119,6 @@
   "optionalDependencies": {
     "artillery": "^2.0.0-11",
     "depcheck": "^1.4.3",
-    "npm-check-updates": "^12.2.1"
+    "npm-check-updates": "^12.3.0"
   }
 }
