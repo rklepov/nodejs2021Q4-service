@@ -1,27 +1,9 @@
 // update-board.dto.ts
 
-import { Type } from 'class-transformer';
-import {
-  IsArray,
-  IsNotEmpty,
-  IsOptional,
-  IsString,
-  ValidateNested,
-} from 'class-validator';
+import { PartialType } from '@nestjs/swagger';
 
-import { UpdateBoardColumnDto } from '../../board-columns/dto/update-board-column.dto';
+import { CreateBoardDto } from './create-board.dto';
 
-export class UpdateBoardDto /* extends PartialType(CreateBoardDto) */ {
-  @IsOptional()
-  @IsNotEmpty()
-  @IsString()
-  title?: string;
-
-  @IsOptional()
-  @IsArray()
-  @ValidateNested()
-  @Type(() => UpdateBoardColumnDto)
-  columns?: UpdateBoardColumnDto[];
-}
+export class UpdateBoardDto extends PartialType(CreateBoardDto) {}
 
 // __EOF__

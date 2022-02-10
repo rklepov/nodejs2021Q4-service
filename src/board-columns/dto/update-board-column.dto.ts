@@ -1,18 +1,9 @@
 // update-board-column.dto.ts
 
-import { IsInt, IsNotEmpty, IsOptional, IsString, Min } from 'class-validator';
+import { PartialType } from '@nestjs/swagger';
 
-export class UpdateBoardColumnDto /* extends PartialType(CreateBoardColumnDto) */ {
-  @IsOptional()
-  @IsNotEmpty()
-  @IsString()
-  title?: string;
+import { CreateBoardColumnDto } from './create-board-column.dto';
 
-  @IsOptional()
-  @IsNotEmpty()
-  @IsInt()
-  @Min(0)
-  order?: number;
-}
+export class UpdateBoardColumnDto extends PartialType(CreateBoardColumnDto) {}
 
 // __EOF__
