@@ -66,7 +66,7 @@ export class BoardsService {
 
     if (board) {
       // TODO: the columns are completely replaced rather than merged
-      //       likely no what we expect from PATCH
+      //       likely not what we expect from PATCH
       return new Board(
         await this.boardsRepository.save({
           ...board,

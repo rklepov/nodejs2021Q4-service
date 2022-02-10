@@ -32,7 +32,7 @@ export class FilesController {
   @ApiConsumes('multipart/form-data')
   @Post()
   @UseGuards(JwtAuthGuard)
-  @UseInterceptors(FileInterceptor('file'))
+  @UseInterceptors(FileInterceptor)
   @UseFilters(FilesExceptionFilter)
   upload(@UploadedFile() file: Express.Multer.File) {
     this.logger.debug(`uploading to '${file.path}'`);
@@ -47,6 +47,7 @@ export class FilesController {
   @Get(':file')
   // ! GET is not protected because download will be tested via web browser
   download(@Param('file') filename: FileName) {
+    // TODO: content-type
     return this.filesService.read(filename);
   }
 

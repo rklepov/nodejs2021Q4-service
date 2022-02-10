@@ -6,12 +6,12 @@ import { ConfigModule } from '@nestjs/config';
 import { LoggerModule } from '../common/logger/logger.module';
 import { FilesController } from './files.controller';
 import { FilesService } from './files.service';
-import { MulterModule } from './multer/multer.module';
+import { FileInterceptor } from './multer/file.interceptor';
 
 @Module({
   controllers: [FilesController],
-  providers: [FilesService],
-  imports: [ConfigModule, LoggerModule, MulterModule.register()],
+  providers: [FilesService, FileInterceptor],
+  imports: [ConfigModule, LoggerModule],
 })
 export class FilesModule {}
 
