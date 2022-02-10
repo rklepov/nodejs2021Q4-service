@@ -11,8 +11,6 @@ import { FastifyReply, FastifyRequest } from 'fastify';
 
 export type UUIDString = string;
 
-export const UUIDApiPropertyName = 'UUID';
-
 export type NestRequest = ExpressRequest | FastifyRequest;
 export type NestResponse = ExpressResponse | FastifyReply;
 

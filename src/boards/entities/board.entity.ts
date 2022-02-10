@@ -7,15 +7,13 @@ import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 // TODO: interface?
 // eslint-disable-next-line import/no-cycle
 import { BoardColumn } from '../../board-columns/entities/board-column.entity';
-
 import { BoardId } from '../interfaces/board.interface';
-import { UUIDApiPropertyName } from '../../common/types';
 
 @Entity()
 export class Board {
   @PrimaryGeneratedColumn('uuid')
   @Expose({ name: 'id' })
-  @ApiProperty({ name: 'id', type: UUIDApiPropertyName })
+  @ApiProperty({ name: 'id', format: 'uuid' })
   boardId!: BoardId;
 
   @Column('varchar')

@@ -15,7 +15,6 @@ import {
 import { Board } from '../../boards/entities/board.entity';
 import { BoardId } from '../../boards/interfaces/board.interface';
 import { BoardColumnId } from '../interfaces/board-columns.interface';
-import { UUIDApiPropertyName } from '../../common/types';
 
 @Entity('board_column', {
   // ! https://github.com/typeorm/typeorm/issues/2620
@@ -25,7 +24,7 @@ import { UUIDApiPropertyName } from '../../common/types';
 export class BoardColumn {
   @PrimaryGeneratedColumn('uuid')
   @Expose({ name: 'id', groups: ['board-column'] })
-  @ApiProperty({ name: 'id', type: UUIDApiPropertyName })
+  @ApiProperty({ name: 'id', format: 'uuid' })
   columnId?: BoardColumnId;
 
   @Column('varchar')
@@ -46,7 +45,7 @@ export class BoardColumn {
 
   @Column('uuid', { nullable: false })
   @Exclude({ toPlainOnly: true })
-  @ApiProperty({ type: UUIDApiPropertyName })
+  @ApiProperty({ format: 'uuid' })
   boardId?: BoardId;
 
   constructor(partial: Partial<BoardColumn>) {

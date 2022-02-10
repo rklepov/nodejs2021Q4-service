@@ -12,7 +12,7 @@ import { UserId } from '../interfaces/user.interface';
 export class User {
   @PrimaryGeneratedColumn('uuid')
   @Expose({ name: 'id' })
-  @ApiProperty({ name: 'id' })
+  @ApiProperty({ name: 'id', format: 'uuid' })
   userId!: UserId;
 
   @Column('varchar')

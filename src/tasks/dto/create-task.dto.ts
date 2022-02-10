@@ -13,7 +13,6 @@ import {
 
 import { BoardColumnId } from '../../board-columns/interfaces/board-columns.interface';
 import { UserId } from '../../users/interfaces/user.interface';
-import { UUIDApiPropertyName } from '../../common/types';
 
 export class CreateTaskDto {
   @IsDefined()
@@ -36,12 +35,12 @@ export class CreateTaskDto {
 
   @IsOptional()
   @IsUUID()
-  @ApiProperty({ type: UUIDApiPropertyName })
+  @ApiProperty({ format: 'uuid' })
   userId?: UserId;
 
   @IsOptional()
   @IsUUID()
-  @ApiProperty({ type: UUIDApiPropertyName })
+  @ApiProperty({ format: 'uuid' })
   columnId?: BoardColumnId;
 }
 
