@@ -1,13 +1,13 @@
 // logger.module.ts
 
-// don't want to install express and fastify explicitly for type defs only
-/* eslint-disable import/no-extraneous-dependencies */
-
 import dayjs from 'dayjs';
 import path from 'path';
 import * as pino from 'pino';
 
+// don't want to install express and fastify explicitly for type defs only
+// eslint-disable-next-line import/no-extraneous-dependencies
 import { Request, Response } from 'express';
+// eslint-disable-next-line import/no-extraneous-dependencies
 import { FastifyReply, FastifyRequest } from 'fastify';
 
 import { Module } from '@nestjs/common';
