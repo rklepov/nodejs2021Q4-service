@@ -10,18 +10,18 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
-// TODO: interface?
-// eslint-disable-next-line import/no-cycle
-import { Board } from '../../boards/entities/board.entity';
-import { BoardId } from '../../boards/interfaces/board.interface';
-import { BoardColumnId } from '../interfaces/board-columns.interface';
+import { BoardId, IBoard } from '../../boards/interfaces/board.interface';
+import {
+  BoardColumnId,
+  IBoardColumn,
+} from '../interfaces/board-columns.interface';
 
 @Entity('board_column', {
   // ! https://github.com/typeorm/typeorm/issues/2620
   orderBy: { columnId: 'ASC', order: 'ASC' },
 })
 @Expose()
-export class BoardColumn {
+export class BoardColumn implements IBoardColumn {
   @PrimaryGeneratedColumn('uuid')
   @Expose({ name: 'id', groups: ['board-column'] })
   @ApiProperty({ name: 'id', format: 'uuid' })
@@ -41,7 +41,7 @@ export class BoardColumn {
   })
   @JoinColumn({ name: 'boardId' })
   @ApiHideProperty()
-  board?: Board; // TODO: replace with an interface to break cycle dependency ?
+  board?: IBoard;
 
   @Column('uuid', { nullable: false })
   @Exclude({ toPlainOnly: true })

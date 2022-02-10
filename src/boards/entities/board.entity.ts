@@ -4,13 +4,11 @@ import { ApiProperty } from '@nestjs/swagger';
 import { Expose } from 'class-transformer';
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 
-// TODO: interface?
-// eslint-disable-next-line import/no-cycle
 import { BoardColumn } from '../../board-columns/entities/board-column.entity';
-import { BoardId } from '../interfaces/board.interface';
+import { BoardId, IBoard } from '../interfaces/board.interface';
 
 @Entity()
-export class Board {
+export class Board implements IBoard {
   @PrimaryGeneratedColumn('uuid')
   @Expose({ name: 'id' })
   @ApiProperty({ name: 'id', format: 'uuid' })

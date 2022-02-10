@@ -25,6 +25,7 @@ export class LoggerInterceptor implements NestInterceptor {
   intercept(context: ExecutionContext, next: CallHandler) {
     // *  request url and body are available at this point for Fastify
     const request: NestRequest = context.switchToHttp().getRequest();
+    // TODO:
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const req = pick(request, [
       'id',
@@ -38,6 +39,7 @@ export class LoggerInterceptor implements NestInterceptor {
     ]);
 
     const reply: NestResponse = context.switchToHttp().getResponse();
+    // TODO:
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const res = pick(reply, 'statusCode');
 
