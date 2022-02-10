@@ -6,13 +6,21 @@ import * as pino from 'pino';
 
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { APP_INTERCEPTOR } from '@nestjs/core';
 import { LoggerModule as NestjsPinoLoggerModule } from 'nestjs-pino';
 
 import { NestRequest, NestResponse } from '../types';
+import { LoggerInterceptor } from './logger.interceptor';
 import { LoggerService } from './logger.service';
 
 @Module({
-  providers: [LoggerService],
+  providers: [
+    LoggerService,
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: LoggerInterceptor,
+    },
+  ],
   exports: [LoggerService],
   imports: [
     NestjsPinoLoggerModule.forRootAsync({
@@ -50,7 +58,8 @@ import { LoggerService } from './logger.service';
               },
             },
             redact: [
-              'req.*.password',
+              '*.password',
+              '*.*.password',
               'req.headers.authorization',
               'req.headers.cookie',
             ],
