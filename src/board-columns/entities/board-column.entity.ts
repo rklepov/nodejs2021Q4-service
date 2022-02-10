@@ -10,11 +10,12 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
-// TODO:
+// TODO: interface?
 // eslint-disable-next-line import/no-cycle
 import { Board } from '../../boards/entities/board.entity';
 import { BoardId } from '../../boards/interfaces/board.interface';
 import { BoardColumnId } from '../interfaces/board-columns.interface';
+import { UUIDApiPropertyName } from '../../common/types';
 
 @Entity('board_column', {
   // ! https://github.com/typeorm/typeorm/issues/2620
@@ -24,13 +25,15 @@ import { BoardColumnId } from '../interfaces/board-columns.interface';
 export class BoardColumn {
   @PrimaryGeneratedColumn('uuid')
   @Expose({ name: 'id', groups: ['board-column'] })
-  @ApiProperty({ name: 'id' })
+  @ApiProperty({ name: 'id', type: UUIDApiPropertyName })
   columnId?: BoardColumnId;
 
   @Column('varchar')
+  @ApiProperty()
   title!: string;
 
   @Column('int')
+  @ApiProperty()
   order!: number;
 
   @ManyToOne('Board', {
@@ -43,6 +46,7 @@ export class BoardColumn {
 
   @Column('uuid', { nullable: false })
   @Exclude({ toPlainOnly: true })
+  @ApiProperty({ type: UUIDApiPropertyName })
   boardId?: BoardId;
 
   constructor(partial: Partial<BoardColumn>) {

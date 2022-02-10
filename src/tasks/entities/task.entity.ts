@@ -14,6 +14,7 @@ import { BoardColumn } from '../../board-columns/entities/board-column.entity';
 import { BoardColumnId } from '../../board-columns/interfaces/board-columns.interface';
 import { Board } from '../../boards/entities/board.entity';
 import { BoardId } from '../../boards/interfaces/board.interface';
+import { UUIDApiPropertyName } from '../../common/types';
 import { User } from '../../users/entities/user.entity';
 import { UserId } from '../../users/interfaces/user.interface';
 import { TaskId } from '../interfaces/task.interface';
@@ -22,16 +23,19 @@ import { TaskId } from '../interfaces/task.interface';
 export class Task {
   @PrimaryGeneratedColumn('uuid')
   @Expose({ name: 'id' })
-  @ApiProperty({ name: 'id' })
+  @ApiProperty({ name: 'id', type: UUIDApiPropertyName })
   taskId!: TaskId;
 
   @Column('varchar')
+  @ApiProperty()
   title!: string;
 
   @Column('int')
+  @ApiProperty()
   order!: number;
 
   @Column('varchar')
+  @ApiProperty()
   description?: string = '';
 
   @ManyToOne(() => User, { onDelete: 'SET NULL' })
@@ -40,6 +44,7 @@ export class Task {
   user!: User;
 
   @Column({ nullable: true })
+  @ApiProperty({ type: UUIDApiPropertyName })
   userId!: UserId;
 
   @ManyToOne(() => Board, { onDelete: 'CASCADE' })
@@ -48,6 +53,7 @@ export class Task {
   board!: Board;
 
   @Column({ nullable: false })
+  @ApiProperty({ type: UUIDApiPropertyName })
   boardId!: BoardId;
 
   @ManyToOne(() => BoardColumn, { onDelete: 'SET NULL' })
@@ -56,6 +62,7 @@ export class Task {
   boardColumn!: BoardColumn;
 
   @Column({ nullable: true })
+  @ApiProperty({ type: UUIDApiPropertyName })
   columnId!: BoardColumnId;
 
   constructor(partial: Partial<Task>) {
