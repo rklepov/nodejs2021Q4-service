@@ -4,17 +4,23 @@ import dayjs from 'dayjs';
 import path from 'path';
 import * as pino from 'pino';
 
-import { Request, Response } from 'express';
-import { FastifyReply, FastifyRequest } from 'fastify';
-
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { APP_INTERCEPTOR } from '@nestjs/core';
 import { LoggerModule as NestjsPinoLoggerModule } from 'nestjs-pino';
 
+import { NestRequest, NestResponse } from '../types';
+import { LoggerInterceptor } from './logger.interceptor';
 import { LoggerService } from './logger.service';
 
 @Module({
-  providers: [LoggerService],
+  providers: [
+    LoggerService,
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: LoggerInterceptor,
+    },
+  ],
   exports: [LoggerService],
   imports: [
     NestjsPinoLoggerModule.forRootAsync({
@@ -23,7 +29,7 @@ import { LoggerService } from './logger.service';
       useFactory: (config: ConfigService) => {
         const timestamp = dayjs().format('YYYYMMDDHHmmss');
         const logLevel = config.get('LOG_LEVEL') as pino.Level;
-        const logsDir = config.get<string>('LOG_DIR') || './logs';
+        const logsDir = config.get<string>('LOG_DIR', './logs');
 
         return {
           pinoHttp: {
@@ -31,7 +37,7 @@ import { LoggerService } from './logger.service';
             useLevelLabels: true,
             wrapSerializers: false,
             serializers: {
-              req(q: Request | FastifyRequest) {
+              req(q: NestRequest) {
                 // log http request url, query parameters
                 return {
                   id: q.id as number | string,
@@ -44,7 +50,7 @@ import { LoggerService } from './logger.service';
                   body: q.body as Record<string, unknown>,
                 };
               },
-              res(p: Response | FastifyReply) {
+              res(p: NestResponse) {
                 // log http response status code
                 return {
                   statusCode: p.statusCode,
@@ -52,7 +58,8 @@ import { LoggerService } from './logger.service';
               },
             },
             redact: [
-              'req.*.password',
+              '*.password',
+              '*.*.password',
               'req.headers.authorization',
               'req.headers.cookie',
             ],

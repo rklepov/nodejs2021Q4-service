@@ -12,7 +12,7 @@ import { FileName } from './interfaces/file.interface';
 // TODO: exception filter for filesystem operations
 @Injectable()
 export class FilesService {
-  private readonly rootDir: string;
+  readonly rootDir: string;
 
   constructor(
     private readonly logger: LoggerService,
@@ -22,7 +22,7 @@ export class FilesService {
     this.rootDir = path.join(
       __dirname,
       '../../',
-      this.config.get<string>('STATIC_DIR') || 'static',
+      this.config.get<string>('STATIC_DIR', 'static'),
     );
   }
 

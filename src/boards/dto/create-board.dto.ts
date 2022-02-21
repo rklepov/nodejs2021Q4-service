@@ -15,13 +15,13 @@ export class CreateBoardDto {
   @IsDefined()
   @IsNotEmpty()
   @IsString()
-  title = '';
+  title!: string;
 
   @IsDefined()
   @IsArray()
   @ValidateNested()
   @Type(() => CreateBoardColumnDto)
-  columns?: CreateBoardColumnDto[];
+  columns!: CreateBoardColumnDto[];
 }
 
 // __EOF__

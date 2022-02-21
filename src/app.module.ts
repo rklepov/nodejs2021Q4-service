@@ -44,7 +44,6 @@ import dbConfig from './db/config';
   providers: [{ provide: APP_FILTER, useClass: AllExceptionsFilter }],
 })
 export class AppModule implements NestModule {
-  // eslint-disable-next-line class-methods-use-this
   configure(consumer: MiddlewareConsumer) {
     consumer.apply(LoggerMiddleware).forRoutes('*');
   }

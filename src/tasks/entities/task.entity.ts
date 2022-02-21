@@ -1,5 +1,6 @@
 // task.entity.ts
 
+import { ApiHideProperty, ApiProperty } from '@nestjs/swagger';
 import { Expose } from 'class-transformer';
 import {
   Column,
@@ -21,36 +22,46 @@ import { TaskId } from '../interfaces/task.interface';
 export class Task {
   @PrimaryGeneratedColumn('uuid')
   @Expose({ name: 'id' })
+  @ApiProperty({ name: 'id', format: 'uuid' })
   taskId!: TaskId;
 
   @Column('varchar')
-  title = '';
+  @ApiProperty()
+  title!: string;
 
   @Column('int')
-  order = NaN;
+  @ApiProperty()
+  order!: number;
 
   @Column('varchar')
-  description? = '';
+  @ApiProperty()
+  description?: string = '';
 
   @ManyToOne(() => User, { onDelete: 'SET NULL' })
   @JoinColumn({ name: 'userId' })
+  @ApiHideProperty()
   user!: User;
 
   @Column({ nullable: true })
+  @ApiProperty({ format: 'uuid' })
   userId!: UserId;
 
   @ManyToOne(() => Board, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'boardId' })
-  board?: Board;
+  @ApiHideProperty()
+  board!: Board;
 
   @Column({ nullable: false })
+  @ApiProperty({ format: 'uuid' })
   boardId!: BoardId;
 
   @ManyToOne(() => BoardColumn, { onDelete: 'SET NULL' })
   @JoinColumn({ name: 'columnId' })
+  @ApiHideProperty()
   boardColumn!: BoardColumn;
 
   @Column({ nullable: true })
+  @ApiProperty({ format: 'uuid' })
   columnId!: BoardColumnId;
 
   constructor(partial: Partial<Task>) {

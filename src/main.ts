@@ -91,7 +91,7 @@ async function bootstrap() {
   const swaggerConfig = new DocumentBuilder()
     .setTitle('Trello Service')
     .setDescription("Let's try to create a competitor for Trello!")
-    .setVersion(`3.0 (${app.getHttpAdapter().getType()})`)
+    .setVersion(`3.1 (${app.getHttpAdapter().getType()})`)
     .build();
   const document = SwaggerModule.createDocument(app, swaggerConfig);
   SwaggerModule.setup('doc', app, document);

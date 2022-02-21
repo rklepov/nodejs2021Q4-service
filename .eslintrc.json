@@ -42,11 +42,26 @@
     "@typescript-eslint/explicit-module-boundary-types": "off",
     "@typescript-eslint/interface-name-prefix": "off",
     "@typescript-eslint/no-explicit-any": "error",
+    "class-methods-use-this": "off",
     "import/extensions": "off",
+    "import/no-extraneous-dependencies": [
+      "error",
+      {
+        "devDependencies": false,
+        "optionalDependencies": false,
+        "peerDependencies": false
+      }
+    ],
     "import/prefer-default-export": "off",
     "linebreak-style": "off",
     "no-underscore-dangle": "off",
     "no-useless-constructor": "off",
+    "node/no-extraneous-import": [
+      "error",
+      {
+        "allowModules": ["express", "fastify"]
+      }
+    ],
     "node/no-unsupported-features/es-syntax": [
       "error",
       {

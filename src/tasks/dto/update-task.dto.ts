@@ -1,40 +1,9 @@
 // update-task.dto.ts
 
-import {
-  IsInt,
-  IsNotEmpty,
-  IsOptional,
-  IsString,
-  IsUUID,
-  Min,
-} from 'class-validator';
+import { PartialType } from '@nestjs/swagger';
 
-import { BoardColumnId } from '../../board-columns/interfaces/board-columns.interface';
-import { UserId } from '../../users/interfaces/user.interface';
+import { CreateTaskDto } from './create-task.dto';
 
-export class UpdateTaskDto /* extends PartialType(CreateTaskDto) */ {
-  @IsOptional()
-  @IsNotEmpty()
-  @IsString()
-  title?: string;
-
-  @IsOptional()
-  @IsNotEmpty()
-  @IsInt()
-  @Min(0)
-  order?: number;
-
-  @IsOptional()
-  @IsString()
-  description?: string;
-
-  @IsOptional()
-  @IsUUID()
-  userId?: UserId;
-
-  @IsOptional()
-  @IsUUID()
-  columnId?: BoardColumnId;
-}
+export class UpdateTaskDto extends PartialType(CreateTaskDto) {}
 
 // __EOF__

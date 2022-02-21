@@ -1,49 +1,47 @@
 // file.interceptor.ts
 
-import dotenv from 'dotenv';
-import * as multer from 'multer';
-import path from 'path';
-
+import {
+  CallHandler,
+  ExecutionContext,
+  Injectable,
+  NestInterceptor,
+} from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { FileInterceptor as FileExpressInterceptor } from '@nestjs/platform-express';
-
 import { FileFastifyInterceptor } from 'fastify-file-interceptor';
+import { diskStorage } from 'multer';
 
-dotenv.config({
-  path: path.join(__dirname, '../../../.env'),
-});
+import { FilesService } from '../files.service';
 
-const { USE_FASTIFY } = process.env;
+@Injectable()
+export class FileInterceptor implements NestInterceptor {
+  private readonly fileInterceptor: NestInterceptor;
 
-type FileExpressInterceptorFactory = typeof FileExpressInterceptor;
+  constructor(
+    private readonly config: ConfigService,
+    private readonly filesService: FilesService,
+  ) {
+    const useFastify = config.get<string>('USE_FASTIFY', 'false');
+    const ClassFactory =
+      useFastify.toLowerCase() === 'true'
+        ? FileFastifyInterceptor
+        : FileExpressInterceptor;
 
-type FileFastifyInterceptorFactory = typeof FileFastifyInterceptor;
+    const storageOptions = {
+      storage: diskStorage({
+        destination: filesService.rootDir,
+        filename: (req, file, callback) => {
+          callback(null, file.originalname);
+        },
+      }),
+    };
 
-type FileInterceptorFactory =
-  | FileExpressInterceptorFactory
-  | FileFastifyInterceptorFactory;
+    this.fileInterceptor = new (ClassFactory('file', storageOptions))();
+  }
 
-export const FileInterceptor: FileInterceptorFactory = (fieldName: string) => {
-  // TODO !!!
-  const Factory =
-    USE_FASTIFY?.toLowerCase() === 'true'
-      ? FileFastifyInterceptor
-      : FileExpressInterceptor;
-
-  const storageOptions = {
-    storage: multer.diskStorage({
-      // TODO: this is duplicated in FilesService constructor
-      destination: path.join(
-        __dirname,
-        '../../../',
-        process.env?.STATIC || 'static',
-      ),
-      filename: (req, file, callback) => {
-        callback(null, file.originalname);
-      },
-    }),
-  };
-
-  return Factory(fieldName, storageOptions);
-};
+  intercept(context: ExecutionContext, next: CallHandler) {
+    return this.fileInterceptor.intercept(context, next);
+  }
+}
 
 // __EOF__

@@ -1,5 +1,6 @@
 // create-task.dto.ts
 
+import { ApiProperty } from '@nestjs/swagger';
 import {
   IsDefined,
   IsInt,
@@ -10,31 +11,36 @@ import {
   Min,
 } from 'class-validator';
 
-import { UserId } from '../../users/interfaces/user.interface';
 import { BoardColumnId } from '../../board-columns/interfaces/board-columns.interface';
+import { UserId } from '../../users/interfaces/user.interface';
 
 export class CreateTaskDto {
   @IsDefined()
   @IsNotEmpty()
   @IsString()
-  title = '';
+  @ApiProperty()
+  title!: string;
 
   @IsDefined()
   @IsNotEmpty()
   @IsInt()
   @Min(0)
-  order = NaN;
+  @ApiProperty()
+  order!: number;
 
   @IsOptional()
   @IsString()
-  description?: string;
+  @ApiProperty()
+  description?: string = '';
 
   @IsOptional()
   @IsUUID()
+  @ApiProperty({ format: 'uuid' })
   userId?: UserId;
 
   @IsOptional()
   @IsUUID()
+  @ApiProperty({ format: 'uuid' })
   columnId?: BoardColumnId;
 }
 

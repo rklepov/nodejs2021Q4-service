@@ -6,18 +6,18 @@ export class CreateUserDto {
   @IsDefined()
   @IsNotEmpty()
   @IsString()
-  name = '';
+  name!: string;
 
   @IsDefined()
   @IsNotEmpty()
   @IsString()
-  login = '';
+  login!: string;
 
   @IsDefined()
   @IsNotEmpty()
   @IsString()
   @IsAscii()
-  password = '';
+  password!: string;
 }
 
 // __EOF__
